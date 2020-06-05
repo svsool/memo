@@ -6,9 +6,11 @@
         "sourceType": "module"
     },
     "plugins": [
-        "@typescript-eslint"
+        "@typescript-eslint",
+        "prettier"
     ],
     "rules": {
+        "prettier/prettier": "error",
         "@typescript-eslint/class-name-casing": "warn",
         "@typescript-eslint/semi": "warn",
         "curly": "warn",

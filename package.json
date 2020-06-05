@@ -1,8 +1,9 @@
 {
 	"name": "markdown-memo",
 	"displayName": "markdown-memo",
-	"description": "",
+	"description": "Markdown knowledge base",
 	"version": "0.0.1",
+	"license": "UNLICENSED",
 	"engines": {
 		"vscode": "^1.45.0"
 	},
@@ -10,14 +11,14 @@
 		"Other"
 	],
 	"activationEvents": [
-        "onCommand:markdown-memo.helloWorld"
+		"onCommand:markdown-memo.helloWorld"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
 				"command": "markdown-memo.helloWorld",
-                "title": "Hello World"
+				"title": "Hello World"
 			}
 		]
 	},
@@ -30,15 +31,18 @@
 		"test": "node ./out/test/runTest.js"
 	},
 	"devDependencies": {
-		"@types/vscode": "^1.45.0",
 		"@types/glob": "^7.1.1",
 		"@types/mocha": "^7.0.2",
 		"@types/node": "^13.11.0",
-		"eslint": "^6.8.0",
-		"@typescript-eslint/parser": "^2.30.0",
+		"@types/vscode": "^1.45.0",
 		"@typescript-eslint/eslint-plugin": "^2.30.0",
+		"@typescript-eslint/parser": "^2.30.0",
+		"eslint": "^6.8.0",
+		"eslint-config-prettier": "^6.11.0",
+		"eslint-plugin-prettier": "^3.1.3",
 		"glob": "^7.1.6",
 		"mocha": "^7.1.2",
+		"prettier": "^2.0.5",
 		"typescript": "^3.8.3",
 		"vscode-test": "^1.3.0"
 	}
