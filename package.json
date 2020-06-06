@@ -19,8 +19,13 @@
 	],
 	"main": "./out/extension.js",
 	"contributes": {
-    "markdown.markdownItPlugins": true
+		"markdown.markdownItPlugins": true
 	},
+  "lint-staged": {
+    "*.{ts}": [
+      "eslint --fix"
+    ]
+  },
 	"scripts": {
 		"vscode:prepublish": "yarn run compile",
 		"compile": "tsc -p ./",
@@ -41,6 +46,8 @@
 		"eslint-config-prettier": "^6.11.0",
 		"eslint-plugin-prettier": "^3.1.3",
 		"glob": "^7.1.6",
+		"husky": "^4.2.5",
+		"lint-staged": "^10.2.9",
 		"mocha": "^7.1.2",
 		"prettier": "^2.0.5",
 		"typescript": "^3.8.3",
