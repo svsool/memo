@@ -1,26 +1,25 @@
 {
 	"name": "markdown-memo",
-	"displayName": "markdown-memo",
-	"description": "Markdown knowledge base",
+	"displayName": "Markdown Memo",
+	"description": "Markdown knowledge base with first class bidirectional links",
+  "publisher": "memo",
 	"version": "0.0.1",
-	"license": "UNLICENSED",
+	"license": "MIT",
 	"engines": {
 		"vscode": "^1.45.0"
 	},
 	"categories": [
 		"Other"
 	],
-	"activationEvents": [
-		"onCommand:markdown-memo.helloWorld"
-	],
+  "keywords": [
+    "markdown"
+  ],
+  "activationEvents": [
+    "onLanguage:markdown"
+  ],
 	"main": "./out/extension.js",
 	"contributes": {
-		"commands": [
-			{
-				"command": "markdown-memo.helloWorld",
-				"title": "Hello World"
-			}
-		]
+		"commands": []
 	},
 	"scripts": {
 		"vscode:prepublish": "yarn run compile",
