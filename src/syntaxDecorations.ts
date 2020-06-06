@@ -32,11 +32,8 @@ let regexToDecorationTypes: { [regexp: string]: string[] } = {
   '(\\[\\[)(.+?)(\\]\\])': ['gray', 'lightBlue', 'gray'],
 };
 
-const updateDecorations = (editor?: TextEditor) => {
-  if (editor === undefined) {
-    editor = window.activeTextEditor;
-  }
-
+const updateDecorations = (textEditor?: TextEditor) => {
+  const editor = textEditor || window.activeTextEditor;
   const doc = editor?.document;
 
   if (!editor || !doc || !isMdEditor(editor) || isFileTooLarge(doc)) {

@@ -9,8 +9,8 @@
 		"rootDir": "src",
     "skipLibCheck": true,
 		"strict": true,
-		 "noImplicitReturns": true,
-		 "noFallthroughCasesInSwitch": true
+		"noImplicitReturns": true,
+		"noFallthroughCasesInSwitch": true
 	},
 	"exclude": [
 		"node_modules",
