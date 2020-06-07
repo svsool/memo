@@ -8,15 +8,23 @@
   "engines": {
     "vscode": "^1.45.0"
   },
-  "categories": ["Other"],
-  "keywords": ["markdown"],
-  "activationEvents": ["onLanguage:markdown"],
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "markdown"
+  ],
+  "activationEvents": [
+    "onLanguage:markdown"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "markdown.markdownItPlugins": true
   },
   "lint-staged": {
-    "*.{ts}": ["eslint --fix"]
+    "*.{ts}": [
+      "eslint --fix"
+    ]
   },
   "scripts": {
     "vscode:prepublish": "yarn run compile",
