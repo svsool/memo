@@ -12,7 +12,11 @@
     "Other"
   ],
   "keywords": [
-    "markdown"
+    "markdown",
+    "knowledge base",
+    "references",
+    "reference",
+    "zettelkasten"
   ],
   "activationEvents": [
     "onLanguage:markdown"
