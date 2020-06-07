@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import { Position, Range, TextDocument, TextEditor } from 'vscode';
+import path from 'path';
 
 export const mdDocSelector = [
   { language: 'markdown', scheme: 'file' },
@@ -72,3 +73,41 @@ export function isFileTooLarge(document: TextDocument): boolean {
     return isTooLarge;
   }
 }
+
+const allExts = /\.(md|png|jpg|jpeg|svg|gif)$/;
+
+export const extractLongRef = (
+  basePathParam: string,
+  pathParam: string,
+  preserveExtension?: boolean,
+): string | null => {
+  const allExtsMatch = allExts.exec(pathParam);
+
+  if (allExtsMatch) {
+    const ref = pathParam.replace(basePathParam, '');
+
+    if (preserveExtension) {
+      return ref;
+    }
+
+    return ref.replace(allExts, '');
+  }
+
+  return null;
+};
+
+export const extractShortRef = (pathParam: string, preserveExtension?: boolean): string | null => {
+  const allExtsMatch = allExts.exec(pathParam);
+
+  if (allExtsMatch) {
+    const ref = path.basename(pathParam);
+
+    if (preserveExtension) {
+      return ref;
+    }
+
+    return ref.replace(allExts, '');
+  }
+
+  return null;
+};

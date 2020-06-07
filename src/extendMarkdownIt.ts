@@ -20,18 +20,18 @@ const extendMarkdownIt = (md: MarkdownIt) => {
         const matchLowered = match.toLowerCase();
 
         if (imageExts.some((ext) => matchLowered.includes(ext))) {
-          const imagePath = getImagePaths().find((path) =>
+          const imagePath = getImagePaths().find(({ fsPath: path }) =>
             path.toLowerCase().includes(match.toLowerCase()),
-          );
+          )?.fsPath;
 
           if (imagePath) {
             return `<img src="${imagePath}" title="${match}" />`;
           }
         }
 
-        const markdownPath = getMarkdownPaths().find((path) =>
+        const markdownPath = getMarkdownPaths().find(({ fsPath: path }) =>
           path.toLowerCase().includes(match.toLowerCase()),
-        );
+        )?.fsPath;
 
         if (!markdownPath) {
           return getInvalidRefAnchor(match);
@@ -44,9 +44,9 @@ const extendMarkdownIt = (md: MarkdownIt) => {
       name: 'ref-document',
       regex: /\[\[(.+?)\]\]/,
       replace: (match: string) => {
-        const markdownPath = getMarkdownPaths().find((path) =>
+        const markdownPath = getMarkdownPaths().find(({ fsPath: path }) =>
           path.toLowerCase().includes(match.toLowerCase()),
-        );
+        )?.fsPath;
 
         if (!markdownPath) {
           return getInvalidRefAnchor(match);

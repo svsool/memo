@@ -1,30 +1,8 @@
-import { ExtensionContext, workspace, window, WorkspaceEdit } from 'vscode';
-import path from 'path';
+import { ExtensionContext, workspace, window } from 'vscode';
 import fs from 'fs';
 
 import { sync, getMarkdownPaths, getImagePaths } from './fsCache';
-
-const allExts = /\.(md|png|jpg|jpeg|svg|gif)$/;
-
-// const extractLongRef = (basePathParam: string, pathParam: string): string | null => {
-//   const allExtsMatch = allExts.exec(pathParam);
-//
-//   if (allExtsMatch) {
-//     return pathParam.replace(basePathParam, '').replace(allExts, '');
-//   }
-//
-//   return null;
-// };
-
-const extractShortRef = (pathParam: string): string | null => {
-  const allExtsMatch = allExts.exec(pathParam);
-
-  if (allExtsMatch) {
-    return path.basename(pathParam).replace(allExts, '');
-  }
-
-  return null;
-};
+import { extractShortRef } from './util';
 
 export const activate = async (_: ExtensionContext) => {
   workspace.onDidRenameFiles(async ({ files }) => {
@@ -42,7 +20,7 @@ export const activate = async (_: ExtensionContext) => {
       const oldShortRef = extractShortRef(oldUri.fsPath);
       const newShortRef = extractShortRef(newUri.fsPath);
 
-      paths.forEach((p) => {
+      paths.forEach(({ fsPath: p }) => {
         const fileContent = fs.readFileSync(p);
 
         if (oldShortRef && fileContent.includes(`[[${oldShortRef}]]`)) {
