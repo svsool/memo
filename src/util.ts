@@ -74,14 +74,22 @@ export function isFileTooLarge(document: TextDocument): boolean {
   }
 }
 
-const allExts = /\.(md|png|jpg|jpeg|svg|gif)$/;
+const allExtsRegex = /\.(md|png|jpg|jpeg|svg|gif)$/;
+
+const markdownExtRegex = /\.md$/;
+
+const imageExtsRegex = /\.(png|jpg|jpeg|svg|gif)$/;
+
+export const containsImageExt = (path: string): boolean => !!imageExtsRegex.exec(path);
+
+export const containsMarkdownExt = (path: string): boolean => !!markdownExtRegex.exec(path);
 
 export const extractLongRef = (
   basePathParam: string,
   pathParam: string,
   preserveExtension?: boolean,
 ): string | null => {
-  const allExtsMatch = allExts.exec(pathParam);
+  const allExtsMatch = allExtsRegex.exec(pathParam);
 
   if (allExtsMatch) {
     const ref = pathParam.replace(basePathParam, '');
@@ -90,14 +98,14 @@ export const extractLongRef = (
       return ref;
     }
 
-    return ref.replace(allExts, '');
+    return ref.replace(allExtsRegex, '');
   }
 
   return null;
 };
 
 export const extractShortRef = (pathParam: string, preserveExtension?: boolean): string | null => {
-  const allExtsMatch = allExts.exec(pathParam);
+  const allExtsMatch = allExtsRegex.exec(pathParam);
 
   if (allExtsMatch) {
     const ref = path.basename(pathParam);
@@ -106,7 +114,7 @@ export const extractShortRef = (pathParam: string, preserveExtension?: boolean):
       return ref;
     }
 
-    return ref.replace(allExts, '');
+    return ref.replace(allExtsRegex, '');
   }
 
   return null;

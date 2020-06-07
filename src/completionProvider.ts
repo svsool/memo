@@ -20,8 +20,9 @@ export const activate = async (_: ExtensionContext) => {
         const linePrefix = document.lineAt(position).text.substr(0, position.character);
 
         const isResourceAutocomplete = linePrefix.endsWith('![[');
+        const isDocsAutocomplete = linePrefix.endsWith('[[');
 
-        if (!linePrefix.endsWith('[[') && !isResourceAutocomplete) {
+        if (!isDocsAutocomplete && !isResourceAutocomplete) {
           return undefined;
         }
 
