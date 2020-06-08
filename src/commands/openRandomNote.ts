@@ -1,14 +1,14 @@
 import { commands } from 'vscode';
 
-import { getMarkdownPaths } from '../fsCache';
+import { getMarkdownUris } from '../fsCache';
 
 const openRandomNote = () => {
-  const markdownPaths = getMarkdownPaths();
-  const randomPathIndex = Math.round(Math.random() * markdownPaths.length);
-  const randomPath = markdownPaths[randomPathIndex];
+  const markdownUris = getMarkdownUris();
+  const randomUriIndex = Math.round(Math.random() * markdownUris.length);
+  const randomUri = markdownUris[randomUriIndex];
 
-  if (randomPath) {
-    commands.executeCommand('vscode.open', randomPath);
+  if (randomUri) {
+    commands.executeCommand('vscode.open', randomUri);
   }
 };
 

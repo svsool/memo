@@ -1,14 +1,14 @@
 import { ExtensionContext, workspace, window } from 'vscode';
 import fs from 'fs';
 
-import { sync, getMarkdownPaths, getImagePaths } from './fsCache';
+import { sync, getMarkdownUris, getImageUris } from './fsCache';
 import { extractShortRef, containsImageExt, containsMarkdownExt } from './utils';
 
 export const activate = async (_: ExtensionContext) => {
   workspace.onDidRenameFiles(async ({ files }) => {
     await sync();
 
-    const paths = [...getMarkdownPaths(), ...getImagePaths()];
+    const uris = [...getMarkdownUris(), ...getImageUris()];
 
     let filesUpdated: string[] = [];
 
@@ -23,7 +23,7 @@ export const activate = async (_: ExtensionContext) => {
         const oldShortRef = extractShortRef(oldUri.fsPath, isImage);
         const newShortRef = extractShortRef(newUri.fsPath, isImage);
 
-        paths.forEach(({ fsPath: p }) => {
+        uris.forEach(({ fsPath: p }) => {
           const fileContent = fs.readFileSync(p);
 
           if (oldShortRef && fileContent.includes(`[[${oldShortRef}]]`)) {

@@ -9,7 +9,7 @@ import {
   Uri,
 } from 'vscode';
 
-import { getMarkdownPaths, getImagePaths } from './fsCache';
+import { getMarkdownUris, getImageUris } from './fsCache';
 import { extractLongRef, extractShortRef } from './utils';
 
 export const activate = async (_: ExtensionContext) => {
@@ -29,8 +29,8 @@ export const activate = async (_: ExtensionContext) => {
         const completionItems: CompletionItem[] = [];
 
         const uris: Uri[] = [
-          ...(isResourceAutocomplete ? getImagePaths() : []),
-          ...(!isResourceAutocomplete ? getMarkdownPaths() : []),
+          ...(isResourceAutocomplete ? getImageUris() : []),
+          ...(!isResourceAutocomplete ? getMarkdownUris() : []),
         ];
 
         for (const uri of uris) {

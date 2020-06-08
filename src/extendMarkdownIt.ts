@@ -1,7 +1,7 @@
 import MarkdownIt from 'markdown-it';
 import markdownItRegex from 'markdown-it-regex';
 
-import { getImagePaths, getMarkdownPaths } from './fsCache';
+import { getImageUris, getMarkdownUris } from './fsCache';
 
 const imageExts = ['png', 'jpg', 'jpeg', 'svg', 'gif'];
 
@@ -20,39 +20,39 @@ const extendMarkdownIt = (md: MarkdownIt) => {
         const matchLowered = match.toLowerCase();
 
         if (imageExts.some((ext) => matchLowered.includes(ext))) {
-          const imagePath = getImagePaths().find(({ fsPath: path }) =>
+          const imageUri = getImageUris().find(({ fsPath: path }) =>
             path.toLowerCase().includes(match.toLowerCase()),
           )?.fsPath;
 
-          if (imagePath) {
-            return `<img src="${imagePath}" title="${match}" />`;
+          if (imageUri) {
+            return `<img src="${imageUri}" title="${match}" />`;
           }
         }
 
-        const markdownPath = getMarkdownPaths().find(({ fsPath: path }) =>
+        const markdownUri = getMarkdownUris().find(({ fsPath: path }) =>
           path.toLowerCase().includes(match.toLowerCase()),
         )?.fsPath;
 
-        if (!markdownPath) {
+        if (!markdownUri) {
           return getInvalidRefAnchor(match);
         }
 
-        return getRefAnchor(markdownPath, match);
+        return getRefAnchor(markdownUri, match);
       },
     })
     .use(markdownItRegex, {
       name: 'ref-document',
       regex: /\[\[(.+?)\]\]/,
       replace: (match: string) => {
-        const markdownPath = getMarkdownPaths().find(({ fsPath: path }) =>
+        const markdownUri = getMarkdownUris().find(({ fsPath: path }) =>
           path.toLowerCase().includes(match.toLowerCase()),
         )?.fsPath;
 
-        if (!markdownPath) {
+        if (!markdownUri) {
           return getInvalidRefAnchor(match);
         }
 
-        return getRefAnchor(markdownPath, match);
+        return getRefAnchor(markdownUri, match);
       },
     });
 };
