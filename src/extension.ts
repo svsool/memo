@@ -13,6 +13,8 @@ export const activate = async (context: vscode.ExtensionContext) => {
   await fsCache.activate(context);
   context.subscriptions.push(
     vscode.commands.registerCommand('_memo.openTextDocument', commands.openTextDocument),
+    vscode.commands.registerCommand('memo.openRandomNote', commands.openRandomNote),
+    vscode.commands.registerCommand('memo.openTodayNote', commands.openTodayNote),
   );
   vscode.languages.registerDocumentLinkProvider(
     { language: 'markdown', scheme: '*' },

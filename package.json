@@ -8,27 +8,27 @@
   "engines": {
     "vscode": "^1.45.0"
   },
-  "categories": [
-    "Other"
-  ],
-  "keywords": [
-    "markdown",
-    "knowledge base",
-    "references",
-    "reference",
-    "zettelkasten"
-  ],
-  "activationEvents": [
-    "onLanguage:markdown"
-  ],
+  "categories": ["Other"],
+  "keywords": ["markdown", "knowledge base", "references", "reference", "zettelkasten"],
+  "activationEvents": ["onLanguage:markdown"],
   "main": "./out/extension.js",
   "contributes": {
-    "markdown.markdownItPlugins": true
+    "markdown.markdownItPlugins": true,
+    "commands": [
+      {
+        "command": "memo.openTodayNote",
+        "title": "Open today's note",
+        "category": "Memo"
+      },
+      {
+        "command": "memo.openRandomNote",
+        "title": "Open random note",
+        "category": "Memo"
+      }
+    ]
   },
   "lint-staged": {
-    "*.{ts}": [
-      "eslint --fix"
-    ]
+    "*.{ts}": ["eslint --fix"]
   },
   "scripts": {
     "vscode:prepublish": "yarn run compile",
