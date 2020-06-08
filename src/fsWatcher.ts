@@ -20,7 +20,6 @@ export const activate = async (_: ExtensionContext) => {
       const isImage = containsImageExt(oldUri.fsPath) && containsImageExt(newUri.fsPath);
       const isMarkdown = containsMarkdownExt(oldUri.fsPath) && containsMarkdownExt(newUri.fsPath);
       if (isImage || isMarkdown) {
-        const preserveExtension = true;
         const oldShortRef = extractShortRef(oldUri.fsPath, isImage);
         const newShortRef = extractShortRef(newUri.fsPath, isImage);
 
