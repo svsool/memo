@@ -15,7 +15,7 @@ export const activate = async (_: ExtensionContext) => {
     let refsUpdated: number = 0;
 
     // TODO: Support long refs as well, at the moment only short refs supported
-    // but it will lead to clashes if file with the same name exists in different directories
+    // which will lead to clashes if file with the same name exists in different directories
     files.forEach(({ oldUri, newUri }) => {
       const isImage = containsImageExt(oldUri.fsPath) && containsImageExt(newUri.fsPath);
       const isMarkdown = containsMarkdownExt(oldUri.fsPath) && containsMarkdownExt(newUri.fsPath);
