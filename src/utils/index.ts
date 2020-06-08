@@ -1,11 +1,6 @@
 import * as fs from 'fs';
-import { Position, Range, TextDocument, TextEditor } from 'vscode';
+import { workspace, Uri, Position, Range, TextDocument, TextEditor } from 'vscode';
 import path from 'path';
-
-export const mdDocSelector = [
-  { language: 'markdown', scheme: 'file' },
-  { language: 'markdown', scheme: 'untitled' },
-];
 
 /*
   Borrowed from https://github.com/yzhang-gh/vscode-markdown
@@ -118,4 +113,17 @@ export const extractShortRef = (pathParam: string, preserveExtension?: boolean):
   }
 
   return null;
+};
+
+let imageUris: Uri[] = [];
+
+let markdownUris: Uri[] = [];
+
+export const getImageUris = () => imageUris;
+
+export const getMarkdownUris = () => markdownUris;
+
+export const cacheWorkspaceUris = async () => {
+  imageUris = await workspace.findFiles('**/*.{png,jpg,jpeg,svg,gif}');
+  markdownUris = await workspace.findFiles('**/*.md');
 };

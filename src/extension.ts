@@ -1,21 +1,19 @@
 import * as vscode from 'vscode';
 
-import * as syntaxDecorations from './syntaxDecorations';
-import * as fsCache from './fsCache';
-import * as fsWatcher from './fsWatcher';
-import * as completionProvider from './completionProvider';
-import extendMarkdownIt from './extendMarkdownIt';
-import DocumentLinkProvider from './documentLinkProvider';
-import * as commands from './commands';
+import {
+  syntaxDecorations,
+  fsWatcher,
+  completionProvider,
+  DocumentLinkProvider,
+  extendMarkdownIt,
+} from './extensions';
+import commands from './commands';
+import { cacheWorkspaceUris } from './utils';
 
 export const activate = async (context: vscode.ExtensionContext) => {
   syntaxDecorations.activate(context);
-  await fsCache.activate(context);
-  context.subscriptions.push(
-    vscode.commands.registerCommand('_memo.openTextDocument', commands.openTextDocument),
-    vscode.commands.registerCommand('memo.openRandomNote', commands.openRandomNote),
-    vscode.commands.registerCommand('memo.openTodayNote', commands.openTodayNote),
-  );
+  await cacheWorkspaceUris();
+  context.subscriptions.push(...commands);
   vscode.languages.registerDocumentLinkProvider(
     { language: 'markdown', scheme: '*' },
     new DocumentLinkProvider(),

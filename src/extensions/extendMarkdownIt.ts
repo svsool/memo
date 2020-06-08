@@ -1,7 +1,7 @@
 import MarkdownIt from 'markdown-it';
 import markdownItRegex from 'markdown-it-regex';
 
-import { getImageUris, getMarkdownUris } from './fsCache';
+import { getImageUris, getMarkdownUris } from '../utils';
 
 const imageExts = ['png', 'jpg', 'jpeg', 'svg', 'gif'];
 

@@ -1,6 +1,6 @@
 import { commands } from 'vscode';
 
-import { getMarkdownUris } from '../fsCache';
+import { getMarkdownUris } from '../utils';
 
 const openRandomNote = () => {
   const markdownUris = getMarkdownUris();

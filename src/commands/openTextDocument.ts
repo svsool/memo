@@ -2,8 +2,7 @@ import vscode from 'vscode';
 import fs from 'fs';
 import path from 'path';
 
-import { getMarkdownUris, getImageUris } from '../fsCache';
-import { containsImageExt } from '../utils';
+import { getMarkdownUris, getImageUris, containsImageExt } from '../utils';
 
 const openTextDocument = ({ reference }: { reference: string }) => {
   const uris = [...getMarkdownUris(), ...getImageUris()];

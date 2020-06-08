@@ -7,7 +7,7 @@ import {
   ExtensionContext,
   TextEditorDecorationType,
 } from 'vscode';
-import { isFileTooLarge, isInFencedCodeBlock, isMdEditor, mathEnvCheck } from './utils';
+import { isFileTooLarge, isInFencedCodeBlock, isMdEditor, mathEnvCheck } from '../utils';
 import Timeout = NodeJS.Timeout;
 
 /*

@@ -1,12 +1,18 @@
 import { ExtensionContext, workspace, window } from 'vscode';
 import fs from 'fs';
 
-import { sync, getMarkdownUris, getImageUris } from './fsCache';
-import { extractShortRef, containsImageExt, containsMarkdownExt } from './utils';
+import {
+  extractShortRef,
+  containsImageExt,
+  containsMarkdownExt,
+  cacheWorkspaceUris,
+  getMarkdownUris,
+  getImageUris,
+} from '../utils';
 
 export const activate = async (_: ExtensionContext) => {
   workspace.onDidRenameFiles(async ({ files }) => {
-    await sync();
+    await cacheWorkspaceUris();
 
     const uris = [...getMarkdownUris(), ...getImageUris()];
 
@@ -53,7 +59,7 @@ export const activate = async (_: ExtensionContext) => {
     }
   });
 
-  workspace.onDidCreateFiles(async () => await sync());
+  workspace.onDidCreateFiles(async () => await cacheWorkspaceUris());
 
-  workspace.onDidDeleteFiles(async () => await sync());
+  workspace.onDidDeleteFiles(async () => await cacheWorkspaceUris());
 };

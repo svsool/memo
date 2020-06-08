@@ -9,8 +9,7 @@ import {
   Uri,
 } from 'vscode';
 
-import { getMarkdownUris, getImageUris } from './fsCache';
-import { extractLongRef, extractShortRef } from './utils';
+import { getMarkdownUris, getImageUris, extractLongRef, extractShortRef } from '../utils';
 
 export const activate = async (_: ExtensionContext) => {
   languages.registerCompletionItemProvider(
