@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 
 import { getMarkdownPaths, getImagePaths } from '../fsCache';
-import { containsImageExt } from '../util';
+import { containsImageExt } from '../utils';
 
 const openTextDocument = ({ reference }: { reference: string }) => {
   const uris = [...getMarkdownPaths(), ...getImagePaths()];

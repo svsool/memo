@@ -2,7 +2,7 @@ import { ExtensionContext, workspace, window } from 'vscode';
 import fs from 'fs';
 
 import { sync, getMarkdownPaths, getImagePaths } from './fsCache';
-import { extractShortRef, containsImageExt, containsMarkdownExt } from './util';
+import { extractShortRef, containsImageExt, containsMarkdownExt } from './utils';
 
 export const activate = async (_: ExtensionContext) => {
   workspace.onDidRenameFiles(async ({ files }) => {

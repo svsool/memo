@@ -10,7 +10,7 @@ import {
 } from 'vscode';
 
 import { getMarkdownPaths, getImagePaths } from './fsCache';
-import { extractLongRef, extractShortRef } from './util';
+import { extractLongRef, extractShortRef } from './utils';
 
 export const activate = async (_: ExtensionContext) => {
   languages.registerCompletionItemProvider(
