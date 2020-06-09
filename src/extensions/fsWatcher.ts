@@ -1,4 +1,4 @@
-import { ExtensionContext, workspace, window } from 'vscode';
+import { workspace, window } from 'vscode';
 import fs from 'fs';
 
 import {
@@ -10,7 +10,7 @@ import {
   getImageUris,
 } from '../utils';
 
-export const activate = async (_: ExtensionContext) => {
+export const activate = async () => {
   workspace.onDidRenameFiles(async ({ files }) => {
     await cacheWorkspaceUris();
 

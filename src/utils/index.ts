@@ -49,7 +49,7 @@ export function mathEnvCheck(doc: TextDocument, pos: Position): string {
 }
 
 const sizeLimit = 50000; // ~50 KB
-let fileSizesCache: { [path: string]: [number, boolean] } = {};
+const fileSizesCache: { [path: string]: [number, boolean] } = {};
 
 /*
   Borrowed from https://github.com/yzhang-gh/vscode-markdown

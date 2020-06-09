@@ -1,5 +1,4 @@
 import {
-  ExtensionContext,
   languages,
   TextDocument,
   Position,
@@ -11,7 +10,7 @@ import {
 
 import { getMarkdownUris, getImageUris, extractLongRef, extractShortRef } from '../utils';
 
-export const activate = async (_: ExtensionContext) => {
+export const activate = async () => {
   languages.registerCompletionItemProvider(
     'markdown',
     {

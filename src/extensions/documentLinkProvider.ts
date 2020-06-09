@@ -13,10 +13,7 @@ function matchAll(pattern: RegExp, text: string): Array<RegExpMatchArray> {
 export default class DocumentLinkProvider implements vscode.DocumentLinkProvider {
   private readonly linkPattern = /\[\[(.+?)\]\]/g;
 
-  public provideDocumentLinks(
-    document: vscode.TextDocument,
-    _token: vscode.CancellationToken,
-  ): vscode.DocumentLink[] {
+  public provideDocumentLinks(document: vscode.TextDocument): vscode.DocumentLink[] {
     const results: vscode.DocumentLink[] = [];
     const text = document.getText();
 
@@ -24,7 +21,7 @@ export default class DocumentLinkProvider implements vscode.DocumentLinkProvider
       let linkStart: vscode.Position;
       let linkEnd: vscode.Position;
 
-      let reference = match[1];
+      const reference = match[1];
       if (reference) {
         const offset = (match.index || 0) + 2;
 

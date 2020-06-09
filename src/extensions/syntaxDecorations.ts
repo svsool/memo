@@ -1,14 +1,6 @@
-import {
-  window,
-  workspace,
-  Position,
-  Range,
-  TextEditor,
-  ExtensionContext,
-  TextEditorDecorationType,
-} from 'vscode';
+import { window, workspace, Position, Range, TextEditor, TextEditorDecorationType } from 'vscode';
+
 import { isFileTooLarge, isInFencedCodeBlock, isMdEditor, mathEnvCheck } from '../utils';
-import Timeout = NodeJS.Timeout;
 
 /*
   Some of this code borrowed from https://github.com/yzhang-gh/vscode-markdown
@@ -27,7 +19,7 @@ const decorationTypes: { [type: string]: TextEditorDecorationType } = {
 
 const decors: { [decorTypeName: string]: Range[] } = {};
 
-let regexToDecorationTypes: { [regexp: string]: string[] } = {
+const regexToDecorationTypes: { [regexp: string]: string[] } = {
   // [[ref]]
   '(\\[\\[)(.+?)(\\]\\])': ['gray', 'lightBlue', 'gray'],
 };
@@ -53,7 +45,7 @@ const updateDecorations = (textEditor?: TextEditor) => {
       }
 
       // Trick. Match `[alt](link)` and `![alt](link)` first and remember those greyed out ranges
-      let noDecorRanges: [number, number][] = [];
+      const noDecorRanges: [number, number][] = [];
 
       Object.keys(regexToDecorationTypes).forEach((reText) => {
         const decorTypeNames: string[] = regexToDecorationTypes[reText];
@@ -106,7 +98,7 @@ const updateDecorations = (textEditor?: TextEditor) => {
   });
 };
 
-export const activate = (_: ExtensionContext) => {
+export const activate = () => {
   workspace.onDidChangeConfiguration((event) => {
     if (event.affectsConfiguration('markdown.extension.syntax.decorations')) {
       window.showInformationMessage(
@@ -122,21 +114,21 @@ export const activate = (_: ExtensionContext) => {
   window.onDidChangeActiveTextEditor(updateDecorations);
 
   workspace.onDidChangeTextDocument((event) => {
-    let editor = window.activeTextEditor;
+    const editor = window.activeTextEditor;
+    let timeout: NodeJS.Timeout | null = null;
+    const triggerUpdateDecorations = (editor: TextEditor) => {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+      timeout = setTimeout(() => updateDecorations(editor), 200);
+    };
+
     if (editor !== undefined && event.document === editor.document) {
       triggerUpdateDecorations(editor);
     }
   });
 
-  let timeout: Timeout | null = null;
-  function triggerUpdateDecorations(editor: TextEditor) {
-    if (timeout) {
-      clearTimeout(timeout);
-    }
-    timeout = setTimeout(() => updateDecorations(editor), 200);
-  }
-
-  let editor = window.activeTextEditor;
+  const editor = window.activeTextEditor;
   if (editor) {
     updateDecorations(editor);
   }

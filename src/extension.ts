@@ -11,15 +11,15 @@ import commands from './commands';
 import { cacheWorkspaceUris } from './utils';
 
 export const activate = async (context: vscode.ExtensionContext) => {
-  syntaxDecorations.activate(context);
+  syntaxDecorations.activate();
   await cacheWorkspaceUris();
   context.subscriptions.push(...commands);
   vscode.languages.registerDocumentLinkProvider(
     { language: 'markdown', scheme: '*' },
     new DocumentLinkProvider(),
   );
-  fsWatcher.activate(context);
-  completionProvider.activate(context);
+  fsWatcher.activate();
+  completionProvider.activate();
 
   return {
     extendMarkdownIt,

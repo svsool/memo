@@ -5,14 +5,64 @@
     "ecmaVersion": 6,
     "sourceType": "module"
   },
+  "extends": [
+    "prettier",
+    "prettier/@typescript-eslint",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings"
+  ],
   "plugins": ["@typescript-eslint", "prettier"],
   "rules": {
-    "prettier/prettier": "error",
-    "@typescript-eslint/class-name-casing": "warn",
-    "@typescript-eslint/semi": "warn",
-    "curly": "warn",
     "eqeqeq": "warn",
     "no-throw-literal": "warn",
-    "semi": "off"
+    "semi": "off",
+    "prettier/prettier": "error",
+    "camelcase": 0,
+    "default-case": 0,
+    "curly": ["error", "all"],
+    "global-require": 0,
+    "import/export": 0,
+    "import/extensions": 0,
+    "import/named": 0,
+    "import/no-named-as-default-member": 0,
+    "import/no-named-as-default": 0,
+    "import/no-unresolved": 0,
+    "import/prefer-default-export": 0,
+    "import/order": [
+      "error",
+      {
+        "newlines-between": "always",
+        "groups": [
+          ["external", "builtin"],
+          ["internal", "index", "sibling", "parent"]
+        ]
+      }
+    ],
+    "max-classes-per-file": 0,
+    "new-cap": ["error", { "capIsNew": false }],
+    "no-restricted-globals": 0,
+    "no-var-requires": 0,
+    "prefer-object-spread": "error",
+    "prefer-destructuring": 0,
+    "strict": 0,
+    "consistent-return": 0,
+    "@typescript-eslint/no-unused-vars": ["warn", { "ignoreRestSiblings": true }],
+    "@typescript-eslint/camelcase": 0,
+    "@typescript-eslint/explicit-function-return-type": 0,
+    "@typescript-eslint/prefer-interface": 0,
+    "@typescript-eslint/no-var-requires": 0,
+    "@typescript-eslint/no-explicit-any": 0,
+    "@typescript-eslint/no-empty-function": 0,
+    "@typescript-eslint/no-non-null-assertion": 0,
+    "@typescript-eslint/ban-types": 0,
+    "@typescript-eslint/no-inferrable-types": 0,
+    "@typescript-eslint/no-empty-interface": 0,
+    "@typescript-eslint/no-object-literal-type-assertion": 0,
+    "@typescript-eslint/indent": 0,
+    "@typescript-eslint/consistent-type-definitions": ["error", "type"],
+    "@typescript-eslint/explicit-module-boundary-types": 0,
+    "@typescript-eslint/class-name-casing": "warn",
+    "@typescript-eslint/semi": "warn"
   }
 }
