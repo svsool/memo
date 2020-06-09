@@ -2,7 +2,7 @@ import vscode from 'vscode';
 import fs from 'fs';
 import path from 'path';
 
-import { getMarkdownUris, getImageUris, containsImageExt } from '../utils';
+import { getMarkdownUris, getImageUris, containsImageExt, cacheWorkspaceUris } from '../utils';
 
 const openTextDocument = ({ reference }: { reference: string }) => {
   const uris = [...getMarkdownUris(), ...getImageUris()];
@@ -18,6 +18,7 @@ const openTextDocument = ({ reference }: { reference: string }) => {
     if (workspaceFolder) {
       const filePath = path.join(workspaceFolder.uri.fsPath, `${reference}.md`);
       fs.writeFileSync(filePath, '');
+      cacheWorkspaceUris();
       vscode.commands.executeCommand('vscode.open', vscode.Uri.file(filePath));
     }
   }
