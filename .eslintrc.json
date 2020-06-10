@@ -5,6 +5,14 @@
     "ecmaVersion": 6,
     "sourceType": "module"
   },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "paths": ["src"],
+        "extensions": [".ts"]
+      }
+    }
+  },
   "extends": [
     "prettier",
     "prettier/@typescript-eslint",
