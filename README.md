@@ -1,6 +1,6 @@
 # Memo
 
-Markdown knowledge base with first class bidirectional links
+Markdown knowledge base with bidirectional links
 
 ## Get up and running straight away
 

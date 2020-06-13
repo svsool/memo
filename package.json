@@ -1,7 +1,7 @@
 {
   "name": "markdown-memo",
   "displayName": "Markdown Memo",
-  "description": "Markdown knowledge base with first class bidirectional links",
+  "description": "Markdown knowledge base with bidirectional links",
   "publisher": "memo",
   "version": "0.0.1",
   "license": "MIT",
