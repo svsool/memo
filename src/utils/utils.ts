@@ -49,23 +49,9 @@ export const extractShortRef = (pathParam: string, preserveExtension?: boolean):
   return null;
 };
 
-let imageUris: Uri[] = [];
+export const getImageUris = async () => await workspace.findFiles('**/*.{png,jpg,jpeg,svg,gif}');
 
-let markdownUris: Uri[] = [];
-
-export const getImageUris = () => imageUris;
-
-export const getMarkdownUris = () => markdownUris;
-
-export const cacheWorkspaceUris = async () => {
-  imageUris = await workspace.findFiles('**/*.{png,jpg,jpeg,svg,gif}');
-  markdownUris = await workspace.findFiles('**/*.md');
-};
-
-export const cleanWorkspaceCache = () => {
-  imageUris = [];
-  markdownUris = [];
-};
+export const getMarkdownUris = async () => await workspace.findFiles('**/*.md');
 
 export const getWorkspaceFolder = () =>
   workspace.workspaceFolders && workspace.workspaceFolders[0].uri.fsPath;

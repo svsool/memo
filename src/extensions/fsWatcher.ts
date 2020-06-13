@@ -5,16 +5,15 @@ import {
   extractShortRef,
   containsImageExt,
   containsMarkdownExt,
-  cacheWorkspaceUris,
   getMarkdownUris,
   getImageUris,
 } from '../utils';
 
 export const activate = async () => {
   workspace.onDidRenameFiles(async ({ files }) => {
-    await cacheWorkspaceUris();
-
-    const uris = [...getMarkdownUris(), ...getImageUris()];
+    const markdownUris = await getMarkdownUris();
+    const imageUris = await getImageUris();
+    const uris = [...markdownUris, ...imageUris];
 
     let filesUpdated: string[] = [];
 
@@ -58,8 +57,4 @@ export const activate = async () => {
       );
     }
   });
-
-  workspace.onDidCreateFiles(async () => await cacheWorkspaceUris());
-
-  workspace.onDidDeleteFiles(async () => await cacheWorkspaceUris());
 };

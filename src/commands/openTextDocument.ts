@@ -2,10 +2,12 @@ import vscode from 'vscode';
 import fs from 'fs';
 import path from 'path';
 
-import { getMarkdownUris, getImageUris, containsImageExt, cacheWorkspaceUris } from '../utils';
+import { getMarkdownUris, getImageUris, containsImageExt } from '../utils';
 
-const openTextDocument = ({ reference }: { reference: string }) => {
-  const uris = [...getMarkdownUris(), ...getImageUris()];
+const openTextDocument = async ({ reference }: { reference: string }) => {
+  const markdownUris = await getMarkdownUris();
+  const imageUris = await getImageUris();
+  const uris = [...markdownUris, ...imageUris];
 
   const uri = uris.find((uri) => uri.fsPath.toLowerCase().includes(reference.toLowerCase()));
 
@@ -18,7 +20,6 @@ const openTextDocument = ({ reference }: { reference: string }) => {
     if (workspaceFolder) {
       const filePath = path.join(workspaceFolder.uri.fsPath, `${reference}.md`);
       fs.writeFileSync(filePath, '');
-      cacheWorkspaceUris();
       vscode.commands.executeCommand('vscode.open', vscode.Uri.file(filePath));
     }
   }

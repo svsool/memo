@@ -14,7 +14,7 @@ export const activate = async () => {
   languages.registerCompletionItemProvider(
     'markdown',
     {
-      provideCompletionItems(document: TextDocument, position: Position) {
+      async provideCompletionItems(document: TextDocument, position: Position) {
         const linePrefix = document.lineAt(position).text.substr(0, position.character);
 
         const isResourceAutocomplete = linePrefix.endsWith('![[');
@@ -26,9 +26,12 @@ export const activate = async () => {
 
         const completionItems: CompletionItem[] = [];
 
+        const imageUris = await getImageUris();
+        const markdownUris = await getMarkdownUris();
+
         const uris: Uri[] = [
-          ...(isResourceAutocomplete ? getImageUris() : []),
-          ...(!isResourceAutocomplete ? getMarkdownUris() : []),
+          ...(isResourceAutocomplete ? imageUris : []),
+          ...(!isResourceAutocomplete ? markdownUris : []),
         ];
 
         for (const uri of uris) {

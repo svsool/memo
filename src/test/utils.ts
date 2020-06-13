@@ -1,6 +1,6 @@
 import rimraf from 'rimraf';
 import path from 'path';
-import fs from 'fs';
+import { workspace, Uri, commands } from 'vscode';
 
 import { getWorkspaceFolder } from '../utils';
 
@@ -12,10 +12,20 @@ export const cleanWorkspace = () => {
   }
 };
 
-export const createFile = (filename: string, content: string) => {
+export const createFile = async (filename: string, content: string = '') => {
   const workspaceFolder = getWorkspaceFolder();
 
   if (workspaceFolder) {
-    fs.writeFileSync(path.join(workspaceFolder, `${filename}`), content);
+    await workspace.fs.writeFile(
+      Uri.file(path.join(workspaceFolder, `${filename}`)),
+      Buffer.from(content),
+    );
   }
+};
+
+export const getOpenedFilenames = () =>
+  workspace.textDocuments.map(({ uri: { fsPath } }) => path.basename(fsPath));
+
+export const closeAllEditors = async () => {
+  await commands.executeCommand('workbench.action.closeAllEditors');
 };

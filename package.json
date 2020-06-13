@@ -19,7 +19,9 @@
     "zettelkasten"
   ],
   "activationEvents": [
-    "onLanguage:markdown"
+    "onLanguage:markdown",
+    "onCommand:memo.openRandomNote",
+    "onCommand:memo.openTodayNote"
   ],
   "main": "./out/extension.js",
   "contributes": {
