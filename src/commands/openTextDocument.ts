@@ -12,7 +12,7 @@ const openTextDocument = async ({ reference }: { reference: string }) => {
   const uri = uris.find((uri) => uri.fsPath.toLowerCase().includes(reference.toLowerCase()));
 
   if (uri) {
-    vscode.commands.executeCommand('vscode.open', uri);
+    await vscode.commands.executeCommand('vscode.open', uri);
   } else if (!containsImageExt(reference)) {
     // Create missing file
     const workspaceFolder =
@@ -20,7 +20,7 @@ const openTextDocument = async ({ reference }: { reference: string }) => {
     if (workspaceFolder) {
       const filePath = path.join(workspaceFolder.uri.fsPath, `${reference}.md`);
       fs.writeFileSync(filePath, '');
-      vscode.commands.executeCommand('vscode.open', vscode.Uri.file(filePath));
+      await vscode.commands.executeCommand('vscode.open', vscode.Uri.file(filePath));
     }
   }
 };
