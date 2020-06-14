@@ -4,7 +4,6 @@
     "target": "es6",
     "esModuleInterop": true,
     "outDir": "out",
-    "lib": ["es2019"],
     "sourceMap": true,
     "rootDir": "src",
     "skipLibCheck": true,

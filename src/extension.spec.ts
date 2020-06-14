@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import { closeAllEditors } from './test/utils';
+import { closeAllEditors } from './test/testUtils';
 
 const MEMO_EXTENSION_ID = 'memo.markdown-memo';
 

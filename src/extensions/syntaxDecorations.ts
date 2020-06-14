@@ -24,13 +24,8 @@ const regexToDecorationTypes: { [regexp: string]: string[] } = {
   '(\\[\\[)(.+?)(\\]\\])': ['gray', 'lightBlue', 'gray'],
 };
 
-const updateDecorations = (textEditor?: TextEditor) => {
-  const editor = textEditor || window.activeTextEditor;
-  const doc = editor?.document;
-
-  if (!editor || !doc || !isMdEditor(editor) || isFileTooLarge(doc)) {
-    return;
-  }
+export const getDecorations = (textEditor: TextEditor): { [decorTypeName: string]: Range[] } => {
+  const doc = textEditor.document;
 
   Object.keys(decorationTypes).forEach((decorTypeName) => {
     decors[decorTypeName] = [];
@@ -92,6 +87,19 @@ const updateDecorations = (textEditor?: TextEditor) => {
         }
       });
     });
+
+  return decors;
+};
+
+const updateDecorations = (textEditor?: TextEditor) => {
+  const editor = textEditor || window.activeTextEditor;
+  const doc = editor?.document;
+
+  if (!editor || !doc || !isMdEditor(editor) || isFileTooLarge(doc)) {
+    return;
+  }
+
+  const decors = getDecorations(editor);
 
   Object.keys(decors).forEach((decorTypeName) => {
     editor && editor.setDecorations(decorationTypes[decorTypeName], decors[decorTypeName]);

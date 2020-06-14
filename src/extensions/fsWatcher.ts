@@ -12,11 +12,11 @@ import {
 export const activate = async () => {
   const fileWatcher = workspace.createFileSystemWatcher('**/*.{md,png,jpg,jpeg,svg,gif}');
 
-  fileWatcher.onDidCreate(() => cacheWorkspace);
-  fileWatcher.onDidDelete(() => cacheWorkspace);
+  fileWatcher.onDidCreate(cacheWorkspace);
+  fileWatcher.onDidDelete(cacheWorkspace);
 
   workspace.onDidRenameFiles(async ({ files }) => {
-    cacheWorkspace();
+    await cacheWorkspace();
 
     const uris = [...getWorkspaceCache().markdownUris, ...getWorkspaceCache().imageUris];
 

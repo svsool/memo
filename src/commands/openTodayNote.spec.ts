@@ -5,46 +5,35 @@ import { getDateInYYYYMMDDFormat, getWorkspaceFolder } from '../utils';
 import {
   createFile,
   getOpenedFilenames,
-  closeAllEditors,
-  cleanWorkspace,
-  cleanWorkspaceCache,
-} from '../test/utils';
+  closeEditorsAndCleanWorkspace,
+  openTextDocument,
+} from '../test/testUtils';
 
 describe('openTodayNote command', () => {
-  beforeEach(async () => {
-    await closeAllEditors();
-    await cleanWorkspaceCache();
-  });
+  beforeEach(closeEditorsAndCleanWorkspace);
 
-  afterEach(async () => {
-    await closeAllEditors();
-    cleanWorkspace();
-    await cleanWorkspaceCache();
-  });
+  afterEach(closeEditorsAndCleanWorkspace);
 
   it("should open today's note if note already exists", async () => {
     const filename = `${getDateInYYYYMMDDFormat()}.md`;
 
-    await createFile(filename);
+    await createFile(filename, '# Hello world');
 
     await commands.executeCommand('memo.openTodayNote');
 
-    const openedFilenames = getOpenedFilenames();
+    expect(getOpenedFilenames()).toContain(filename);
 
-    expect(openedFilenames).toHaveLength(1);
-    expect(openedFilenames[0]).toBe(filename);
+    const doc = await openTextDocument(filename);
+
+    expect(doc.getText()).toBe('# Hello world');
   });
 
   it("should open today's note if note does not exist", async () => {
-    const filename = `${getDateInYYYYMMDDFormat()}.md`;
-
     expect(await fs.readdirSync(getWorkspaceFolder()!)).toHaveLength(0);
 
     await commands.executeCommand('memo.openTodayNote');
 
-    const openedFilenames = getOpenedFilenames();
-
-    expect(openedFilenames).toHaveLength(1);
-    expect(openedFilenames[0]).toBe(filename);
+    expect(await fs.readdirSync(getWorkspaceFolder()!)).toHaveLength(1);
+    expect(getOpenedFilenames()).toContain(`${getDateInYYYYMMDDFormat()}.md`);
   });
 });

@@ -1,6 +1,11 @@
 import path from 'path';
 
-import { cleanWorkspace, createFile } from '../test/utils';
+import {
+  createFile,
+  rndName,
+  cleanWorkspace,
+  closeEditorsAndCleanWorkspace,
+} from '../test/testUtils';
 import {
   containsImageExt,
   containsMarkdownExt,
@@ -78,10 +83,9 @@ describe('extractShortRef()', () => {
 });
 
 describe('cacheWorkspace()', () => {
-  afterEach(() => {
-    cleanWorkspace();
-    cleanWorkspaceCache();
-  });
+  beforeEach(closeEditorsAndCleanWorkspace);
+
+  afterEach(closeEditorsAndCleanWorkspace);
 
   it('should work with empty workspace', async () => {
     await cacheWorkspace();
@@ -90,8 +94,11 @@ describe('cacheWorkspace()', () => {
   });
 
   it('should cache workspace', async () => {
-    await createFile('memo-note.md', '# Hello world');
-    await createFile('image.png', '👍');
+    const noteFilename = `${rndName()}.md`;
+    const imageFilename = `${rndName()}.png`;
+
+    await createFile(noteFilename);
+    await createFile(imageFilename);
 
     await cacheWorkspace();
 
@@ -99,15 +106,14 @@ describe('cacheWorkspace()', () => {
       [...getWorkspaceCache().markdownUris, ...getWorkspaceCache().imageUris].map(({ fsPath }) =>
         path.basename(fsPath),
       ),
-    ).toEqual(['memo-note.md', 'image.png']);
+    ).toEqual([noteFilename, imageFilename]);
   });
 });
 
 describe('cleanWorkspaceCache()', () => {
-  afterEach(() => {
-    cleanWorkspace();
-    cleanWorkspaceCache();
-  });
+  beforeEach(closeEditorsAndCleanWorkspace);
+
+  afterEach(closeEditorsAndCleanWorkspace);
 
   it('should work with empty workspace', async () => {
     await cleanWorkspaceCache();
@@ -116,8 +122,11 @@ describe('cleanWorkspaceCache()', () => {
   });
 
   it('should clean workspace cache', async () => {
-    await createFile('memo-note.md', '# Hello world');
-    await createFile('image.png', '👍');
+    const noteFilename = `${rndName()}.md`;
+    const imageFilename = `${rndName()}.png`;
+
+    await createFile(noteFilename);
+    await createFile(imageFilename);
 
     await cacheWorkspace();
 
@@ -125,7 +134,7 @@ describe('cleanWorkspaceCache()', () => {
       [...getWorkspaceCache().markdownUris, ...getWorkspaceCache().imageUris].map(({ fsPath }) =>
         path.basename(fsPath),
       ),
-    ).toEqual(['memo-note.md', 'image.png']);
+    ).toEqual([noteFilename, imageFilename]);
 
     cleanWorkspaceCache();
 
@@ -134,10 +143,9 @@ describe('cleanWorkspaceCache()', () => {
 });
 
 describe('getWorkspaceCache()', () => {
-  afterEach(() => {
-    cleanWorkspace();
-    cleanWorkspaceCache();
-  });
+  beforeEach(closeEditorsAndCleanWorkspace);
+
+  afterEach(closeEditorsAndCleanWorkspace);
 
   it('should work with empty workspace', () => {
     cleanWorkspace();
@@ -147,14 +155,17 @@ describe('getWorkspaceCache()', () => {
   });
 
   it('should get workspace cache', async () => {
-    await createFile('memo-note.md', '# Hello world');
-    await createFile('image.png', '👍');
+    const noteFilename = `${rndName()}.md`;
+    const imageFilename = `${rndName()}.png`;
+
+    await createFile(noteFilename);
+    await createFile(imageFilename);
 
     await cacheWorkspace();
 
     const uris = [...getWorkspaceCache().markdownUris, ...getWorkspaceCache().imageUris];
 
     expect(uris).toHaveLength(2);
-    expect(uris.map(({ fsPath }) => path.basename(fsPath))).toEqual(['memo-note.md', 'image.png']);
+    expect(uris.map(({ fsPath }) => path.basename(fsPath))).toEqual([noteFilename, imageFilename]);
   });
 });

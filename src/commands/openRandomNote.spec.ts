@@ -2,39 +2,28 @@ import { commands } from 'vscode';
 
 import {
   createFile,
+  rndName,
   getOpenedFilenames,
-  closeAllEditors,
-  cleanWorkspace,
-  cleanWorkspaceCache,
-} from '../test/utils';
+  closeEditorsAndCleanWorkspace,
+} from '../test/testUtils';
 
 describe('openRandomNote command', () => {
-  beforeEach(async () => {
-    await closeAllEditors();
-    await cleanWorkspaceCache();
-  });
+  beforeEach(closeEditorsAndCleanWorkspace);
 
-  afterEach(async () => {
-    await closeAllEditors();
-    cleanWorkspace();
-    await cleanWorkspaceCache();
-  });
+  afterEach(closeEditorsAndCleanWorkspace);
 
   it('should open random note', async () => {
-    const filenames = ['memo-note.md', 'memo-note-1.md', 'memo-note-2.md'];
+    const filenames = [`${rndName()}.md`, `${rndName()}.md`, `${rndName()}.md`];
 
     await Promise.all(filenames.map((filename) => createFile(filename)));
 
     await commands.executeCommand('memo.openRandomNote');
 
-    const openedFilenames = getOpenedFilenames();
-
-    expect(openedFilenames).toHaveLength(1);
-    expect(filenames).toContain(openedFilenames[0]);
+    expect(getOpenedFilenames().some((filename) => filenames.includes(filename))).toBe(true);
   });
 
-  it('opens random notes and does not try to open them again', async () => {
-    const filenames = ['memo-note.md', 'memo-note-1.md', 'memo-note-2.md'];
+  it('opens all random notes', async () => {
+    const filenames = [`${rndName()}.md`, `${rndName()}.md`, `${rndName()}.md`];
 
     await Promise.all(filenames.map((filename) => createFile(filename)));
 
@@ -42,14 +31,11 @@ describe('openRandomNote command', () => {
     await commands.executeCommand('memo.openRandomNote');
     await commands.executeCommand('memo.openRandomNote');
 
-    const openedFilenames = getOpenedFilenames();
-
-    expect(openedFilenames).toHaveLength(3);
-    expect(openedFilenames).toEqual(expect.arrayContaining(filenames));
+    expect(getOpenedFilenames()).toEqual(expect.arrayContaining(filenames));
   });
 
-  it('should open only one existing note on executing command multiple times', async () => {
-    const filename = 'memo-note.md';
+  it('should open existing note only once on executing command multiple times', async () => {
+    const filename = `${rndName()}.md`;
 
     await createFile(filename);
 
@@ -57,9 +43,6 @@ describe('openRandomNote command', () => {
     await commands.executeCommand('memo.openRandomNote');
     await commands.executeCommand('memo.openRandomNote');
 
-    const openedFilenames = getOpenedFilenames();
-
-    expect(openedFilenames).toHaveLength(1);
-    expect(openedFilenames[0]).toBe(filename);
+    expect(getOpenedFilenames()).toContain(filename);
   });
 });

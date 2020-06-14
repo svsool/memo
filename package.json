@@ -24,7 +24,8 @@
     "onCommand:memo.openTodayNote",
     "onCommand:_memo.openTextDocument",
     "onCommand:_memo.cacheWorkspace",
-    "onCommand:_memo.cleanWorkspaceCache"
+    "onCommand:_memo.cleanWorkspaceCache",
+    "onCommand:_memo.getWorkspaceCache"
   ],
   "main": "./out/extension.js",
   "contributes": {

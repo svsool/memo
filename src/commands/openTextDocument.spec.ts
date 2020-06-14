@@ -2,45 +2,34 @@ import { commands } from 'vscode';
 
 import {
   createFile,
+  rndName,
   getOpenedFilenames,
-  closeAllEditors,
-  cleanWorkspace,
-  cleanWorkspaceCache,
-} from '../test/utils';
+  closeEditorsAndCleanWorkspace,
+} from '../test/testUtils';
 
 describe('openTextDocument command', () => {
-  beforeEach(async () => {
-    await closeAllEditors();
-    await cleanWorkspaceCache();
-  });
+  beforeEach(closeEditorsAndCleanWorkspace);
 
-  afterEach(async () => {
-    await closeAllEditors();
-    cleanWorkspace();
-    await cleanWorkspaceCache();
-  });
+  afterEach(closeEditorsAndCleanWorkspace);
 
   it('should open text document', async () => {
-    const filename = 'memo-note.md';
+    const name = rndName();
+    const filename = `${name}.md`;
 
     await createFile(filename);
 
-    await commands.executeCommand('_memo.openTextDocument', { reference: 'memo-note' });
+    await commands.executeCommand('_memo.openTextDocument', { reference: name });
 
-    const openedFilenames = getOpenedFilenames();
-
-    expect(openedFilenames).toHaveLength(1);
-    expect(openedFilenames[0]).toBe(filename);
+    expect(getOpenedFilenames()).toContain(filename);
   });
 
   it('should create new text document if one does not exist', async () => {
-    expect(getOpenedFilenames()).toHaveLength(0);
+    const name = rndName();
 
-    await commands.executeCommand('_memo.openTextDocument', { reference: 'memo-note' });
+    expect(getOpenedFilenames()).not.toContain(`${name}.md`);
 
-    const openedFilenames = getOpenedFilenames();
+    await commands.executeCommand('_memo.openTextDocument', { reference: name });
 
-    expect(openedFilenames).toHaveLength(1);
-    expect(openedFilenames[0]).toBe('memo-note.md');
+    expect(getOpenedFilenames()).toContain(`${name}.md`);
   });
 });
