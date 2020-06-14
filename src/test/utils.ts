@@ -12,6 +12,11 @@ export const cleanWorkspace = () => {
   }
 };
 
+export const cacheWorkspace = async () => await commands.executeCommand('_memo.cacheWorkspace');
+
+export const cleanWorkspaceCache = async () =>
+  await commands.executeCommand('_memo.cleanWorkspaceCache');
+
 export const createFile = async (filename: string, content: string = '') => {
   const workspaceFolder = getWorkspaceFolder();
 
@@ -20,6 +25,8 @@ export const createFile = async (filename: string, content: string = '') => {
       Uri.file(path.join(workspaceFolder, `${filename}`)),
       Buffer.from(content),
     );
+
+    await cacheWorkspace();
   }
 };
 

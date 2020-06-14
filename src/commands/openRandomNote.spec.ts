@@ -1,15 +1,23 @@
 import { commands } from 'vscode';
 
-import { cleanWorkspace, createFile, getOpenedFilenames, closeAllEditors } from '../test/utils';
+import {
+  createFile,
+  getOpenedFilenames,
+  closeAllEditors,
+  cleanWorkspace,
+  cleanWorkspaceCache,
+} from '../test/utils';
 
 describe('openRandomNote command', () => {
   beforeEach(async () => {
     await closeAllEditors();
+    await cleanWorkspaceCache();
   });
 
   afterEach(async () => {
-    cleanWorkspace();
     await closeAllEditors();
+    cleanWorkspace();
+    await cleanWorkspaceCache();
   });
 
   it('should open random note', async () => {

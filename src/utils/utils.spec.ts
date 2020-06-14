@@ -7,8 +7,9 @@ import {
   extractLongRef,
   extractShortRef,
   trimLeadingSlash,
-  getMarkdownUris,
-  getImageUris,
+  getWorkspaceCache,
+  cacheWorkspace,
+  cleanWorkspaceCache,
 } from './utils';
 
 describe('containsImageExt()', () => {
@@ -76,40 +77,84 @@ describe('extractShortRef()', () => {
   });
 });
 
-describe('getMarkdownUris()', () => {
+describe('cacheWorkspace()', () => {
   afterEach(() => {
     cleanWorkspace();
+    cleanWorkspaceCache();
   });
 
   it('should work with empty workspace', async () => {
-    expect(await getMarkdownUris()).toHaveLength(0);
+    await cacheWorkspace();
+
+    expect([...getWorkspaceCache().markdownUris, ...getWorkspaceCache().imageUris]).toHaveLength(0);
   });
 
-  it('should get markdown uris', async () => {
+  it('should cache workspace', async () => {
     await createFile('memo-note.md', '# Hello world');
-    await createFile('memo-note-1.md', '# Bye world');
+    await createFile('image.png', '👍');
 
-    expect((await getMarkdownUris()).map(({ fsPath }) => path.basename(fsPath))).toEqual(
-      expect.arrayContaining(['memo-note.md', 'memo-note-1.md']),
-    );
+    await cacheWorkspace();
+
+    expect(
+      [...getWorkspaceCache().markdownUris, ...getWorkspaceCache().imageUris].map(({ fsPath }) =>
+        path.basename(fsPath),
+      ),
+    ).toEqual(['memo-note.md', 'image.png']);
   });
 });
 
-describe('getImageUris()', () => {
+describe('cleanWorkspaceCache()', () => {
   afterEach(() => {
     cleanWorkspace();
+    cleanWorkspaceCache();
   });
 
   it('should work with empty workspace', async () => {
-    expect(await getImageUris()).toHaveLength(0);
+    await cleanWorkspaceCache();
+
+    expect([...getWorkspaceCache().markdownUris, ...getWorkspaceCache().imageUris]).toHaveLength(0);
   });
 
-  it('should get image uris', async () => {
+  it('should clean workspace cache', async () => {
+    await createFile('memo-note.md', '# Hello world');
     await createFile('image.png', '👍');
-    await createFile('image-1.png', '✌️');
 
-    expect((await getImageUris()).map(({ fsPath }) => path.basename(fsPath))).toEqual(
-      expect.arrayContaining(['image.png', 'image-1.png']),
-    );
+    await cacheWorkspace();
+
+    expect(
+      [...getWorkspaceCache().markdownUris, ...getWorkspaceCache().imageUris].map(({ fsPath }) =>
+        path.basename(fsPath),
+      ),
+    ).toEqual(['memo-note.md', 'image.png']);
+
+    cleanWorkspaceCache();
+
+    expect([...getWorkspaceCache().markdownUris, ...getWorkspaceCache().imageUris]).toHaveLength(0);
+  });
+});
+
+describe('getWorkspaceCache()', () => {
+  afterEach(() => {
+    cleanWorkspace();
+    cleanWorkspaceCache();
+  });
+
+  it('should work with empty workspace', () => {
+    cleanWorkspace();
+    cleanWorkspaceCache();
+
+    expect([...getWorkspaceCache().markdownUris, ...getWorkspaceCache().imageUris]).toHaveLength(0);
+  });
+
+  it('should get workspace cache', async () => {
+    await createFile('memo-note.md', '# Hello world');
+    await createFile('image.png', '👍');
+
+    await cacheWorkspace();
+
+    const uris = [...getWorkspaceCache().markdownUris, ...getWorkspaceCache().imageUris];
+
+    expect(uris).toHaveLength(2);
+    expect(uris.map(({ fsPath }) => path.basename(fsPath))).toEqual(['memo-note.md', 'image.png']);
   });
 });

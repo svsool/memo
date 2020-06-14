@@ -5,15 +5,20 @@ import {
   extractShortRef,
   containsImageExt,
   containsMarkdownExt,
-  getMarkdownUris,
-  getImageUris,
+  cacheWorkspace,
+  getWorkspaceCache,
 } from '../utils';
 
 export const activate = async () => {
+  const fileWatcher = workspace.createFileSystemWatcher('**/*.{md,png,jpg,jpeg,svg,gif}');
+
+  fileWatcher.onDidCreate(() => cacheWorkspace);
+  fileWatcher.onDidDelete(() => cacheWorkspace);
+
   workspace.onDidRenameFiles(async ({ files }) => {
-    const markdownUris = await getMarkdownUris();
-    const imageUris = await getImageUris();
-    const uris = [...markdownUris, ...imageUris];
+    cacheWorkspace();
+
+    const uris = [...getWorkspaceCache().markdownUris, ...getWorkspaceCache().imageUris];
 
     let filesUpdated: string[] = [];
 

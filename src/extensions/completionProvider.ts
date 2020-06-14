@@ -8,13 +8,13 @@ import {
   Uri,
 } from 'vscode';
 
-import { getMarkdownUris, getImageUris, extractLongRef, extractShortRef } from '../utils';
+import { getWorkspaceCache, extractLongRef, extractShortRef } from '../utils';
 
 export const activate = async () => {
   languages.registerCompletionItemProvider(
     'markdown',
     {
-      async provideCompletionItems(document: TextDocument, position: Position) {
+      provideCompletionItems(document: TextDocument, position: Position) {
         const linePrefix = document.lineAt(position).text.substr(0, position.character);
 
         const isResourceAutocomplete = linePrefix.endsWith('![[');
@@ -26,12 +26,9 @@ export const activate = async () => {
 
         const completionItems: CompletionItem[] = [];
 
-        const imageUris = await getImageUris();
-        const markdownUris = await getMarkdownUris();
-
         const uris: Uri[] = [
-          ...(isResourceAutocomplete ? imageUris : []),
-          ...(!isResourceAutocomplete ? markdownUris : []),
+          ...(isResourceAutocomplete ? getWorkspaceCache().imageUris : []),
+          ...(!isResourceAutocomplete ? getWorkspaceCache().markdownUris : []),
         ];
 
         for (const uri of uris) {

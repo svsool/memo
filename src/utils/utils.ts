@@ -1,4 +1,4 @@
-import { workspace } from 'vscode';
+import { workspace, Uri } from 'vscode';
 import path from 'path';
 
 const allExtsRegex = /\.(md|png|jpg|jpeg|svg|gif)$/;
@@ -52,6 +52,25 @@ export const extractShortRef = (pathParam: string, preserveExtension?: boolean):
 export const getImageUris = async () => await workspace.findFiles('**/*.{png,jpg,jpeg,svg,gif}');
 
 export const getMarkdownUris = async () => await workspace.findFiles('**/*.md');
+
+type WorkspaceCache = { imageUris: Uri[]; markdownUris: Uri[] };
+
+const workspaceCache: WorkspaceCache = {
+  imageUris: [],
+  markdownUris: [],
+};
+
+export const getWorkspaceCache = (): WorkspaceCache => workspaceCache;
+
+export const cacheWorkspace = async () => {
+  workspaceCache.imageUris = await workspace.findFiles('**/*.{png,jpg,jpeg,svg,gif}');
+  workspaceCache.markdownUris = await workspace.findFiles('**/*.md');
+};
+
+export const cleanWorkspaceCache = () => {
+  workspaceCache.imageUris = [];
+  workspaceCache.markdownUris = [];
+};
 
 export const getWorkspaceFolder = () =>
   workspace.workspaceFolders && workspace.workspaceFolders[0].uri.fsPath;

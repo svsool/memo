@@ -7,10 +7,12 @@ import {
   DocumentLinkProvider,
   extendMarkdownIt,
 } from './extensions';
+import { cacheWorkspace } from './utils';
 import commands from './commands';
 
 export const activate = async (context: vscode.ExtensionContext) => {
   syntaxDecorations.activate();
+  await cacheWorkspace();
   context.subscriptions.push(...commands);
   vscode.languages.registerDocumentLinkProvider(
     { language: 'markdown', scheme: '*' },
@@ -20,6 +22,6 @@ export const activate = async (context: vscode.ExtensionContext) => {
   completionProvider.activate();
 
   return {
-    extendMarkdownIt: await extendMarkdownIt(),
+    extendMarkdownIt,
   };
 };

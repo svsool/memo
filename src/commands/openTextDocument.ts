@@ -2,12 +2,10 @@ import vscode from 'vscode';
 import fs from 'fs';
 import path from 'path';
 
-import { getMarkdownUris, getImageUris, containsImageExt } from '../utils';
+import { containsImageExt, getWorkspaceCache } from '../utils';
 
 const openTextDocument = async ({ reference }: { reference: string }) => {
-  const markdownUris = await getMarkdownUris();
-  const imageUris = await getImageUris();
-  const uris = [...markdownUris, ...imageUris];
+  const uris = [...getWorkspaceCache().markdownUris, ...getWorkspaceCache().imageUris];
 
   const uri = uris.find((uri) => uri.fsPath.toLowerCase().includes(reference.toLowerCase()));
 
