@@ -21,7 +21,8 @@
   "activationEvents": [
     "onLanguage:markdown",
     "onCommand:memo.openRandomNote",
-    "onCommand:memo.openTodayNote"
+    "onCommand:memo.openTodayNote",
+    "onCommand:_memo.openTextDocument"
   ],
   "main": "./out/extension.js",
   "contributes": {

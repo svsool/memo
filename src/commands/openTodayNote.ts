@@ -1,9 +1,8 @@
 import { commands } from 'vscode';
 
-const openTodayNote = () => {
-  const dateInYYYYMMDDFormat = new Date().toISOString().slice(0, 10);
+import { getDateInYYYYMMDDFormat } from '../utils';
 
-  commands.executeCommand('_memo.openTextDocument', { reference: dateInYYYYMMDDFormat });
-};
+const openTodayNote = () =>
+  commands.executeCommand('_memo.openTextDocument', { reference: getDateInYYYYMMDDFormat() });
 
 export default openTodayNote;

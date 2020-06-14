@@ -13,22 +13,22 @@ describe('openRandomNote command', () => {
   });
 
   it('should open random note', async () => {
-    const fileNames = ['memo-note.md', 'memo-note-1.md', 'memo-note-2.md'];
+    const filenames = ['memo-note.md', 'memo-note-1.md', 'memo-note-2.md'];
 
-    await Promise.all(fileNames.map((filename) => createFile(filename)));
+    await Promise.all(filenames.map((filename) => createFile(filename)));
 
     await commands.executeCommand('memo.openRandomNote');
 
     const openedFilenames = getOpenedFilenames();
 
     expect(openedFilenames).toHaveLength(1);
-    expect(fileNames).toContain(openedFilenames[0]);
+    expect(filenames).toContain(openedFilenames[0]);
   });
 
   it('opens random notes and does not try to open them again', async () => {
-    const fileNames = ['memo-note.md', 'memo-note-1.md', 'memo-note-2.md'];
+    const filenames = ['memo-note.md', 'memo-note-1.md', 'memo-note-2.md'];
 
-    await Promise.all(fileNames.map((filename) => createFile(filename)));
+    await Promise.all(filenames.map((filename) => createFile(filename)));
 
     await commands.executeCommand('memo.openRandomNote');
     await commands.executeCommand('memo.openRandomNote');
@@ -37,13 +37,13 @@ describe('openRandomNote command', () => {
     const openedFilenames = getOpenedFilenames();
 
     expect(openedFilenames).toHaveLength(3);
-    expect(openedFilenames).toEqual(expect.arrayContaining(fileNames));
+    expect(openedFilenames).toEqual(expect.arrayContaining(filenames));
   });
 
   it('should open only one existing note on executing command multiple times', async () => {
-    const fileName = 'memo-note.md';
+    const filename = 'memo-note.md';
 
-    await createFile(fileName);
+    await createFile(filename);
 
     await commands.executeCommand('memo.openRandomNote');
     await commands.executeCommand('memo.openRandomNote');
@@ -52,6 +52,6 @@ describe('openRandomNote command', () => {
     const openedFilenames = getOpenedFilenames();
 
     expect(openedFilenames).toHaveLength(1);
-    expect(openedFilenames[0]).toBe(fileName);
+    expect(openedFilenames[0]).toBe(filename);
   });
 });
