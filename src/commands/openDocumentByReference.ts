@@ -4,7 +4,7 @@ import path from 'path';
 
 import { containsImageExt, getWorkspaceCache } from '../utils';
 
-const openTextDocument = async ({ reference }: { reference: string }) => {
+const openDocumentByReference = async ({ reference }: { reference: string }) => {
   const [ref] = reference.split('|');
 
   const uris = [...getWorkspaceCache().markdownUris, ...getWorkspaceCache().imageUris];
@@ -25,4 +25,4 @@ const openTextDocument = async ({ reference }: { reference: string }) => {
   }
 };
 
-export default openTextDocument;
+export default openDocumentByReference;

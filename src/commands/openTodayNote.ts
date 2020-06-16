@@ -3,6 +3,8 @@ import { commands } from 'vscode';
 import { getDateInYYYYMMDDFormat } from '../utils';
 
 const openTodayNote = async () =>
-  await commands.executeCommand('_memo.openTextDocument', { reference: getDateInYYYYMMDDFormat() });
+  await commands.executeCommand('_memo.openDocumentByReference', {
+    reference: getDateInYYYYMMDDFormat(),
+  });
 
 export default openTodayNote;

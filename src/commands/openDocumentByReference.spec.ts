@@ -7,7 +7,7 @@ import {
   closeEditorsAndCleanWorkspace,
 } from '../test/testUtils';
 
-describe('openTextDocument command', () => {
+describe('openDocumentByReference command', () => {
   beforeEach(closeEditorsAndCleanWorkspace);
 
   afterEach(closeEditorsAndCleanWorkspace);
@@ -18,7 +18,7 @@ describe('openTextDocument command', () => {
 
     await createFile(filename);
 
-    await commands.executeCommand('_memo.openTextDocument', { reference: name });
+    await commands.executeCommand('_memo.openDocumentByReference', { reference: name });
 
     expect(getOpenedFilenames()).toContain(filename);
   });
@@ -28,7 +28,7 @@ describe('openTextDocument command', () => {
 
     expect(getOpenedFilenames()).not.toContain(`${name}.md`);
 
-    await commands.executeCommand('_memo.openTextDocument', { reference: name });
+    await commands.executeCommand('_memo.openDocumentByReference', { reference: name });
 
     expect(getOpenedFilenames()).toContain(`${name}.md`);
   });
@@ -38,7 +38,9 @@ describe('openTextDocument command', () => {
 
     expect(getOpenedFilenames()).not.toContain(`${name}.md`);
 
-    await commands.executeCommand('_memo.openTextDocument', { reference: `${name}|Test Label` });
+    await commands.executeCommand('_memo.openDocumentByReference', {
+      reference: `${name}|Test Label`,
+    });
 
     expect(getOpenedFilenames()).toContain(`${name}.md`);
   });

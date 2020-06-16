@@ -52,7 +52,7 @@ describe('documentLinkProvider extension', () => {
       ],
       target: {
         $mid: 1,
-        path: '_memo.openTextDocument',
+        path: '_memo.openDocumentByReference',
         scheme: 'command',
         query: `{"reference":"${noteName1}"}`,
       },

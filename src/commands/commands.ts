@@ -1,12 +1,12 @@
 import vscode from 'vscode';
 
-import openTextDocument from './openTextDocument';
+import openDocumentByReference from './openDocumentByReference';
 import openTodayNote from './openTodayNote';
 import openRandomNote from './openRandomNote';
 import { cacheWorkspace, cleanWorkspaceCache, getWorkspaceCache } from '../utils';
 
 const commands = [
-  vscode.commands.registerCommand('_memo.openTextDocument', openTextDocument),
+  vscode.commands.registerCommand('_memo.openDocumentByReference', openDocumentByReference),
   vscode.commands.registerCommand('_memo.cacheWorkspace', cacheWorkspace),
   vscode.commands.registerCommand('_memo.cleanWorkspaceCache', cleanWorkspaceCache),
   vscode.commands.registerCommand('_memo.getWorkspaceCache', getWorkspaceCache),

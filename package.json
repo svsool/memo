@@ -22,7 +22,7 @@
     "onLanguage:markdown",
     "onCommand:memo.openRandomNote",
     "onCommand:memo.openTodayNote",
-    "onCommand:_memo.openTextDocument",
+    "onCommand:_memo.openReference",
     "onCommand:_memo.cacheWorkspace",
     "onCommand:_memo.cleanWorkspaceCache",
     "onCommand:_memo.getWorkspaceCache"
