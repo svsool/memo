@@ -17,28 +17,54 @@ describe('fsWatcher extension', () => {
 
   afterEach(closeEditorsAndCleanWorkspace);
 
-  it('should update refs on rename', async () => {
-    const noteName0 = rndName();
-    const noteName1 = rndName();
-    const nextNoteName1 = rndName();
+  describe('automatic refs update on file rename', () => {
+    it('should update ref without label on file rename', async () => {
+      const noteName0 = rndName();
+      const noteName1 = rndName();
+      const nextNoteName1 = rndName();
 
-    await createFile(`${noteName0}.md`, `[[${noteName1}]]`);
-    await createFile(`${noteName1}.md`);
+      await createFile(`${noteName0}.md`, `[[${noteName1}]]`);
+      await createFile(`${noteName1}.md`);
 
-    const edit = new WorkspaceEdit();
-    edit.renameFile(
-      Uri.file(`${getWorkspaceFolder()}/${noteName1}.md`),
-      Uri.file(`${getWorkspaceFolder()}/${nextNoteName1}.md`),
-    );
+      const edit = new WorkspaceEdit();
+      edit.renameFile(
+        Uri.file(`${getWorkspaceFolder()}/${noteName1}.md`),
+        Uri.file(`${getWorkspaceFolder()}/${nextNoteName1}.md`),
+      );
 
-    await workspace.applyEdit(edit);
+      await workspace.applyEdit(edit);
 
-    // onDidRenameFiles handler is not fired immediately
-    await delay(100);
+      // onDidRenameFiles handler is not fired immediately
+      await delay(100);
 
-    const doc = await openTextDocument(`${noteName0}.md`);
+      const doc = await openTextDocument(`${noteName0}.md`);
 
-    expect(doc.getText()).toBe(`[[${nextNoteName1}]]`);
+      expect(doc.getText()).toBe(`[[${nextNoteName1}]]`);
+    });
+
+    it('should update ref with label on file rename', async () => {
+      const noteName0 = rndName();
+      const noteName1 = rndName();
+      const nextNoteName1 = rndName();
+
+      await createFile(`${noteName0}.md`, `[[${noteName1}|Test Label]]`);
+      await createFile(`${noteName1}.md`);
+
+      const edit = new WorkspaceEdit();
+      edit.renameFile(
+        Uri.file(`${getWorkspaceFolder()}/${noteName1}.md`),
+        Uri.file(`${getWorkspaceFolder()}/${nextNoteName1}.md`),
+      );
+
+      await workspace.applyEdit(edit);
+
+      // onDidRenameFiles handler is not fired immediately
+      await delay(100);
+
+      const doc = await openTextDocument(`${noteName0}.md`);
+
+      expect(doc.getText()).toBe(`[[${nextNoteName1}|Test Label]]`);
+    });
   });
 
   it('should sync cache on file create', async () => {

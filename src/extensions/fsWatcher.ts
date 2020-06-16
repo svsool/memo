@@ -33,20 +33,24 @@ export const activate = async () => {
         const oldShortRef = extractShortRef(oldUri.fsPath, isImage)?.ref;
         const newShortRef = extractShortRef(newUri.fsPath, isImage)?.ref;
 
-        uris.forEach(({ fsPath: p }) => {
-          const fileContent = fs.readFileSync(p);
+        if (!oldShortRef || !newShortRef) {
+          return;
+        }
 
-          if (oldShortRef && fileContent.includes(`[[${oldShortRef}]]`)) {
+        uris.forEach(({ fsPath: p }) => {
+          const fileContent = fs.readFileSync(p).toString();
+
+          const pattern = `\\[\\[${oldShortRef}(\\|.*)?\\]\\]`;
+
+          if (new RegExp(pattern, 'i').exec(fileContent)) {
             filesUpdated = [...new Set([...filesUpdated, oldShortRef])];
 
             // TODO: Figure how to use WorkspaceEdit API instead to make undo work properly
-            const newContent = fileContent
-              .toString()
-              .replace(new RegExp(`\\[\\[${oldShortRef.toLowerCase()}\\]\\]`, 'gi'), () => {
-                refsUpdated++;
+            const newContent = fileContent.replace(new RegExp(pattern, 'gi'), ($0, $1) => {
+              refsUpdated++;
 
-                return `[[${newShortRef}]]`;
-              });
+              return `[[${newShortRef}${$1 || ''}]]`;
+            });
 
             fs.writeFileSync(p, newContent);
           }
