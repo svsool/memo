@@ -144,4 +144,53 @@ describe('getDecorations', () => {
       }
     `);
   });
+
+  it('should return decorations for ref even when brackets are unbalanced', async () => {
+    const noteFilename = `${rndName()}.md`;
+
+    await createFile(noteFilename, '[[[[1234512345]]]]]]');
+
+    const doc = await openTextDocument(noteFilename);
+
+    const editor = await window.showTextDocument(doc);
+
+    expect(getDecorations(editor)).toMatchInlineSnapshot(`
+      Object {
+        "gray": Array [
+          Array [
+            Object {
+              "character": 2,
+              "line": 0,
+            },
+            Object {
+              "character": 4,
+              "line": 0,
+            },
+          ],
+          Array [
+            Object {
+              "character": 14,
+              "line": 0,
+            },
+            Object {
+              "character": 16,
+              "line": 0,
+            },
+          ],
+        ],
+        "lightBlue": Array [
+          Array [
+            Object {
+              "character": 4,
+              "line": 0,
+            },
+            Object {
+              "character": 14,
+              "line": 0,
+            },
+          ],
+        ],
+      }
+    `);
+  });
 });
