@@ -25,7 +25,7 @@ describe('documentLinkProvider extension', () => {
     expect(linkProvider.provideDocumentLinks(doc)).toHaveLength(0);
   });
 
-  it('should not provide a link for for invalid ref', async () => {
+  it('should not provide a link for the invalid ref', async () => {
     const filename = `${rndName()}.md`;
 
     await createFile(filename, '[[]]');
