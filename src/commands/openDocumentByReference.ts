@@ -9,7 +9,13 @@ const openDocumentByReference = async ({ reference }: { reference: string }) => 
 
   const uris = [...getWorkspaceCache().markdownUris, ...getWorkspaceCache().imageUris];
 
-  const uri = uris.find((uri) => uri.fsPath.toLowerCase().includes(ref.toLowerCase()));
+  const uri = uris.find((uri) => {
+    if (containsImageExt(reference)) {
+      return path.basename(uri.fsPath).toLowerCase() === ref.toLowerCase();
+    }
+
+    return path.parse(uri.fsPath).name.toLowerCase() === ref.toLowerCase();
+  });
 
   if (uri) {
     await vscode.commands.executeCommand('vscode.open', uri);

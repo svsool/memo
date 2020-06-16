@@ -44,4 +44,15 @@ describe('openDocumentByReference command', () => {
 
     expect(getOpenedFilenames()).toContain(`${name}.md`);
   });
+
+  it('should not open reference with inexact name match', async() => {
+    const name = rndName();
+    const filename = `${name}-test.md`;
+
+    await createFile(filename);
+
+    await commands.executeCommand('_memo.openDocumentByReference', { reference: 'test' });
+
+    expect(getOpenedFilenames()).not.toContain(filename);
+  });
 });
