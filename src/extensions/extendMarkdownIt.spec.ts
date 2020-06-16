@@ -21,7 +21,7 @@ describe('extendMarkdownIt contribution', () => {
     expect(md.render('')).toBe('');
   });
 
-  it('should detect invalid link', async () => {
+  it('should render invalid link', async () => {
     const md = extendMarkdownIt(MarkdownIt());
 
     await cacheWorkspace();
@@ -32,7 +32,7 @@ describe('extendMarkdownIt contribution', () => {
     `);
   });
 
-  it('should detect link to existing note', async () => {
+  it('should render link to existing note without label', async () => {
     const name = rndName();
     await createFile(`${name}.md`);
 
@@ -45,7 +45,7 @@ describe('extendMarkdownIt contribution', () => {
     );
   });
 
-  it('should detect link to existing note with label', async () => {
+  it('should render link to existing note with label', async () => {
     const name = rndName();
     await createFile(`${name}.md`);
 
@@ -61,7 +61,7 @@ describe('extendMarkdownIt contribution', () => {
     );
   });
 
-  it('should detect link to existing image', async () => {
+  it('should render link to existing image', async () => {
     const name = rndName();
     await createFile(`${name}.png`);
 

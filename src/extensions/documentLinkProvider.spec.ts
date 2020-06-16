@@ -25,7 +25,7 @@ describe('documentLinkProvider extension', () => {
     expect(linkProvider.provideDocumentLinks(doc)).toHaveLength(0);
   });
 
-  it('should detect link to existing note', async () => {
+  it('should provide link to existing note', async () => {
     const noteName0 = rndName();
     const noteName1 = rndName();
 
