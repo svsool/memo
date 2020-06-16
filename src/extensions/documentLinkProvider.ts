@@ -1,5 +1,7 @@
 import * as vscode from 'vscode';
 
+import { refPattern } from '../utils';
+
 function matchAll(pattern: RegExp, text: string): Array<RegExpMatchArray> {
   const out: RegExpMatchArray[] = [];
   pattern.lastIndex = 0;
@@ -11,17 +13,17 @@ function matchAll(pattern: RegExp, text: string): Array<RegExpMatchArray> {
 }
 
 export default class DocumentLinkProvider implements vscode.DocumentLinkProvider {
-  private readonly linkPattern = /\[\[(.+?)\]\]/g;
+  private readonly refPattern = new RegExp(refPattern, 'g');
 
   public provideDocumentLinks(document: vscode.TextDocument): vscode.DocumentLink[] {
     const results: vscode.DocumentLink[] = [];
     const text = document.getText();
 
-    for (const match of matchAll(this.linkPattern, text)) {
+    for (const match of matchAll(this.refPattern, text)) {
       let linkStart: vscode.Position;
       let linkEnd: vscode.Position;
 
-      const reference = match[1];
+      const reference = match[2];
       if (reference) {
         const offset = (match.index || 0) + 2;
 

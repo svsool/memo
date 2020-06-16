@@ -1,6 +1,12 @@
 import { window, workspace, Position, Range, TextEditor, TextEditorDecorationType } from 'vscode';
 
-import { isFileTooLarge, isInFencedCodeBlock, isMdEditor, mathEnvCheck } from '../utils';
+import {
+  isFileTooLarge,
+  isInFencedCodeBlock,
+  isMdEditor,
+  mathEnvCheck,
+  refPattern,
+} from '../utils';
 
 /*
   Some of this code borrowed from https://github.com/yzhang-gh/vscode-markdown
@@ -21,7 +27,7 @@ const decors: { [decorTypeName: string]: Range[] } = {};
 
 const regexToDecorationTypes: { [regexp: string]: string[] } = {
   // [[ref]]
-  '(\\[\\[)(.+?)(\\]\\])': ['gray', 'lightBlue', 'gray'],
+  [refPattern]: ['gray', 'lightBlue', 'gray'],
 };
 
 export const getDecorations = (textEditor: TextEditor): { [decorTypeName: string]: Range[] } => {
