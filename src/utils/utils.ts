@@ -1,13 +1,13 @@
 import { workspace } from 'vscode';
 import path from 'path';
 
-import { WorkspaceCache } from '../types';
+import { WorkspaceCache, RefT } from '../types';
 
-const allExtsRegex = /\.(md|png|jpg|jpeg|svg|gif)$/;
+const allExtsRegex = /\.(md|png|jpg|jpeg|svg|gif)/;
 
 const markdownExtRegex = /\.md$/;
 
-const imageExtsRegex = /\.(png|jpg|jpeg|svg|gif)$/;
+const imageExtsRegex = /\.(png|jpg|jpeg|svg|gif)/;
 
 export const containsImageExt = (path: string): boolean => !!imageExtsRegex.exec(path);
 
@@ -35,17 +35,28 @@ export const extractLongRef = (
   return null;
 };
 
-export const extractShortRef = (pathParam: string, preserveExtension?: boolean): string | null => {
+export const extractShortRef = (pathParam: string, preserveExtension?: boolean): RefT | null => {
   const allExtsMatch = allExtsRegex.exec(pathParam);
 
   if (allExtsMatch) {
     const ref = path.basename(pathParam);
 
     if (preserveExtension) {
-      return trimLeadingSlash(ref);
+      const [refStr, label = ''] = trimLeadingSlash(ref).split('|');
+
+      return {
+        ref: refStr,
+        label,
+      };
     }
 
-    return trimLeadingSlash(ref.replace(allExtsRegex, ''));
+    const refNoExts = trimLeadingSlash(ref.replace(allExtsRegex, ''));
+    const [refStr, label = ''] = refNoExts.split('|');
+
+    return {
+      ref: refStr,
+      label,
+    };
   }
 
   return null;

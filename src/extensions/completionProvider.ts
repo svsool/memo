@@ -36,15 +36,15 @@ export const provideCompletionItems = (document: TextDocument, position: Positio
 
     const label = extractLongRef(workspaceFolder.uri.fsPath, uri.fsPath, isResourceAutocomplete);
 
-    const shortLabel = extractShortRef(uri.fsPath, isResourceAutocomplete);
+    const shortRef = extractShortRef(uri.fsPath, isResourceAutocomplete);
 
-    if (!label || !shortLabel) {
+    if (!label || !shortRef) {
       continue;
     }
 
     const item = new CompletionItem(label, CompletionItemKind.Text);
 
-    item.insertText = shortLabel;
+    item.insertText = shortRef.ref;
 
     completionItems.push(item);
   }

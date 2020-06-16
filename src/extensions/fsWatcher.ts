@@ -30,8 +30,8 @@ export const activate = async () => {
       const isImage = containsImageExt(oldUri.fsPath) && containsImageExt(newUri.fsPath);
       const isMarkdown = containsMarkdownExt(oldUri.fsPath) && containsMarkdownExt(newUri.fsPath);
       if (isImage || isMarkdown) {
-        const oldShortRef = extractShortRef(oldUri.fsPath, isImage);
-        const newShortRef = extractShortRef(newUri.fsPath, isImage);
+        const oldShortRef = extractShortRef(oldUri.fsPath, isImage)?.ref;
+        const newShortRef = extractShortRef(newUri.fsPath, isImage)?.ref;
 
         uris.forEach(({ fsPath: p }) => {
           const fileContent = fs.readFileSync(p);

@@ -1,4 +1,5 @@
 import MarkdownIt from 'markdown-it';
+import path from 'path';
 
 import extendMarkdownIt from './extendMarkdownIt';
 import { getWorkspaceFolder } from '../utils';
@@ -39,9 +40,40 @@ describe('extendMarkdownIt contribution', () => {
 
     await cacheWorkspace();
 
-    expect(md.render(`[[${name}]]`).replace(getWorkspaceFolder()!, '')).toMatchInlineSnapshot(`
-      "<p><a title=\\"${name}\\" href=\\"/${name}.md\\">${name}</a></p>
-      "
-    `);
+    expect(md.render(`[[${name}]]`)).toBe(
+      `<p><a title="${name}" href="${getWorkspaceFolder()}/${name}.md">${name}</a></p>\n`,
+    );
+  });
+
+  it('should detect link to existing note with label', async () => {
+    const name = rndName();
+    await createFile(`${name}.md`);
+
+    const md = extendMarkdownIt(MarkdownIt());
+
+    await cacheWorkspace();
+
+    expect(md.render(`[[${name}|Test Label]]`)).toBe(
+      `<p><a title="Test Label" href="${path.join(
+        getWorkspaceFolder()!,
+        `${name}.md`,
+      )}">Test Label</a></p>\n`,
+    );
+  });
+
+  it('should detect link to existing image', async () => {
+    const name = rndName();
+    await createFile(`${name}.png`);
+
+    const md = extendMarkdownIt(MarkdownIt());
+
+    await cacheWorkspace();
+
+    expect(md.render(`![[${name}.png]]`)).toBe(
+      `<p><div><img src="${path.join(
+        getWorkspaceFolder()!,
+        `${name}.png`,
+      )}" alt="${name}.png" /></div></p>\n`,
+    );
   });
 });

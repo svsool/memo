@@ -16,43 +16,47 @@ const extendMarkdownIt = (md: MarkdownIt) => {
     .use(markdownItRegex, {
       name: 'ref-resource',
       regex: /!\[\[(.+?)\]\]/,
-      replace: (match: string) => {
-        const matchLowered = match.toLowerCase();
+      replace: (ref: string) => {
+        const [refStr, label = ''] = ref.split('|');
+
+        const matchLowered = refStr.toLowerCase();
 
         if (imageExts.some((ext) => matchLowered.includes(ext))) {
           const imageUri = getWorkspaceCache().imageUris.find(({ fsPath: path }) =>
-            path.toLowerCase().includes(match.toLowerCase()),
+            path.toLowerCase().includes(matchLowered),
           )?.fsPath;
 
           if (imageUri) {
-            return `<img src="${imageUri}" alt="${match}" />`;
+            return `<div><img src="${imageUri}" alt="${label || refStr}" /></div>`;
           }
         }
 
         const markdownUri = getWorkspaceCache().markdownUris.find(({ fsPath: path }) =>
-          path.toLowerCase().includes(match.toLowerCase()),
+          path.toLowerCase().includes(matchLowered),
         )?.fsPath;
 
         if (!markdownUri) {
-          return getInvalidRefAnchor(match);
+          return getInvalidRefAnchor(label || refStr);
         }
 
-        return getRefAnchor(markdownUri, match);
+        return getRefAnchor(markdownUri, label || refStr);
       },
     })
     .use(markdownItRegex, {
       name: 'ref-document',
       regex: /\[\[(.+?)\]\]/,
-      replace: (match: string) => {
+      replace: (ref: string) => {
+        const [refStr, label = ''] = ref.split('|');
+
         const markdownUri = getWorkspaceCache().markdownUris.find(({ fsPath: path }) =>
-          path.toLowerCase().includes(match.toLowerCase()),
+          path.toLowerCase().includes(refStr.toLowerCase()),
         )?.fsPath;
 
         if (!markdownUri) {
-          return getInvalidRefAnchor(match);
+          return getInvalidRefAnchor(label || refStr);
         }
 
-        return getRefAnchor(markdownUri, match);
+        return getRefAnchor(markdownUri, label || refStr);
       },
     });
 };

@@ -32,4 +32,14 @@ describe('openTextDocument command', () => {
 
     expect(getOpenedFilenames()).toContain(`${name}.md`);
   });
+
+  it('should open text document based on reference with label', async () => {
+    const name = rndName();
+
+    expect(getOpenedFilenames()).not.toContain(`${name}.md`);
+
+    await commands.executeCommand('_memo.openTextDocument', { reference: `${name}|Test Label` });
+
+    expect(getOpenedFilenames()).toContain(`${name}.md`);
+  });
 });

@@ -70,11 +70,24 @@ describe('extractLongRef()', () => {
 
 describe('extractShortRef()', () => {
   it('should extract short ref', () => {
-    expect(extractShortRef('/Users/memo/Diary/Notes/note.md')).toBe('note');
+    expect(extractShortRef('/Users/memo/Diary/Notes/note.md')).toEqual({
+      label: '',
+      ref: 'note',
+    });
   });
 
   it('should extract short ref with extension', () => {
-    expect(extractShortRef('/Users/memo/Diary/Attachments/image.png', true)).toBe('image.png');
+    expect(extractShortRef('/Users/memo/Diary/Attachments/image.png', true)).toEqual({
+      label: '',
+      ref: 'image.png',
+    });
+  });
+
+  it('should extract short ref with label', () => {
+    expect(extractShortRef('/Users/memo/Diary/Notes/note.md|Test Label')).toEqual({
+      label: 'Test Label',
+      ref: 'note',
+    });
   });
 
   it('should return null if input contains unknown extension', () => {
