@@ -44,7 +44,7 @@
     ]
   },
   "lint-staged": {
-    "*.{ts}": [
+    "*.ts": [
       "eslint --fix"
     ]
   },
