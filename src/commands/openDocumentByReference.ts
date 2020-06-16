@@ -25,7 +25,7 @@ const openDocumentByReference = async ({ reference }: { reference: string }) => 
       return uri.fsPath.toLowerCase().endsWith(`${ref.toLowerCase()}.md`);
     }
 
-    return path.parse(uri.fsPath).name.toLowerCase() === ref.toLowerCase();;
+    return path.parse(uri.fsPath).name.toLowerCase() === ref.toLowerCase();
   });
 
   if (uri) {
