@@ -42,7 +42,7 @@ export const provideCompletionItems = (document: TextDocument, position: Positio
       continue;
     }
 
-    const item = new CompletionItem(label, CompletionItemKind.Text);
+    const item = new CompletionItem(label, CompletionItemKind.File);
 
     item.insertText = shortRef.ref;
 
