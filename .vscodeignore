@@ -3,7 +3,15 @@
 out/test/**
 src/**
 .gitignore
+.editorconfig
+.eslintrc.json
+.huskyrc.js
+.prettierrc
+CONTRIBUTION.md
+README.md
 vsc-extension-quickstart.md
+yarn.lock
+yarn-error.log
 **/tsconfig.json
 **/.eslintrc.json
 **/*.map
