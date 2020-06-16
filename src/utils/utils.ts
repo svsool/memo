@@ -9,13 +9,15 @@ const markdownExtRegex = /\.md$/;
 
 const imageExtsRegex = /\.(png|jpg|jpeg|svg|gif)/;
 
-export const refPattern = '(\\[\\[)([^\\[\\]]+?)(\\]\\])';
+export const refPattern = '(\\[\\[)([^\\[\\]\\.]+?)(\\]\\])';
 
 export const containsImageExt = (path: string): boolean => !!imageExtsRegex.exec(path);
 
 export const containsMarkdownExt = (path: string): boolean => !!markdownExtRegex.exec(path);
 
 export const trimLeadingSlash = (value: string) => value.replace(/^\/+|^\\+/g, '');
+
+export const isLongRef = (path: string) => path.split('/').length > 1;
 
 export const extractLongRef = (
   basePathParam: string,

@@ -1,9 +1,12 @@
 import { commands } from 'vscode';
+import path from 'path';
 
+import { getWorkspaceFolder } from '../utils';
 import {
   createFile,
   rndName,
   getOpenedFilenames,
+  getOpenedPaths,
   closeEditorsAndCleanWorkspace,
 } from '../test/testUtils';
 
@@ -67,5 +70,19 @@ describe('openDocumentByReference command', () => {
     });
 
     expect(getOpenedFilenames()).toContain(filename);
+  });
+
+  it('should open document by a long ref', async () => {
+    const name = rndName();
+    const filename = `${name}.md`;
+
+    await createFile(filename);
+    await createFile(`/folder1/${filename}`);
+
+    await commands.executeCommand('_memo.openDocumentByReference', {
+      reference: `/folder1/${name}`,
+    });
+
+    expect(getOpenedPaths()).toContain(`${path.join(getWorkspaceFolder()!, 'folder1', filename)}`);
   });
 });

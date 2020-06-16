@@ -35,7 +35,7 @@ export const createFile = async (
   }
 
   await workspace.fs.writeFile(
-    Uri.file(path.join(workspaceFolder, `${filename}`)),
+    Uri.file(path.join(workspaceFolder, ...filename.split('/'))),
     Buffer.from(content),
   );
 
@@ -43,11 +43,13 @@ export const createFile = async (
     await cacheWorkspace();
   }
 
-  return Uri.file(path.join(workspaceFolder, `${filename}`));
+  return Uri.file(path.join(workspaceFolder, ...filename.split('/')));
 };
 
 export const removeFile = async (filename: string) =>
-  await workspace.fs.delete(Uri.file(`${utils.getWorkspaceFolder()}/${filename}`));
+  await workspace.fs.delete(
+    Uri.file(path.join(utils.getWorkspaceFolder()!, ...filename.split('/'))),
+  );
 
 export const rndName = (): string => {
   return Math.random()
@@ -61,6 +63,8 @@ export const openTextDocument = async (filename: string) =>
 
 export const getOpenedFilenames = () =>
   workspace.textDocuments.map(({ uri: { fsPath } }) => path.basename(fsPath));
+
+export const getOpenedPaths = () => workspace.textDocuments.map(({ uri: { fsPath } }) => fsPath);
 
 export const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
