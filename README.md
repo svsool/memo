@@ -2,26 +2,27 @@
 
 Markdown knowledge base with bidirectional links
 
-## Get up and running straight away
+## Development
 
-* Press `F5` to open a new window with your extension loaded.
-* Set breakpoints in your code inside `src/extension.ts` to debug your extension.
-* Find output from your extension in the debug console.
+* `cd <project-root> && yarn`
+* Open project in VSCode using `code <project-root>` or via `File -> Open...` and press `F5` to open a new window with the extension loaded.
+* Set breakpoints in your code inside `src/extension.ts` to debug the extension.
+* Find output from the extension in the debug console.
 
 ## Run tests
 
-* Open the debug viewlet (`Ctrl+Shift+D` or `Cmd+Shift+D` on Mac) and from the launch configuration dropdown pick `Extension Tests`.
-* Press `F5` to run the tests in a new window with your extension loaded.
-* See the output of the test result in the debug console.
-* Make changes to `src/test/suite/extension.test.ts` or create new test files inside the `test/suite` folder.
-  * The provided test runner will only consider files matching the name pattern `**.test.ts`.
-  * You can create folders inside the `test` folder to structure your tests any way you want.
+```
+yarn test
+```
 
 
 ## MVP Roadmap
 
-- refs highlights in editor and in preview
-- refs should be openable in editor and in preview
-- refs autocomplete / tagger
-- backlinks panel
-- tags panel
+- [x] refs highlight in editor and in preview
+- [x] refs should be openable in editor and in preview
+- [x] refs autocomplete / tagger
+- [ ] backlinks panel
+- [ ] tags panel
+- commands
+  - [x] open today note
+  - [x] open random note

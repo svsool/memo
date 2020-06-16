@@ -5,7 +5,7 @@
 ```
 src
  ├── commands - contains internal / external commands, e.g. open today or random note
- ├── declarations.d.ts - global type declarations
+ ├── declarations.d.ts - global TS type declarations
  ├── extension.ts - plugin entrypoint
  ├── extensions - contains extensions, usually extension accepts plugin context and implements certain functionality
  ├── test - folder with test runner and common test utils
@@ -13,7 +13,7 @@ src
  └── utils - common utils
 ```
 
-### Conventions
+## Conventions
 
 General:
 
