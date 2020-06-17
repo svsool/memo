@@ -15,18 +15,18 @@ describe('provideCompletionItems()', () => {
   afterEach(closeEditorsAndCleanWorkspace);
 
   it('should provide completion items', async () => {
-    const filename0 = rndName();
-    const filename1 = rndName();
-    const filename2 = rndName();
+    const name0 = rndName();
+    const name1 = rndName();
+    const name2 = rndName();
 
-    await createFile(`${filename0}.md`);
-    await createFile(`${filename1}.md`);
-    await createFile(`${filename2}.md`);
+    await createFile(`${name0}.md`);
+    await createFile(`${name1}.md`);
+    await createFile(`${name2}.md`);
     await createFile(`${rndName()}.png`);
 
     await cacheWorkspace();
 
-    const doc = await openTextDocument(`${filename0}.md`);
+    const doc = await openTextDocument(`${name0}.md`);
 
     const editor = await window.showTextDocument(doc);
 
@@ -36,8 +36,36 @@ describe('provideCompletionItems()', () => {
 
     expect(completionItems).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ insertText: filename1, label: filename1 }),
-        expect.objectContaining({ insertText: filename2, label: filename2 }),
+        expect.objectContaining({ insertText: name1, label: name1 }),
+        expect.objectContaining({ insertText: name2, label: name2 }),
+      ]),
+    );
+  });
+
+  it('should provide short and long links on filename clash', async () => {
+    const name0 = `a-${rndName()}`;
+    const name1 = `b-${rndName()}`;
+
+    await createFile(`${name0}.md`);
+    await createFile(`${name1}.md`);
+    await createFile(`/folder1/${name1}.md`);
+    await createFile(`/folder1/subfolder1/${name1}.md`);
+    await createFile(`${rndName()}.png`);
+
+    await cacheWorkspace();
+
+    const doc = await openTextDocument(`${name0}.md`);
+
+    const editor = await window.showTextDocument(doc);
+
+    await editor.edit((edit) => edit.insert(new Position(0, 0), '[['));
+
+    const completionItems = provideCompletionItems(doc, new Position(0, 2));
+
+    expect(completionItems).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ insertText: name1, label: name1 }),
+        expect.objectContaining({ insertText: `folder1/${name1}`, label: `folder1/${name1}` }),
       ]),
     );
   });

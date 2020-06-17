@@ -7,8 +7,10 @@ import {
   CompletionItemKind,
   Uri,
 } from 'vscode';
+import path from 'path';
+import groupBy from 'lodash.groupby';
 
-import { getWorkspaceCache, extractLongRef, extractShortRef } from '../utils';
+import { getWorkspaceCache, extractLongRef, extractShortRef, sortPaths } from '../utils';
 
 export const provideCompletionItems = (document: TextDocument, position: Position) => {
   const linePrefix = document.lineAt(position).text.substr(0, position.character);
@@ -22,10 +24,15 @@ export const provideCompletionItems = (document: TextDocument, position: Positio
 
   const completionItems: CompletionItem[] = [];
 
-  const uris: Uri[] = [
-    ...(isResourceAutocomplete ? getWorkspaceCache().imageUris : []),
-    ...(!isResourceAutocomplete ? getWorkspaceCache().markdownUris : []),
-  ];
+  const uris: Uri[] = sortPaths(
+    [
+      ...(isResourceAutocomplete ? getWorkspaceCache().imageUris : []),
+      ...(!isResourceAutocomplete ? getWorkspaceCache().markdownUris : []),
+    ],
+    { pathKey: 'fsPath' },
+  );
+
+  const urisByPathBasename = groupBy(uris, ({ fsPath }) => path.basename(fsPath).toLowerCase());
 
   for (const uri of uris) {
     const workspaceFolder = workspace.getWorkspaceFolder(uri);
@@ -34,17 +41,22 @@ export const provideCompletionItems = (document: TextDocument, position: Positio
       continue;
     }
 
-    const label = extractLongRef(workspaceFolder.uri.fsPath, uri.fsPath, isResourceAutocomplete);
+    const longRef = extractLongRef(workspaceFolder.uri.fsPath, uri.fsPath, isResourceAutocomplete);
 
     const shortRef = extractShortRef(uri.fsPath, isResourceAutocomplete);
 
-    if (!label || !shortRef) {
+    const urisGroup = urisByPathBasename[path.basename(uri.fsPath).toLowerCase()] || [];
+
+    const isFirstUriInGroup =
+      urisGroup.findIndex((uriParam) => uriParam.fsPath === uri.fsPath) === 0;
+
+    if (!longRef || !shortRef) {
       continue;
     }
 
-    const item = new CompletionItem(label, CompletionItemKind.File);
+    const item = new CompletionItem(longRef.ref, CompletionItemKind.File);
 
-    item.insertText = shortRef.ref;
+    item.insertText = isFirstUriInGroup ? shortRef.ref : longRef.ref;
 
     completionItems.push(item);
   }

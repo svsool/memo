@@ -52,15 +52,24 @@ describe('trimLeadingSlash()', () => {
 
 describe('extractLongRef()', () => {
   it('should extract long ref', () => {
-    expect(extractLongRef('/Users/memo', '/Users/memo/Diary/Notes/note.md')).toBe(
-      'Diary/Notes/note',
-    );
+    expect(extractLongRef('/Users/memo', '/Users/memo/Diary/Notes/note.md')).toEqual({
+      label: '',
+      ref: 'Diary/Notes/note',
+    });
   });
 
   it('should extract long ref with extension', () => {
-    expect(extractLongRef('/Users/memo', '/Users/memo/Diary/Attachments/image.png', true)).toBe(
-      'Diary/Attachments/image.png',
-    );
+    expect(extractLongRef('/Users/memo', '/Users/memo/Diary/Attachments/image.png', true)).toEqual({
+      label: '',
+      ref: 'Diary/Attachments/image.png',
+    });
+  });
+
+  it('should extract long ref with label', () => {
+    expect(extractLongRef('/Users/memo', '/Users/memo/Diary/Notes/note.md|Test Label')).toEqual({
+      label: 'Test Label',
+      ref: 'Diary/Notes/note',
+    });
   });
 
   it('should return null if input contains unknown extension', () => {

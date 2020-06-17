@@ -1,5 +1,6 @@
 import { workspace } from 'vscode';
 import path from 'path';
+export { sort as sortPaths } from 'cross-path-sort';
 
 import { WorkspaceCache, RefT } from '../types';
 
@@ -23,17 +24,28 @@ export const extractLongRef = (
   basePathParam: string,
   pathParam: string,
   preserveExtension?: boolean,
-): string | null => {
+): RefT | null => {
   const allExtsMatch = allExtsRegex.exec(pathParam);
 
   if (allExtsMatch) {
     const ref = pathParam.replace(basePathParam, '');
 
     if (preserveExtension) {
-      return trimLeadingSlash(ref);
+      const [refStr, label = ''] = trimLeadingSlash(ref).split('|');
+
+      return {
+        ref: refStr,
+        label,
+      };
     }
 
-    return trimLeadingSlash(ref.replace(allExtsRegex, ''));
+    const refNoExts = trimLeadingSlash(ref.replace(allExtsRegex, ''));
+    const [refStr, label = ''] = refNoExts.split('|');
+
+    return {
+      ref: refStr,
+      label,
+    };
   }
 
   return null;

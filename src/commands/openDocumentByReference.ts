@@ -2,15 +2,15 @@ import vscode from 'vscode';
 import fs from 'fs';
 import path from 'path';
 
-import { containsImageExt, getWorkspaceCache, isLongRef } from '../utils';
+import { containsImageExt, getWorkspaceCache, isLongRef, sortPaths } from '../utils';
 
 const openDocumentByReference = async ({ reference }: { reference: string }) => {
   const [ref] = reference.split('|');
 
-  const uris = [
-    ...getWorkspaceCache().markdownUris,
-    ...getWorkspaceCache().imageUris,
-  ].sort((a, b) => b.fsPath.toLowerCase().localeCompare(a.fsPath.toLowerCase()));
+  const uris = sortPaths([...getWorkspaceCache().markdownUris, ...getWorkspaceCache().imageUris], {
+    pathKey: 'fsPath',
+    shallowFirst: true,
+  });
 
   const uri = uris.find((uri) => {
     if (containsImageExt(reference)) {

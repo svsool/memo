@@ -741,6 +741,18 @@
   resolved "https://registry.yarnpkg.com/@types/linkify-it/-/linkify-it-2.1.0.tgz#ea3dd64c4805597311790b61e872cbd1ed2cd806"
   integrity sha512-Q7DYAOi9O/+cLLhdaSvKdaumWyHbm7HAk/bFwwyTuU0arR5yyCeW5GOoqt4tJTpDRxhpx9Q8kQL6vMpuw9hDSw==
 
+"@types/lodash.groupby@^4.6.6":
+  version "4.6.6"
+  resolved "https://registry.yarnpkg.com/@types/lodash.groupby/-/lodash.groupby-4.6.6.tgz#4d9b61a4d8b0d83d384975cabfed4c1769d6792e"
+  integrity sha512-kwg3T7Ia63KtDNoQQR8hKrLHCAgrH4I44l5uEMuA6JCbj7DiSccaV4tNV1vbjtAOpX990SolVthJCmBVtRVRgw==
+  dependencies:
+    "@types/lodash" "*"
+
+"@types/lodash@*":
+  version "4.14.155"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.155.tgz#e2b4514f46a261fd11542e47519c20ebce7bc23a"
+  integrity sha512-vEcX7S7aPhsBCivxMwAANQburHBtfN9RdyXFk84IJmu2Z4Hkg1tOFgaslRiEqqvoLtbCBi6ika1EMspE+NZ9Lg==
+
 "@types/markdown-it@^10.0.1":
   version "10.0.1"
   resolved "https://registry.yarnpkg.com/@types/markdown-it/-/markdown-it-10.0.1.tgz#94e252ab689c8e9ceb9aff2946e0a458390105eb"
@@ -1485,6 +1497,11 @@ cosmiconfig@^6.0.0:
     parse-json "^5.0.0"
     path-type "^4.0.0"
     yaml "^1.7.2"
+
+cross-path-sort@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/cross-path-sort/-/cross-path-sort-1.0.0.tgz#9c07df9fe5ebdc49d980d99ffcf845f7717865b8"
+  integrity sha512-aNS22Ns5IC2YmotLFBaQLmH+RtRpfjQlnZtUuwlHUaaxMKUeLQ0Pve1c69zgU6jmh2Irug1ZiMex9XkYdm5Mwg==
 
 cross-spawn@^6.0.0, cross-spawn@^6.0.5:
   version "6.0.5"
@@ -3746,6 +3763,11 @@ locate-path@^5.0.0:
   integrity sha512-t7hw9pI+WvuwNJXwk5zVHpyhIqzg2qTlklJOf0mVxGSbe3Fp2VieZcduNYjaLDoy6p9uGpQEGWG87WpMKlNq8g==
   dependencies:
     p-locate "^4.1.0"
+
+lodash.groupby@^4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/lodash.groupby/-/lodash.groupby-4.6.0.tgz#0b08a1dcf68397c397855c3239783832df7403d1"
+  integrity sha1-Cwih3PaDl8OXhVwyOXg4Mt90A9E=
 
 lodash.memoize@4.x:
   version "4.1.2"
