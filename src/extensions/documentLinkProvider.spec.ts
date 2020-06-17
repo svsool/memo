@@ -106,4 +106,39 @@ describe('documentLinkProvider extension', () => {
       tooltip: 'Follow link',
     });
   });
+
+  it('should provide link to existing image', async () => {
+    const noteName = rndName();
+    const imageName = rndName();
+
+    await createFile(`${noteName}.md`, `![[${imageName}.png]]`);
+    await createFile(`${imageName}.png`);
+
+    const doc = await openTextDocument(`${noteName}.md`);
+
+    const linkProvider = new DocumentLinkProvider();
+
+    const links = linkProvider.provideDocumentLinks(doc);
+
+    expect(links).toHaveLength(1);
+    expect(toPlainObject(links[0])).toMatchObject({
+      range: [
+        {
+          line: 0,
+          character: expect.any(Number),
+        },
+        {
+          line: 0,
+          character: expect.any(Number),
+        },
+      ],
+      target: {
+        $mid: 1,
+        path: '_memo.openDocumentByReference',
+        scheme: 'command',
+        query: `{"reference":"${imageName}.png"}`,
+      },
+      tooltip: 'Follow link',
+    });
+  });
 });

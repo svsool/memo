@@ -10,7 +10,7 @@ const markdownExtRegex = /\.md$/;
 
 const imageExtsRegex = /\.(png|jpg|jpeg|svg|gif)/;
 
-export const refPattern = '(\\[\\[)([^\\[\\]\\.]+?)(\\]\\])';
+export const refPattern = '(\\[\\[)([^\\[\\]]+?)(\\]\\])';
 
 export const containsImageExt = (path: string): boolean => !!imageExtsRegex.exec(path);
 

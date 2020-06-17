@@ -193,4 +193,53 @@ describe('getDecorations', () => {
       }
     `);
   });
+
+  it('should return decorations for image ref', async () => {
+    const noteFilename = `${rndName()}.md`;
+
+    await createFile(noteFilename, '![[12345.png]]');
+
+    const doc = await openTextDocument(noteFilename);
+
+    const editor = await window.showTextDocument(doc);
+
+    expect(getDecorations(editor)).toMatchInlineSnapshot(`
+      Object {
+        "gray": Array [
+          Array [
+            Object {
+              "character": 1,
+              "line": 0,
+            },
+            Object {
+              "character": 3,
+              "line": 0,
+            },
+          ],
+          Array [
+            Object {
+              "character": 12,
+              "line": 0,
+            },
+            Object {
+              "character": 14,
+              "line": 0,
+            },
+          ],
+        ],
+        "lightBlue": Array [
+          Array [
+            Object {
+              "character": 3,
+              "line": 0,
+            },
+            Object {
+              "character": 12,
+              "line": 0,
+            },
+          ],
+        ],
+      }
+    `);
+  });
 });
