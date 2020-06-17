@@ -15,7 +15,6 @@ Markdown knowledge base with bidirectional links
 yarn test
 ```
 
-
 ## MVP Roadmap
 
 - [x] refs highlight in editor and in preview
