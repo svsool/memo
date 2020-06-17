@@ -76,4 +76,41 @@ describe('extendMarkdownIt contribution', () => {
       )}" alt="${name}.png" /></div></p>\n`,
     );
   });
+
+  it('should not identify broken link', async () => {
+    const md = extendMarkdownIt(MarkdownIt());
+
+    await cacheWorkspace();
+
+    expect(md.render('[[]]')).toBe('<p>[[]]</p>\n');
+  });
+
+  it('should render link to document even when brackets unbalanced', async () => {
+    const name = rndName();
+    await createFile(`${name}.md`);
+
+    const md = extendMarkdownIt(MarkdownIt());
+
+    await cacheWorkspace();
+
+    expect(md.render(`[[[[${name}]]]]]]`)).toBe(
+      `<p>[[<a title="${name}" href="${getWorkspaceFolder()}/${name}.md">${name}</a>]]]]</p>\n`,
+    );
+  });
+
+  it('should embed image even when brackets unbalanced', async () => {
+    const name = rndName();
+    await createFile(`${name}.png`);
+
+    const md = extendMarkdownIt(MarkdownIt());
+
+    await cacheWorkspace();
+
+    expect(md.render(`[[![[${name}.png]]]]]]`)).toBe(
+      `<p>[[<div><img src="${path.join(
+        getWorkspaceFolder()!,
+        `${name}.png`,
+      )}" alt="${name}.png" /></div>]]]]</p>\n`,
+    );
+  });
 });

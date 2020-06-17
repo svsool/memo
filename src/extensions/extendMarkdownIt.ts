@@ -15,7 +15,7 @@ const extendMarkdownIt = (md: MarkdownIt) => {
   return md
     .use(markdownItRegex, {
       name: 'ref-resource',
-      regex: /!\[\[(.+?)\]\]/,
+      regex: /!\[\[([^\[\]]+?)\]\]/,
       replace: (ref: string) => {
         const [refStr, label = ''] = ref.split('|');
 
@@ -44,7 +44,7 @@ const extendMarkdownIt = (md: MarkdownIt) => {
     })
     .use(markdownItRegex, {
       name: 'ref-document',
-      regex: /\[\[(.+?)\]\]/,
+      regex: /\[\[([^\[\]]+?)\]\]/,
       replace: (ref: string) => {
         const [refStr, label = ''] = ref.split('|');
 
