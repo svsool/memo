@@ -11,3 +11,4 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - Refs autocomplete on typing `[[` or `![[` for embedding images
 - Open today note command
 - Open random note command for exploring already existing notes
+- Automatic links synchronization on file move / rename
