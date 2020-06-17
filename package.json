@@ -4,6 +4,7 @@
   "description": "Markdown knowledge base with bidirectional links",
   "publisher": "memo",
   "version": "0.0.1",
+  "author": "Svyatoslav Sobol <svyatoslav.sobol@gmail.com>",
   "license": "MIT",
   "engines": {
     "vscode": "^1.45.0"
