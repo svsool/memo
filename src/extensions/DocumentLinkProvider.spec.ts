@@ -4,11 +4,10 @@ import {
   rndName,
   openTextDocument,
   closeEditorsAndCleanWorkspace,
+  toPlainObject,
 } from '../test/testUtils';
 
-const toPlainObject = (value: unknown) => JSON.parse(JSON.stringify(value));
-
-describe('documentLinkProvider extension', () => {
+describe('DocumentLinkProvider', () => {
   beforeEach(closeEditorsAndCleanWorkspace);
 
   afterEach(closeEditorsAndCleanWorkspace);

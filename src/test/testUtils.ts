@@ -5,6 +5,10 @@ import { workspace, Uri, commands } from 'vscode';
 import * as utils from '../utils';
 import { WorkspaceCache } from '../types';
 
+const { getWorkspaceFolder } = utils;
+
+export { getWorkspaceFolder };
+
 export const cleanWorkspace = () => {
   const workspaceFolder = utils.getWorkspaceFolder();
 
@@ -81,3 +85,5 @@ export const closeEditorsAndCleanWorkspace = async () => {
 
 export const getWorkspaceCache = async (): Promise<WorkspaceCache> =>
   (await commands.executeCommand('_memo.getWorkspaceCache')) as WorkspaceCache;
+
+export const toPlainObject = (value: unknown) => JSON.parse(JSON.stringify(value));

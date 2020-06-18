@@ -1,9 +1,10 @@
 import { commands } from 'vscode';
 import fs from 'fs';
 
-import { getDateInYYYYMMDDFormat, getWorkspaceFolder } from '../utils';
+import { getDateInYYYYMMDDFormat } from '../utils';
 import {
   createFile,
+  getWorkspaceFolder,
   getOpenedFilenames,
   closeEditorsAndCleanWorkspace,
   openTextDocument,

@@ -2,10 +2,10 @@ import MarkdownIt from 'markdown-it';
 import path from 'path';
 
 import extendMarkdownIt from './extendMarkdownIt';
-import { getWorkspaceFolder } from '../utils';
 import {
   createFile,
   rndName,
+  getWorkspaceFolder,
   cacheWorkspace,
   closeEditorsAndCleanWorkspace,
 } from '../test/testUtils';

@@ -1,10 +1,10 @@
 import { commands } from 'vscode';
 import path from 'path';
 
-import { getWorkspaceFolder } from '../utils';
 import {
   createFile,
   rndName,
+  getWorkspaceFolder,
   getOpenedFilenames,
   getOpenedPaths,
   closeEditorsAndCleanWorkspace,

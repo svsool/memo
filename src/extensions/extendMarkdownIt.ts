@@ -22,6 +22,7 @@ const extendMarkdownIt = (md: MarkdownIt) => {
         const matchLowered = refStr.toLowerCase();
 
         if (imageExts.some((ext) => matchLowered.includes(ext))) {
+          // TODO: Fix includes here, it can provide wrong file path
           const imageUri = getWorkspaceCache().imageUris.find(({ fsPath: path }) =>
             path.toLowerCase().includes(matchLowered),
           )?.fsPath;
@@ -32,6 +33,7 @@ const extendMarkdownIt = (md: MarkdownIt) => {
         }
 
         const markdownUri = getWorkspaceCache().markdownUris.find(({ fsPath: path }) =>
+          // TODO: Fix includes here, it can provide wrong file path
           path.toLowerCase().includes(matchLowered),
         )?.fsPath;
 
@@ -49,6 +51,7 @@ const extendMarkdownIt = (md: MarkdownIt) => {
         const [refStr, label = ''] = ref.split('|');
 
         const markdownUri = getWorkspaceCache().markdownUris.find(({ fsPath: path }) =>
+          // TODO: Fix includes here, it can provide wrong file path
           path.toLowerCase().includes(refStr.toLowerCase()),
         )?.fsPath;
 

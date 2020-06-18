@@ -1,11 +1,11 @@
 import { WorkspaceEdit, Uri, workspace } from 'vscode';
 import path from 'path';
 
-import { getWorkspaceFolder } from '../utils';
 import {
   createFile,
   removeFile,
   rndName,
+  getWorkspaceFolder,
   openTextDocument,
   closeEditorsAndCleanWorkspace,
   cacheWorkspace,
