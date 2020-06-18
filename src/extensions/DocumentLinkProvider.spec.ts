@@ -1,4 +1,4 @@
-import DocumentLinkProvider from './documentLinkProvider';
+import DocumentLinkProvider from './DocumentLinkProvider';
 import {
   createFile,
   rndName,
