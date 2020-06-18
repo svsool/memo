@@ -63,6 +63,12 @@ export const activate = async () => {
   fileWatcher.onDidDelete(cacheWorkspace);
 
   workspace.onDidRenameFiles(async ({ files }) => {
+    if (files.some(({ newUri }) => fs.lstatSync(newUri.fsPath).isDirectory())) {
+      window.showWarningMessage(
+        'Recursive links update on renaming / moving directory is not supported yet.',
+      );
+    }
+
     const oldUris = sortPaths(
       [...getWorkspaceCache().markdownUris, ...getWorkspaceCache().imageUris],
       { pathKey: 'fsPath', shallowFirst: true },
