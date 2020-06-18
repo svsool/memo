@@ -8,6 +8,7 @@ import {
   rndName,
   openTextDocument,
   closeEditorsAndCleanWorkspace,
+  cacheWorkspace,
   getWorkspaceCache,
   delay,
 } from '../test/testUtils';
@@ -18,13 +19,13 @@ describe('fsWatcher extension', () => {
   afterEach(closeEditorsAndCleanWorkspace);
 
   describe('automatic refs update on file rename', () => {
-    it('should update ref without label on file rename', async () => {
+    it('should update short ref without label with short ref without label on file rename', async () => {
       const noteName0 = rndName();
       const noteName1 = rndName();
       const nextNoteName1 = rndName();
 
-      await createFile(`${noteName0}.md`, `[[${noteName1}]]`);
-      await createFile(`${noteName1}.md`);
+      await createFile(`${noteName0}.md`, `[[${noteName1}]]`, false);
+      await createFile(`${noteName1}.md`, '', false);
 
       const edit = new WorkspaceEdit();
       edit.renameFile(
@@ -42,13 +43,13 @@ describe('fsWatcher extension', () => {
       expect(doc.getText()).toBe(`[[${nextNoteName1}]]`);
     });
 
-    it('should update ref with label on file rename', async () => {
+    it('should update short ref with label with another short ref with label on file rename', async () => {
       const noteName0 = rndName();
       const noteName1 = rndName();
       const nextNoteName1 = rndName();
 
-      await createFile(`${noteName0}.md`, `[[${noteName1}|Test Label]]`);
-      await createFile(`${noteName1}.md`);
+      await createFile(`${noteName0}.md`, `[[${noteName1}|Test Label]]`, false);
+      await createFile(`${noteName1}.md`, '', false);
 
       const edit = new WorkspaceEdit();
       edit.renameFile(
@@ -64,6 +65,83 @@ describe('fsWatcher extension', () => {
       const doc = await openTextDocument(`${noteName0}.md`);
 
       expect(doc.getText()).toBe(`[[${nextNoteName1}|Test Label]]`);
+    });
+
+    it('should update long ref with long ref on file rename', async () => {
+      const noteName0 = rndName();
+      const noteName1 = rndName();
+      const nextNoteName1 = rndName();
+
+      await createFile(`${noteName0}.md`, `[[folder1/${noteName1}|Test Label]]`, false);
+      await createFile(`${noteName1}.md`, '', false);
+      await createFile(`${nextNoteName1}.md`, '', false);
+      await createFile(`/folder1/${noteName1}.md`, '', false);
+
+      const edit = new WorkspaceEdit();
+      edit.renameFile(
+        Uri.file(`${getWorkspaceFolder()}/folder1/${noteName1}.md`),
+        Uri.file(`${getWorkspaceFolder()}/folder1/${nextNoteName1}.md`),
+      );
+
+      await workspace.applyEdit(edit);
+
+      // onDidRenameFiles handler is not fired immediately
+      await delay(100);
+
+      const doc = await openTextDocument(`${noteName0}.md`);
+
+      expect(doc.getText()).toBe(`[[folder1/${nextNoteName1}|Test Label]]`);
+    });
+
+    it('should update long ref with short ref on file rename', async () => {
+      const noteName0 = rndName();
+      const noteName1 = rndName();
+      const nextNoteName1 = rndName();
+
+      await createFile(`${noteName0}.md`, `[[folder1/${noteName1}]]`, false);
+      await createFile(`${noteName1}.md`, '', false);
+      await createFile(`/folder1/${noteName1}.md`, '', false);
+
+      const edit = new WorkspaceEdit();
+      edit.renameFile(
+        Uri.file(`${getWorkspaceFolder()}/folder1/${noteName1}.md`),
+        Uri.file(`${getWorkspaceFolder()}/folder1/${nextNoteName1}.md`),
+      );
+
+      await workspace.applyEdit(edit);
+
+      // onDidRenameFiles handler is not fired immediately
+      await delay(100);
+
+      const doc = await openTextDocument(`${noteName0}.md`);
+
+      expect(doc.getText()).toBe(`[[${nextNoteName1}]]`);
+    });
+
+    it('should update short ref with long ref on file rename', async () => {
+      const noteName0 = rndName();
+      const noteName1 = rndName();
+
+      await createFile(`${noteName0}.md`, `[[${noteName1}]]`, false);
+      await createFile(`${noteName1}.md`, '', false);
+      await createFile(`/folder1/${noteName1}.md`, '', false);
+
+      await cacheWorkspace();
+
+      const edit = new WorkspaceEdit();
+      edit.renameFile(
+        Uri.file(`${getWorkspaceFolder()}/${noteName1}.md`),
+        Uri.file(`${getWorkspaceFolder()}/folder2/${noteName1}.md`),
+      );
+
+      await workspace.applyEdit(edit);
+
+      // onDidRenameFiles handler is not fired immediately
+      await delay(100);
+
+      const doc = await openTextDocument(`${noteName0}.md`);
+
+      expect(doc.getText()).toBe(`[[folder2/${noteName1}]]`);
     });
   });
 
@@ -94,7 +172,7 @@ describe('fsWatcher extension', () => {
   it('should sync cache on file remove', async () => {
     const noteName = rndName();
 
-    await createFile(`${noteName}.md`);
+    await createFile(`${noteName}.md`, '', false);
 
     const workspaceCache0 = await getWorkspaceCache();
 
