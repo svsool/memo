@@ -98,15 +98,16 @@ export const activate = async () => {
 
     const incrementRefsCounter = () => (refsUpdated += 1);
 
-    const isShortRefAllowed = (pathParam: string, uris: typeof newUrisByPathBasename) => {
-      // This logic is needed only given non-unique filename in workspace within file tree.
-      // By current logic file can be referenced when it's first in the list of oldUris grouped by file basename
-      // and sorted by shallow path first.
-      // For instance:
-      // /a.txt - <-- can be referenced via short ref as [[a]]
-      // /folder1/a.txt - can be referenced via long ref as [[folder/a]]
-
-      const urisGroup = uris[path.basename(pathParam).toLowerCase()] || [];
+    const isShortRefAllowed = (
+      pathParam: string,
+      urisByPathBasename: typeof newUrisByPathBasename,
+    ) => {
+      // Short ref allowed when non-unique filename comes first in the list of sorted uris.
+      // Notice that note name is not required to be unique across multiple folders but only within single folder.
+      // /a.md - <-- can be referenced via short ref as [[a]], since it comes first according to paths sorting
+      // /folder1/a.md - can be referenced only via long ref as [[folder1/a]]
+      // /folder2/subfolder1/a.md - can be referenced only via long ref as [[folder2/subfolder1/a]]
+      const urisGroup = urisByPathBasename[path.basename(pathParam).toLowerCase()] || [];
       return urisGroup.findIndex((uriParam) => uriParam.fsPath === pathParam) === 0;
     };
 
@@ -128,22 +129,11 @@ export const activate = async () => {
 
         newUris.forEach(({ fsPath: p }) => {
           const fileContent = fs.readFileSync(p).toString();
-          let nextContent = null;
-
-          /*
-           on file rename the following cases were identified:
-            1) replace long ref with short ref
-               - find previous short refs and make them point to long refs (not implemented yet)
-               - find long refs and replace with short refs
-            2) replace short ref with long ref
-               - find and update short refs with long refs
-               - find new short ref and update long refs with short refs (not implemented yet)
-            3) replace long ref with long ref
-            4) replace short ref with short ref
-          */
+          let nextContent: string | null = null;
 
           if (!oldUriIsShortRef && !newUriIsShortRef) {
             // replace long ref with long ref
+            // TODO: Consider finding previous short ref and make it point to long ref
             nextContent = replaceRefs({
               refs: [{ old: oldLongRef, new: newLongRef }],
               content: fileContent,
@@ -160,6 +150,7 @@ export const activate = async () => {
             });
           } else if (oldUriIsShortRef && !newUriIsShortRef) {
             // replace short ref with long ref
+            // TODO: Consider finding new short ref and making long refs point to new short ref
             nextContent = replaceRefs({
               refs: [{ old: oldShortRef, new: newLongRef }],
               content: fileContent,
