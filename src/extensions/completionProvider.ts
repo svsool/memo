@@ -29,7 +29,7 @@ export const provideCompletionItems = (document: TextDocument, position: Positio
       ...(isResourceAutocomplete ? getWorkspaceCache().imageUris : []),
       ...(!isResourceAutocomplete ? getWorkspaceCache().markdownUris : []),
     ],
-    { pathKey: 'fsPath' },
+    { pathKey: 'fsPath', shallowFirst: true },
   );
 
   const urisByPathBasename = groupBy(uris, ({ fsPath }) => path.basename(fsPath).toLowerCase());
