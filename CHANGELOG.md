@@ -14,3 +14,5 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - Automatic links synchronization on file move / rename
 - Ref labels `[[your ref|your label]]`, it will be rendered as link with `your label` text in markdown preview
 - Support long refs in case if ref name is not unique across multiple folder
+- Image and file preview on hover
+- Option `memo.imagePreviewMaxHeight` for configuring image preview height on hover
