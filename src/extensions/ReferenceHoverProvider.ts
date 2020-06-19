@@ -2,12 +2,23 @@ import vscode from 'vscode';
 import path from 'path';
 import fs from 'fs';
 
-import { refPattern, containsImageExt, getWorkspaceCache, isLongRef } from '../utils';
+import {
+  refPattern,
+  containsImageExt,
+  getWorkspaceCache,
+  isLongRef,
+  getConfigProperty,
+} from '../utils';
 
 export default class ReferenceHoverProvider implements vscode.HoverProvider {
   private readonly refPattern = new RegExp(refPattern);
 
   public provideHover(document: vscode.TextDocument, position: vscode.Position) {
+    const imagePreviewMaxHeight = Math.max(
+      getConfigProperty(document, 'imagePreviewMaxHeight', 200),
+      10,
+    );
+
     const range = document.getWordRangeAtPosition(position, this.refPattern);
 
     if (range) {
@@ -41,7 +52,7 @@ export default class ReferenceHoverProvider implements vscode.HoverProvider {
 
       if (foundUri && fs.existsSync(foundUri.fsPath)) {
         const fileContent = containsImageExt(foundUri.fsPath)
-          ? `![](${encodeURI(foundUri.fsPath)})`
+          ? `![](${encodeURI(foundUri.fsPath)}|height=${imagePreviewMaxHeight})`
           : fs.readFileSync(foundUri.fsPath).toString();
 
         return new vscode.Hover(

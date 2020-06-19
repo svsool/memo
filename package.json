@@ -42,7 +42,19 @@
         "title": "Open random note",
         "category": "Memo"
       }
-    ]
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "Memo configuration",
+      "properties": {
+        "memo.imagePreviewMaxHeight": {
+          "default": "200",
+          "scope": "resource",
+          "description": "The maximum height of the image preview",
+          "type": "number"
+        }
+      }
+    }
   },
   "lint-staged": {
     "*.ts": [

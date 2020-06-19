@@ -1,4 +1,4 @@
-import { workspace } from 'vscode';
+import vscode, { workspace } from 'vscode';
 import path from 'path';
 export { sort as sortPaths } from 'cross-path-sort';
 
@@ -99,3 +99,18 @@ export const getWorkspaceFolder = () =>
   workspace.workspaceFolders && workspace.workspaceFolders[0].uri.fsPath;
 
 export const getDateInYYYYMMDDFormat = () => new Date().toISOString().slice(0, 10);
+
+const isEditor = (
+  documentOrEditor: vscode.TextDocument | vscode.TextEditor,
+): documentOrEditor is vscode.TextEditor =>
+  'document' in documentOrEditor && documentOrEditor.document !== null;
+
+export function getConfigProperty<T>(
+  documentOrEditor: vscode.TextDocument | vscode.TextEditor,
+  property: string,
+  fallback: T,
+): T {
+  const document = isEditor(documentOrEditor) ? documentOrEditor.document : documentOrEditor;
+  const config = vscode.workspace.getConfiguration('memo', document ? document.uri : undefined);
+  return config.get(property.toLowerCase(), config.get(property, fallback));
+}
