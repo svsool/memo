@@ -103,7 +103,7 @@ export const activate = async () => {
       urisByPathBasename: typeof newUrisByPathBasename,
     ) => {
       // Short ref allowed when non-unique filename comes first in the list of sorted uris.
-      // Notice that note name is not required to be unique across multiple folders but only within single folder.
+      // Notice that note name is not required to be unique across multiple folders but only within a single folder.
       // /a.md - <-- can be referenced via short ref as [[a]], since it comes first according to paths sorting
       // /folder1/a.md - can be referenced only via long ref as [[folder1/a]]
       // /folder2/subfolder1/a.md - can be referenced only via long ref as [[folder2/subfolder1/a]]
