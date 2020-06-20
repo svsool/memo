@@ -1,8 +1,9 @@
 import vscode, { workspace } from 'vscode';
 import path from 'path';
 export { sort as sortPaths } from 'cross-path-sort';
+import fs from 'fs';
 
-import { WorkspaceCache, RefT } from '../types';
+import { WorkspaceCache, RefT, FoundRefT } from '../types';
 
 const allExtsRegex = /\.(md|png|jpg|jpeg|svg|gif)/;
 
@@ -17,6 +18,8 @@ export const containsImageExt = (path: string): boolean => !!imageExtsRegex.exec
 export const containsMarkdownExt = (path: string): boolean => !!markdownExtRegex.exec(path);
 
 export const trimLeadingSlash = (value: string) => value.replace(/^\/+|^\\+/g, '');
+export const trimTrailingSlash = (value: string) => value.replace(/\/+|^\\+$/g, '');
+export const trimSlashes = (value: string) => trimLeadingSlash(trimTrailingSlash(value));
 
 export const isLongRef = (path: string) => path.split('/').length > 1;
 
@@ -123,4 +126,69 @@ export const matchAll = (pattern: RegExp, text: string): Array<RegExpMatchArray>
     out.push(match);
   }
   return out;
+};
+
+export const getReferenceAtPosition = (
+  document: vscode.TextDocument,
+  position: vscode.Position,
+): { range: vscode.Range; ref: string } | null => {
+  const range = document.getWordRangeAtPosition(position, new RegExp(refPattern));
+
+  if (!range) {
+    return null;
+  }
+
+  const [ref] = document
+    .getText(range)
+    .replace('![[', '')
+    .replace('[[', '')
+    .replace(']]', '')
+    .split('|');
+
+  return {
+    ref,
+    range,
+  };
+};
+
+export const findReferences = async (
+  ref: string,
+  excludePaths: string[] = [],
+): Promise<FoundRefT[]> => {
+  const refs: FoundRefT[] = [];
+
+  for (const { fsPath } of workspaceCache.markdownUris) {
+    if (excludePaths.includes(fsPath)) {
+      continue;
+    }
+
+    const fileContent = fs.readFileSync(fsPath).toString();
+    const matches = matchAll(new RegExp(`\\[\\[(${ref}(\\|.*)?)\\]\\]`, 'gi'), fileContent);
+
+    if (matches.length) {
+      const currentDocument = await vscode.workspace.openTextDocument(vscode.Uri.file(fsPath));
+      matches.forEach((match) => {
+        const [, $1] = match;
+        const offset = (match.index || 0) + 2;
+
+        const refStart = currentDocument.positionAt(offset);
+        const lineStart = currentDocument.lineAt(refStart);
+        const matchText = lineStart.text.slice(
+          Math.max(refStart.character - 2, 0),
+          lineStart.text.length,
+        );
+        const refEnd = currentDocument.positionAt(offset + $1.length);
+
+        refs.push({
+          location: new vscode.Location(
+            vscode.Uri.file(fsPath),
+            new vscode.Range(refStart, refEnd),
+          ),
+          matchText: matchText,
+        });
+      });
+    }
+  }
+
+  return refs;
 };

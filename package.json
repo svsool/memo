@@ -26,7 +26,8 @@
     "onCommand:_memo.openReference",
     "onCommand:_memo.cacheWorkspace",
     "onCommand:_memo.cleanWorkspaceCache",
-    "onCommand:_memo.getWorkspaceCache"
+    "onCommand:_memo.getWorkspaceCache",
+    "onView:memoBacklinksExplorer"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -54,6 +55,14 @@
           "type": "number"
         }
       }
+    },
+    "views": {
+      "explorer": [
+        {
+          "id": "memoBacklinksExplorer",
+          "name": "Backlinks"
+        }
+      ]
     }
   },
   "lint-staged": {

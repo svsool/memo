@@ -7,6 +7,7 @@ import {
   DocumentLinkProvider,
   ReferenceHoverProvider,
   ReferenceProvider,
+  BacklinksTreeDataProvider,
   extendMarkdownIt,
 } from './extensions';
 import { cacheWorkspace } from './utils';
@@ -17,6 +18,13 @@ export const activate = async (context: vscode.ExtensionContext) => {
   syntaxDecorations.activate();
   await cacheWorkspace();
   context.subscriptions.push(...commands);
+  const backlinksTreeDataProvider = new BacklinksTreeDataProvider();
+  vscode.window.onDidChangeActiveTextEditor(async () => await backlinksTreeDataProvider.refresh());
+  const backlinksExplorer = vscode.window.createTreeView('memoBacklinksExplorer', {
+    treeDataProvider: backlinksTreeDataProvider,
+    showCollapseAll: true,
+  });
+  context.subscriptions.push(backlinksExplorer);
   vscode.languages.registerDocumentLinkProvider(mdLangSelector, new DocumentLinkProvider());
   vscode.languages.registerHoverProvider(mdLangSelector, new ReferenceHoverProvider());
   vscode.languages.registerReferenceProvider(mdLangSelector, new ReferenceProvider());

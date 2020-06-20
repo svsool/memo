@@ -3,51 +3,39 @@ import path from 'path';
 import fs from 'fs';
 
 import {
-  refPattern,
   containsImageExt,
   getWorkspaceCache,
   isLongRef,
   getConfigProperty,
+  getReferenceAtPosition,
 } from '../utils';
 
 export default class ReferenceHoverProvider implements vscode.HoverProvider {
-  private readonly refPattern = new RegExp(refPattern);
-
   public provideHover(document: vscode.TextDocument, position: vscode.Position) {
     const imagePreviewMaxHeight = Math.max(
       getConfigProperty(document, 'imagePreviewMaxHeight', 200),
       10,
     );
 
-    const range = document.getWordRangeAtPosition(position, this.refPattern);
+    const refResult = getReferenceAtPosition(document, position);
 
-    if (range) {
-      const [reference] = document
-        .getText(range)
-        .replace('![[', '')
-        .replace('[[', '')
-        .replace(']]', '')
-        .split('|');
-
+    if (refResult) {
+      const { ref, range } = refResult;
       const uris = [...getWorkspaceCache().imageUris, ...getWorkspaceCache().markdownUris];
 
       // TODO: Move to utils as findUriByRef
       const foundUri = uris.find((uri) => {
-        if (isLongRef(reference)) {
+        if (isLongRef(ref)) {
           return uri.fsPath
             .toLowerCase()
-            .endsWith(
-              containsImageExt(reference)
-                ? reference.toLowerCase()
-                : `${reference.toLowerCase()}.md`,
-            );
+            .endsWith(containsImageExt(ref) ? ref.toLowerCase() : `${ref.toLowerCase()}.md`);
         }
 
-        if (containsImageExt(reference)) {
-          return path.basename(uri.fsPath).toLowerCase() === reference.toLowerCase();
+        if (containsImageExt(ref)) {
+          return path.basename(uri.fsPath).toLowerCase() === ref.toLowerCase();
         }
 
-        return path.parse(uri.fsPath).name.toLowerCase() === reference.toLowerCase();
+        return path.parse(uri.fsPath).name.toLowerCase() === ref.toLowerCase();
       });
 
       if (foundUri && fs.existsSync(foundUri.fsPath)) {
