@@ -1,16 +1,6 @@
 import * as vscode from 'vscode';
 
-import { refPattern } from '../utils';
-
-function matchAll(pattern: RegExp, text: string): Array<RegExpMatchArray> {
-  const out: RegExpMatchArray[] = [];
-  pattern.lastIndex = 0;
-  let match: RegExpMatchArray | null;
-  while ((match = pattern.exec(text))) {
-    out.push(match);
-  }
-  return out;
-}
+import { refPattern, matchAll } from '../utils';
 
 export default class DocumentLinkProvider implements vscode.DocumentLinkProvider {
   private readonly refPattern = new RegExp(refPattern, 'g');

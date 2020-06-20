@@ -114,3 +114,13 @@ export function getConfigProperty<T>(
   const config = vscode.workspace.getConfiguration('memo', document ? document.uri : undefined);
   return config.get(property.toLowerCase(), config.get(property, fallback));
 }
+
+export const matchAll = (pattern: RegExp, text: string): Array<RegExpMatchArray> => {
+  const out: RegExpMatchArray[] = [];
+  pattern.lastIndex = 0;
+  let match: RegExpMatchArray | null;
+  while ((match = pattern.exec(text))) {
+    out.push(match);
+  }
+  return out;
+};
