@@ -4,18 +4,17 @@ Markdown knowledge base with bidirectional links. Inspired by Obsidian.md and Ro
 
 ## Features
 
-- Links and images autocomplete on typing `[[my note]]`
-- Embedding images via `![[image.png]]`
-- Refs and images preview via markdown preview
+- Notes and images autocomplete on typing `[[my note]]` or `![[image.png]]`
+- Images preview via markdown preview
 - Creating notes automatically from non-existing links
+- Automatic links synchronization on file move / rename
+- Support for absolute and short links support in case of non-unique filename across workspace
+- Support for link with label `[[your link|your label]]`, it will be rendered as link with `your label` in markdown preview
+- Image and note preview on hovering a link in the text editor
+- Opening note or image from link in markdown preview
+- Backlinks panel
 - "Open today note" command
 - "Open random note command" for exploring already existing notes
-- Automatic links synchronization on file move / rename
-- Absolute and short links support in case of non-unique filename across workspace
-- Ref labels `[[your ref|your label]]`, it will be rendered as link with `your label` text in markdown preview
-- Image and note preview on hovering a link in the text editor
-- Opening note or image from markdown preview
-- Backlinks panel
 
 ## Development
 
