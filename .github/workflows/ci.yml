@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - '**'
+
+env:
+  NODE_VERSION: 12.14.1
+  PROJECT: ops-tools
+  REGISTRY_URL: "https://npm.pkg.github.com/"
+
+jobs:
+  check-types:
+    name: Check Types
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - name: Setup Node
+        uses: actions/setup-node@v1
+      - name: Install Dependencies
+        run: yarn
+      - name: Check Types
+        run: npm run ts
+  lint:
+    name: Run Linter
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - name: Setup Node
+        uses: actions/setup-node@v1
+      - name: Install Dependencies
+        run: yarn
+      - name: Check Types
+        run: npm run lint
+  tests:
+    name: Run Tests
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - name: Setup Node
+        uses: actions/setup-node@v1
+      - name: Install Dependencies
+        run: yarn
+      - name: Run Tests
+        run: yarn test
