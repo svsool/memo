@@ -1,6 +1,8 @@
 import * as path from 'path';
 import { runTests } from 'vscode-test';
 
+process.env.FORCE_COLOR = '1';
+
 async function main() {
   try {
     // The folder containing the Extension Manifest package.json
@@ -9,10 +11,7 @@ async function main() {
 
     // The path to the extension test script
     // Passed to --extensionTestsPath
-    const extensionTestsPath = path.resolve(
-      __dirname,
-      '../../node_modules/vscode-jest-test-runner',
-    );
+    const extensionTestsPath = path.resolve(__dirname, './testRunner');
 
     // Download VS Code, unzip it and run the integration test
     await runTests({
