@@ -43,5 +43,11 @@ jobs:
       - name: Install Dependencies
         run: yarn
       - run: sudo apt-get install xvfb
+      - name: Start xvfb
+        if: startsWith(matrix.os, 'ubuntu')
+        run: /usr/bin/Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
       - name: Run Tests
-        run: xvfb-run --auto-servernum --server-args="-screen 0 1024x768x24" yarn test
+        env:
+          CODE_VERSION: ''
+          DISPLAY: ':99.0'
+        run: yarn test
