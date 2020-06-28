@@ -2,6 +2,21 @@
 
 Markdown knowledge base with bidirectional links
 
+## Features
+
+- Links and images autocomplete on typing `[[my note]]`
+- Embedding images via `![[image.png]]`
+- Refs and images preview via markdown preview
+- Creating notes automatically from non-existing links
+- "Open today note" command
+- "Open random note command" for exploring already existing notes
+- Automatic links synchronization on file move / rename
+- Absolute and short links support in case of non-unique filename across workspace
+- Ref labels `[[your ref|your label]]`, it will be rendered as link with `your label` text in markdown preview
+- Image and note preview on hovering a link in the text editor
+- Opening note or image from markdown preview
+- Backlinks panel
+
 ## Development
 
 * `cd <project-root> && yarn`
@@ -14,14 +29,3 @@ Markdown knowledge base with bidirectional links
 ```
 yarn test
 ```
-
-## MVP Roadmap
-
-- [x] refs highlight in editor and in preview
-- [x] refs should be openable in editor and in preview
-- [x] refs autocomplete / tagger
-- [ ] backlinks panel
-- [ ] tags panel
-- commands
-  - [x] open today note
-  - [x] open random note
