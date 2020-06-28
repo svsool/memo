@@ -96,6 +96,7 @@
     "glob": "^7.1.6",
     "husky": "^4.2.5",
     "jest": "^26.0.1",
+    "jest-environment-vscode": "^1.0.0",
     "lint-staged": "^10.2.9",
     "ncp": "^2.0.0",
     "prettier": "^2.0.5",
