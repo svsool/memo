@@ -31,7 +31,7 @@ export const extractLongRef = (
   const allExtsMatch = allExtsRegex.exec(pathParam);
 
   if (allExtsMatch) {
-    const ref = pathParam.replace(basePathParam, '');
+    const ref = pathParam.replace(basePathParam, '').replace(/\\/gi, '/');
 
     if (preserveExtension) {
       const [refStr, label = ''] = trimLeadingSlash(ref).split('|');

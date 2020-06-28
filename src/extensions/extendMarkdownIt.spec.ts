@@ -41,7 +41,7 @@ describe('extendMarkdownIt contribution', () => {
     await cacheWorkspace();
 
     expect(md.render(`[[${name}]]`)).toBe(
-      `<p><a title="${name}" href="${getWorkspaceFolder()}/${name}.md">${name}</a></p>\n`,
+      `<p><a title="${name}" href="${path.join(getWorkspaceFolder()!, name)}.md">${name}</a></p>\n`,
     );
   });
 
@@ -94,7 +94,10 @@ describe('extendMarkdownIt contribution', () => {
     await cacheWorkspace();
 
     expect(md.render(`[[[[${name}]]]]]]`)).toBe(
-      `<p>[[<a title="${name}" href="${getWorkspaceFolder()}/${name}.md">${name}</a>]]]]</p>\n`,
+      `<p>[[<a title="${name}" href="${path.join(
+        getWorkspaceFolder()!,
+        name,
+      )}.md">${name}</a>]]]]</p>\n`,
     );
   });
 

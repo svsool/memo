@@ -1,6 +1,7 @@
 import rimraf from 'rimraf';
 import path from 'path';
 import { workspace, Uri, commands } from 'vscode';
+export { default as waitForExpect } from 'wait-for-expect';
 
 import * as utils from '../utils';
 import { WorkspaceCache } from '../types';

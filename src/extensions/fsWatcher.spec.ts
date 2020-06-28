@@ -11,6 +11,7 @@ import {
   cacheWorkspace,
   getWorkspaceCache,
   delay,
+  waitForExpect,
 } from '../test/testUtils';
 
 describe('fsWatcher extension', () => {
@@ -35,12 +36,9 @@ describe('fsWatcher extension', () => {
 
       await workspace.applyEdit(edit);
 
-      // onDidRenameFiles handler is not fired immediately
-      await delay(100);
-
       const doc = await openTextDocument(`${noteName0}.md`);
 
-      expect(doc.getText()).toBe(`[[${nextNoteName1}]]`);
+      await waitForExpect(() => expect(doc.getText()).toBe(`[[${nextNoteName1}]]`));
     });
 
     it('should update short ref with label with another short ref with label on file rename', async () => {
@@ -59,12 +57,9 @@ describe('fsWatcher extension', () => {
 
       await workspace.applyEdit(edit);
 
-      // onDidRenameFiles handler is not fired immediately
-      await delay(100);
-
       const doc = await openTextDocument(`${noteName0}.md`);
 
-      expect(doc.getText()).toBe(`[[${nextNoteName1}|Test Label]]`);
+      await waitForExpect(() => expect(doc.getText()).toBe(`[[${nextNoteName1}|Test Label]]`));
     });
 
     it('should update long ref with long ref on file rename', async () => {
@@ -85,12 +80,11 @@ describe('fsWatcher extension', () => {
 
       await workspace.applyEdit(edit);
 
-      // onDidRenameFiles handler is not fired immediately
-      await delay(100);
-
       const doc = await openTextDocument(`${noteName0}.md`);
 
-      expect(doc.getText()).toBe(`[[folder1/${nextNoteName1}|Test Label]]`);
+      await waitForExpect(() =>
+        expect(doc.getText()).toBe(`[[folder1/${nextNoteName1}|Test Label]]`),
+      );
     });
 
     it('should update long ref with short ref on file rename', async () => {
@@ -110,12 +104,9 @@ describe('fsWatcher extension', () => {
 
       await workspace.applyEdit(edit);
 
-      // onDidRenameFiles handler is not fired immediately
-      await delay(100);
-
       const doc = await openTextDocument(`${noteName0}.md`);
 
-      expect(doc.getText()).toBe(`[[${nextNoteName1}]]`);
+      await waitForExpect(() => expect(doc.getText()).toBe(`[[${nextNoteName1}]]`));
     });
 
     it('should update short ref with long ref on file rename', async () => {
@@ -136,12 +127,9 @@ describe('fsWatcher extension', () => {
 
       await workspace.applyEdit(edit);
 
-      // onDidRenameFiles handler is not fired immediately
-      await delay(100);
-
       const doc = await openTextDocument(`${noteName0}.md`);
 
-      expect(doc.getText()).toBe(`[[folder2/${noteName1}]]`);
+      await waitForExpect(() => expect(doc.getText()).toBe(`[[folder2/${noteName1}]]`));
     });
   });
 
