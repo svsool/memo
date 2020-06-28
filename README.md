@@ -1,6 +1,6 @@
 # Memo
 
-Markdown knowledge base with bidirectional links. Inspired by Obsidian.md and RoamResearch.
+Markdown knowledge base with bidirectional links. Inspired by [Obsidian.md](https://obsidian.md/) and [RoamResearch](https://roamresearch.com/).
 
 ## Features
 
