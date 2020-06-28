@@ -145,7 +145,7 @@ describe('fsWatcher extension', () => {
     });
   });
 
-  it('should sync workspace cache on file create', async () => {
+  it.skip('should sync workspace cache on file create', async () => {
     const noteName = rndName();
     const imageName = rndName();
 
@@ -169,7 +169,7 @@ describe('fsWatcher extension', () => {
     ).toEqual(expect.arrayContaining([`${noteName}.md`, `${imageName}.md`]));
   });
 
-  it('should sync workspace cache on file remove', async () => {
+  it.skip('should sync workspace cache on file remove', async () => {
     const noteName = rndName();
 
     await createFile(`${noteName}.md`, '');
