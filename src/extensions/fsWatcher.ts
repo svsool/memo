@@ -56,7 +56,7 @@ const replaceRefs = ({
   return updatedOnce ? nextContent : null;
 };
 
-export const activate = async () => {
+export const activate = () => {
   const fileWatcher = workspace.createFileSystemWatcher('**/*.{md,png,jpg,jpeg,svg,gif}');
 
   fileWatcher.onDidCreate(cacheWorkspace);
