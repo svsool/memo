@@ -26,4 +26,4 @@ Pull requests:
 
 - No linter or type errors
 - No failing tests
-- Try to make code better than it was before pull request
+- Try to make code better than it was before the pull request
