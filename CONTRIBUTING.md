@@ -13,6 +13,19 @@ src
  └── utils - common utils
 ```
 
+## Development
+
+* `cd <project-root> && yarn`
+* Open project in VSCode using `code <project-root>` or via `File -> Open...` and press `F5` to open a new window with the extension loaded.
+* Set breakpoints in your code inside `src/extension.ts` to debug the extension.
+* Find output from the extension in the debug console.
+
+## Run tests
+
+```
+yarn test
+```
+
 ## Conventions
 
 General:
