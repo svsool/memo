@@ -1,6 +1,7 @@
 .vscode/**
 .vscode-test/**
 out/test/**
+**/*.spec.js
 src/**
 .gitignore
 .editorconfig

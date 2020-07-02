@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - '**'
+  release:
+    types:
+      - created
 
 env:
   NODE_VERSION: 12.14.1
@@ -37,7 +40,7 @@ jobs:
     name: Run Tests
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [macos-10.15, ubuntu-18.04, windows-2019]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v1
@@ -49,3 +52,13 @@ jobs:
         uses: GabrielBB/xvfb-action@v1.0
         with:
           run: yarn test
+  publish:
+    name: Publish
+    if: success() && startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-18.04
+    needs: [check-types, lint, tests]
+    steps:
+      - name: Publish
+        env:
+          VSCE_PAT: $
+        run: yarn deploy
