@@ -2,10 +2,17 @@
   "name": "markdown-memo",
   "displayName": "Markdown Memo",
   "description": "Markdown knowledge base with bidirectional links",
-  "publisher": "memo",
-  "version": "0.0.1",
+  "publisher": "svsool",
+  "version": "0.1.0",
   "author": "Svyatoslav Sobol <svyatoslav.sobol@gmail.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/svsool/vscode-memo"
+  },
+  "bugs": {
+    "url": "https://github.com/svsool/vscode-memo/issues"
+  },
   "engines": {
     "vscode": "^1.45.0"
   },
@@ -29,7 +36,7 @@
     "onCommand:_memo.getWorkspaceCache",
     "onView:memoBacklinksExplorer"
   ],
-  "main": "./out/extension.js",
+  "main": "./dist/extension",
   "contributes": {
     "markdown.markdownItPlugins": true,
     "commands": [
@@ -71,12 +78,13 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "yarn run compile",
+    "vscode:prepublish": "webpack --mode production",
     "deploy": "vsce publish --yarn",
-    "compile": "tsc -p ./",
+    "clean": "rimraf dist out",
     "lint": "eslint src --ext ts",
+    "webpack": "webpack --mode development",
     "watch": "tsc -watch -p ./",
-    "pretest": "yarn run compile && rimraf ./out/test/workspace && ncp ./src/test/workspace ./out/test/workspace && rimraf ./out/test/workspace/.gitkeep",
+    "pretest": "tsc -p ./ && yarn run webpack",
     "ts": "tsc --noEmit",
     "test": "node ./out/test/runTest.js"
   },
@@ -99,14 +107,16 @@
     "jest": "^26.0.1",
     "jest-environment-vscode": "^1.0.0",
     "lint-staged": "^10.2.9",
-    "ncp": "^2.0.0",
     "prettier": "^2.0.5",
     "rimraf": "^3.0.2",
     "ts-jest": "^26.1.0",
+    "ts-loader": "^7.0.5",
     "typescript": "^3.8.3",
     "vsce": "^1.77.0",
     "vscode-test": "^1.3.0",
-    "wait-for-expect": "^3.0.2"
+    "wait-for-expect": "^3.0.2",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.12"
   },
   "dependencies": {
     "cross-path-sort": "^1.0.0",

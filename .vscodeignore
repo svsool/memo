@@ -9,11 +9,12 @@ src/**
 .huskyrc.js
 .prettierrc
 CONTRIBUTION.md
-README.md
 vsc-extension-quickstart.md
 yarn.lock
 yarn-error.log
 **/tsconfig.json
+**/webpack.config.js
 **/.eslintrc.json
 **/*.map
 **/*.ts
+node_modules

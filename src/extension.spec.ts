@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 
 import { closeAllEditors } from './test/testUtils';
 
-const MEMO_EXTENSION_ID = 'memo.markdown-memo';
+const MEMO_EXTENSION_ID = 'svsool.markdown-memo';
 
 describe('extension', () => {
   beforeEach(async () => {

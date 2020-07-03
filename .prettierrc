@@ -2,7 +2,7 @@
   "printWidth": 100,
   "overrides": [
     {
-      "files": ["*.ts"],
+      "files": ["*.ts", "*.js"],
       "options": {
         "singleQuote": true,
         "trailingComma": "all"
