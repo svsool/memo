@@ -192,3 +192,9 @@ export const findReferences = async (
 
   return refs;
 };
+
+export const getFileUrlForMarkdownPreview = (filePath: string): string =>
+  vscode.Uri.file(filePath).toString().replace('file:', '');
+
+export const getImgUrlForMarkdownPreview = (imagePath: string): string =>
+  `vscode-resource://${vscode.Uri.file(imagePath).toString().replace('file:', 'file')}`;

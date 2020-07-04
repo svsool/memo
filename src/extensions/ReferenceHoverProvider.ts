@@ -40,7 +40,7 @@ export default class ReferenceHoverProvider implements vscode.HoverProvider {
 
       if (foundUri && fs.existsSync(foundUri.fsPath)) {
         const fileContent = containsImageExt(foundUri.fsPath)
-          ? `![](${encodeURI(foundUri.fsPath)}|height=${imagePreviewMaxHeight})`
+          ? `![](${vscode.Uri.file(foundUri.fsPath).toString()}|height=${imagePreviewMaxHeight})`
           : fs.readFileSync(foundUri.fsPath).toString();
 
         return new vscode.Hover(

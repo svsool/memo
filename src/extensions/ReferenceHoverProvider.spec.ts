@@ -61,10 +61,12 @@ describe('ReferenceHoverProvider', () => {
 
     const referenceHoverProvider = new ReferenceHoverProvider();
 
+    const imagePath = `${path.join(getWorkspaceFolder()!, name1)}.png`;
+
     expect(
       toPlainObject(referenceHoverProvider.provideHover(doc, new vscode.Position(0, 4))),
     ).toEqual({
-      contents: [`![](${encodeURI(path.join(getWorkspaceFolder()!, name1))}.png|height=200)`],
+      contents: [`![](${vscode.Uri.file(imagePath).toString()}|height=200)`],
       range: [
         { character: expect.any(Number), line: 0 },
         { character: expect.any(Number), line: 0 },

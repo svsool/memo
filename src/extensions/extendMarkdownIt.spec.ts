@@ -8,6 +8,8 @@ import {
   getWorkspaceFolder,
   cacheWorkspace,
   closeEditorsAndCleanWorkspace,
+  getImgUrlForMarkdownPreview,
+  getFileUrlForMarkdownPreview,
 } from '../test/testUtils';
 
 describe('extendMarkdownIt contribution', () => {
@@ -40,8 +42,10 @@ describe('extendMarkdownIt contribution', () => {
 
     await cacheWorkspace();
 
+    const notePath = `${path.join(getWorkspaceFolder()!, name)}.md`;
+
     expect(md.render(`[[${name}]]`)).toBe(
-      `<p><a title="${name}" href="${path.join(getWorkspaceFolder()!, name)}.md">${name}</a></p>\n`,
+      `<p><a title="${name}" href="${getFileUrlForMarkdownPreview(notePath)}">${name}</a></p>\n`,
     );
   });
 
@@ -53,10 +57,11 @@ describe('extendMarkdownIt contribution', () => {
 
     await cacheWorkspace();
 
+    const notePath = `${path.join(getWorkspaceFolder()!, `${name}.md`)}`;
+
     expect(md.render(`[[${name}|Test Label]]`)).toBe(
-      `<p><a title="Test Label" href="${path.join(
-        getWorkspaceFolder()!,
-        `${name}.md`,
+      `<p><a title="Test Label" href="${getFileUrlForMarkdownPreview(
+        notePath,
       )}">Test Label</a></p>\n`,
     );
   });
@@ -70,9 +75,8 @@ describe('extendMarkdownIt contribution', () => {
     await cacheWorkspace();
 
     expect(md.render(`![[${name}.png]]`)).toBe(
-      `<p><div><img src="${path.join(
-        getWorkspaceFolder()!,
-        `${name}.png`,
+      `<p><div><img src="${getImgUrlForMarkdownPreview(
+        path.join(getWorkspaceFolder()!, `${name}.png`),
       )}" alt="${name}.png" /></div></p>\n`,
     );
   });
@@ -93,11 +97,12 @@ describe('extendMarkdownIt contribution', () => {
 
     await cacheWorkspace();
 
+    const notePath = `${path.join(getWorkspaceFolder()!, name)}.md`;
+
     expect(md.render(`[[[[${name}]]]]]]`)).toBe(
-      `<p>[[<a title="${name}" href="${path.join(
-        getWorkspaceFolder()!,
-        name,
-      )}.md">${name}</a>]]]]</p>\n`,
+      `<p>[[<a title="${name}" href="${getFileUrlForMarkdownPreview(
+        notePath,
+      )}">${name}</a>]]]]</p>\n`,
     );
   });
 
@@ -110,9 +115,8 @@ describe('extendMarkdownIt contribution', () => {
     await cacheWorkspace();
 
     expect(md.render(`[[![[${name}.png]]]]]]`)).toBe(
-      `<p>[[<div><img src="${path.join(
-        getWorkspaceFolder()!,
-        `${name}.png`,
+      `<p>[[<div><img src="${getImgUrlForMarkdownPreview(
+        path.join(getWorkspaceFolder()!, `${name}.png`),
       )}" alt="${name}.png" /></div>]]]]</p>\n`,
     );
   });
