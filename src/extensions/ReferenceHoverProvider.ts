@@ -8,6 +8,7 @@ import {
   isLongRef,
   getConfigProperty,
   getReferenceAtPosition,
+  isUncPath,
 } from '../utils';
 
 export default class ReferenceHoverProvider implements vscode.HoverProvider {
@@ -39,12 +40,20 @@ export default class ReferenceHoverProvider implements vscode.HoverProvider {
       });
 
       if (foundUri && fs.existsSync(foundUri.fsPath)) {
-        const fileContent = containsImageExt(foundUri.fsPath)
-          ? `![](${vscode.Uri.file(foundUri.fsPath).toString()}|height=${imagePreviewMaxHeight})`
-          : fs.readFileSync(foundUri.fsPath).toString();
+        const getContent = () => {
+          if (containsImageExt(foundUri.fsPath)) {
+            return `![${
+              isUncPath(foundUri.fsPath)
+                ? 'UNC paths are not supported for images preview due to VSCode Content Security Policy. Use markdown preview instead or open image via cmd (ctrl) + click.'
+                : ''
+            }](${vscode.Uri.file(foundUri.fsPath).toString()}|height=${imagePreviewMaxHeight})`;
+          }
+
+          return fs.readFileSync(foundUri.fsPath).toString();
+        };
 
         return new vscode.Hover(
-          fileContent,
+          getContent(),
           new vscode.Range(
             new vscode.Position(range.start.line, range.start.character + 2),
             new vscode.Position(range.end.line, range.end.character - 2),

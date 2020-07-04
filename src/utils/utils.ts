@@ -198,3 +198,7 @@ export const getFileUrlForMarkdownPreview = (filePath: string): string =>
 
 export const getImgUrlForMarkdownPreview = (imagePath: string): string =>
   `vscode-resource://${vscode.Uri.file(imagePath).toString().replace('file:', 'file')}`;
+
+const uncPathRegex = /^[\\\/]{2,}[^\\\/]+[\\\/]+[^\\\/]+/;
+
+export const isUncPath = (path: string): boolean => uncPathRegex.test(path);
