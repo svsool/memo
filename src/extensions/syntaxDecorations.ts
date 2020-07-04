@@ -113,18 +113,6 @@ const updateDecorations = (textEditor?: TextEditor) => {
 };
 
 export const activate = () => {
-  workspace.onDidChangeConfiguration((event) => {
-    if (event.affectsConfiguration('markdown.extension.syntax.decorations')) {
-      window.showInformationMessage(
-        'Please reload VSCode to make setting `syntax.decorations` take effect.',
-      );
-    }
-  });
-
-  if (!workspace.getConfiguration('markdown.extension.syntax').get<boolean>('decorations')) {
-    return;
-  }
-
   window.onDidChangeActiveTextEditor(updateDecorations);
 
   workspace.onDidChangeTextDocument((event) => {
