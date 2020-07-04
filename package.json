@@ -83,7 +83,7 @@
     "clean": "rimraf dist out",
     "lint": "eslint src --ext ts",
     "webpack": "webpack --mode development",
-    "watch": "tsc -watch -p ./",
+    "watch": "webpack --mode development",
     "pretest": "tsc -p ./ && yarn run webpack",
     "ts": "tsc --noEmit",
     "test": "node ./out/test/runTest.js"
