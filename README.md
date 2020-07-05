@@ -56,4 +56,4 @@ Because your knowledge base deserves to be powered by open source.
 
 ## Getting started
 
-If you want to try out [Memo](https://marketplace.visualstudio.com/items?itemName=svsool.markdown-memo), just install it from the marketplace and open help folder in VSCode.
+If you want to try out [Memo](https://marketplace.visualstudio.com/items?itemName=svsool.markdown-memo) just install it via marketplace and open [help](https://github.com/svsool/vscode-memo/tree/master/help) folder in VSCode.
