@@ -40,7 +40,7 @@ Because your knowledge base deserves to be powered by open source.
 
 ![Creating notes on the fly](./help/Attachments/Creating%20notes%20from%20links.png)
 
-- **Backlinks panel**
+- 🖇 **Backlinks panel**
 
 ![Backlinks panel](./help/Attachments/Backlinks%20panel.png)
 
