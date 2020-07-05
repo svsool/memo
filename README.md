@@ -1,12 +1,25 @@
 # Memo
 
-Markdown knowledge base with bidirectional links. Inspired by [Obsidian.md](https://obsidian.md/) and [RoamResearch](https://roamresearch.com/).
+Markdown knowledge base with bidirectional [[link]]s built on top of [VSCode](https://github.com/microsoft/vscode). Inspired by [Obsidian.md](https://obsidian.md/) and [RoamResearch](https://roamresearch.com/).
+
+## Why?
+
+Because your personal knowledge base software deserves to be open source.
 
 ## Features
 
-- Notes and images autocomplete on typing `[[my note]]` or `![[image.png]]`
-- Images preview via markdown preview
-- Creating notes automatically from non-existing links
+- Creating links 📙
+
+![Creating links](./help/Attachments/Creating%20links.gif)
+
+- Notes and images preview on hover and using built-in VSCode Markdown preview 🖼️
+
+![Notes and images preview](./help/Attachments/Notes%20and%20images%20preview.gif)
+
+- Creating notes from links on the fly 🦋
+
+![Creating notes from links](./help/Attachments/Creating%20notes%20from%20links.png)
+
 - Automatic links synchronization on file move / rename
 - Support for absolute and short links support in case of non-unique filename across workspace
 - Support for link with label `[[your link|your label]]`, it will be rendered as link with `your label` in markdown preview
