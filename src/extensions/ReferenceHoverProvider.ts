@@ -39,6 +39,11 @@ export default class ReferenceHoverProvider implements vscode.HoverProvider {
         return path.parse(uri.fsPath).name.toLowerCase() === ref.toLowerCase();
       });
 
+      const hoverRange = new vscode.Range(
+        new vscode.Position(range.start.line, range.start.character + 2),
+        new vscode.Position(range.end.line, range.end.character - 2),
+      );
+
       if (foundUri && fs.existsSync(foundUri.fsPath)) {
         const getContent = () => {
           if (containsImageExt(foundUri.fsPath)) {
@@ -52,13 +57,9 @@ export default class ReferenceHoverProvider implements vscode.HoverProvider {
           return fs.readFileSync(foundUri.fsPath).toString();
         };
 
-        return new vscode.Hover(
-          getContent(),
-          new vscode.Range(
-            new vscode.Position(range.start.line, range.start.character + 2),
-            new vscode.Position(range.end.line, range.end.character - 2),
-          ),
-        );
+        return new vscode.Hover(getContent(), hoverRange);
+      } else {
+        return new vscode.Hover(`"${ref}" is not created yet. Click to create.`, hoverRange);
       }
     }
 
