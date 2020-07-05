@@ -1,30 +1,59 @@
 # Memo
 
-Markdown knowledge base with bidirectional [[link]]s built on top of [VSCode](https://github.com/microsoft/vscode). Inspired by [Obsidian.md](https://obsidian.md/) and [RoamResearch](https://roamresearch.com/).
+Markdown knowledge base with bidirectional [[link]]s built on top of [VSCode](https://github.com/microsoft/vscode).
+
+Inspired by [Obsidian.md](https://obsidian.md/) and [RoamResearch](https://roamresearch.com/).
 
 ## Why?
 
-Because your personal knowledge base software deserves to be open source.
+Because your knowledge base deserves to be powered by open source.
 
 ## Features
 
-- Creating links 📙
+- 🔗 **Links support**
 
-![Creating links](./help/Attachments/Creating%20links.gif)
+  - Creating links
 
-- Notes and images preview on hover and using built-in VSCode Markdown preview 🖼️
+    - ![Creating links](./help/Attachments/Creating%20links.gif)
+
+  - Links navigation
+
+    - ![Links navigation](./help/Attachments/Links%20navigation.gif)
+
+  - Automatic links synchronization
+
+    - ![Automatic links synchronization](./help/Attachments/Automatic%20link%20synchronization.gif)
+
+  - Links labeling
+
+    - ![Links labeling](./help/Attachments/Links%20labeling.png)
+
+  - Support for short and full links on filename clash
+
+    - ![Support short and full links on filename clash](./help/Attachments/Short%20and%20long%20links%20support%202.png)
+
+- 🖼️ **Notes and images preview**
 
 ![Notes and images preview](./help/Attachments/Notes%20and%20images%20preview.gif)
 
-- Creating notes from links on the fly 🦋
+- 🦋 **Creating notes on the fly**
 
-![Creating notes from links](./help/Attachments/Creating%20notes%20from%20links.png)
+![Creating notes on the fly](./help/Attachments/Creating%20notes%20from%20links.png)
 
-- Automatic links synchronization on file move / rename
-- Support for absolute and short links support in case of non-unique filename across workspace
-- Support for link with label `[[your link|your label]]`, it will be rendered as link with `your label` in markdown preview
-- Image and note preview on hovering a link in the text editor
-- Opening note or image from link in markdown preview
-- Backlinks panel
-- "Open today note" command
-- "Open random note command" for exploring already existing notes
+- **Backlinks panel**
+
+![Backlinks panel](./help/Attachments/Backlinks%20panel.png)
+
+- 🕹 **Commands**
+
+  - "Open today's note" command which creates a note with a title in this format `yyyy-mm-dd` or opens already existing one
+
+    - ![Open today's note command](./help/Attachments/Open%20today's%20note.gif)
+
+  - "Open random note" command which allows your to explore you knowledge base a little bit
+
+    - ![Open random note command](./help/Attachments/Open%20random%20note.gif)
+
+## Getting started
+
+If you want to try out [Memo](https://marketplace.visualstudio.com/items?itemName=svsool.markdown-memo), just install it from the marketplace and open help folder in VSCode.
