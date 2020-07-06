@@ -10,6 +10,10 @@ Inspired by [Obsidian.md](https://obsidian.md/) and [RoamResearch](https://roamr
 
 Because your knowledge base deserves to be powered by open source.
 
+## Getting started
+
+If you want to try out Memo just install it via marketplace using [this link](https://marketplace.visualstudio.com/items?itemName=svsool.markdown-memo) and open the [help](https://github.com/svsool/vscode-memo/tree/master/help) folder in VSCode.
+
 ## Features
 
 - 🔗 **Links support**
@@ -55,7 +59,3 @@ Because your knowledge base deserves to be powered by open source.
   - "Open random note" command which allows your to explore you knowledge base a little bit
 
     - ![Open random note command](./help/Attachments/Open%20random%20note.gif)
-
-## Getting started
-
-If you want to try out [Memo](https://marketplace.visualstudio.com/items?itemName=svsool.markdown-memo) just install it via marketplace and open [help](https://github.com/svsool/vscode-memo/tree/master/help) folder in VSCode.
