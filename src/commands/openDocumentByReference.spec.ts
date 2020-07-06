@@ -85,4 +85,17 @@ describe('openDocumentByReference command', () => {
 
     expect(getOpenedPaths()).toContain(`${path.join(getWorkspaceFolder()!, 'folder1', filename)}`);
   });
+
+  it('should open a note instead of an image on short ref', async () => {
+    const name = rndName();
+
+    await createFile(`/a/${name}.png`);
+    await createFile(`/b/${name}.md`);
+
+    await commands.executeCommand('_memo.openDocumentByReference', {
+      reference: name,
+    });
+
+    expect(getOpenedPaths()).toContain(`${path.join(getWorkspaceFolder()!, 'b', `${name}.md`)}`);
+  });
 });

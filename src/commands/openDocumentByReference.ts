@@ -2,7 +2,13 @@ import vscode from 'vscode';
 import fs from 'fs';
 import path from 'path';
 
-import { containsImageExt, getWorkspaceCache, isLongRef, sortPaths } from '../utils';
+import {
+  containsImageExt,
+  containsMarkdownExt,
+  getWorkspaceCache,
+  isLongRef,
+  sortPaths,
+} from '../utils';
 
 const openDocumentByReference = async ({ reference }: { reference: string }) => {
   const [ref] = reference.split('|');
@@ -12,6 +18,7 @@ const openDocumentByReference = async ({ reference }: { reference: string }) => 
     shallowFirst: true,
   });
 
+  // TODO: Move to utils as findUriByRef
   const uri = uris.find((uri) => {
     if (containsImageExt(reference)) {
       if (isLongRef(ref)) {
@@ -25,7 +32,9 @@ const openDocumentByReference = async ({ reference }: { reference: string }) => 
       return uri.fsPath.toLowerCase().endsWith(`${ref.toLowerCase()}.md`);
     }
 
-    return path.parse(uri.fsPath).name.toLowerCase() === ref.toLowerCase();
+    const name = path.parse(uri.fsPath).name.toLowerCase();
+
+    return containsMarkdownExt(path.basename(uri.fsPath)) && name === ref.toLowerCase();
   });
 
   if (uri) {

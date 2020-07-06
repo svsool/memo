@@ -73,4 +73,27 @@ describe('ReferenceHoverProvider', () => {
       ],
     });
   });
+
+  it('should provide hover for a note instead of an image on filenames clash', async () => {
+    const name0 = rndName();
+    const name1 = rndName();
+
+    await createFile(`${name0}.md`, `[[${name1}]]`);
+    await createFile(`/a/${name1}.png`);
+    await createFile(`/b/${name1}.md`, '# Hello world');
+
+    const doc = await openTextDocument(`${name0}.md`);
+
+    const referenceHoverProvider = new ReferenceHoverProvider();
+
+    expect(
+      toPlainObject(referenceHoverProvider.provideHover(doc, new vscode.Position(0, 4))),
+    ).toEqual({
+      contents: ['# Hello world'],
+      range: [
+        { character: expect.any(Number), line: 0 },
+        { character: expect.any(Number), line: 0 },
+      ],
+    });
+  });
 });

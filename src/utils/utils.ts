@@ -3,6 +3,7 @@ import path from 'path';
 export { sort as sortPaths } from 'cross-path-sort';
 import fs from 'fs';
 
+import getWordRangeAtPosition from './getWordRangeAtPosition';
 import { WorkspaceCache, RefT, FoundRefT } from '../types';
 
 const allExtsRegex = /\.(md|png|jpg|jpeg|svg|gif)/;
@@ -132,7 +133,11 @@ export const getReferenceAtPosition = (
   document: vscode.TextDocument,
   position: vscode.Position,
 ): { range: vscode.Range; ref: string } | null => {
-  const range = document.getWordRangeAtPosition(position, new RegExp(refPattern));
+  const range = getWordRangeAtPosition(
+    document.lineAt(position.line).text,
+    position,
+    new RegExp(refPattern),
+  );
 
   if (!range) {
     return null;
