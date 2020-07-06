@@ -26,6 +26,15 @@ src
 yarn test
 ```
 
+## Releasing
+
+1. bump version using [semver](https://semver.org/) and yarn built-in commands either `yarn version --patch`, `yarn version --minor` or `yarn version --major`
+  - patch update for bug fixes, dependency updates and small changes
+  - minor update for features and bigger changes in a backwards compatible manner
+  - major update for features with incompatible API changes
+1. push to origin with `git push && git push --tags`
+1. CI will automatically create new release with changes since the last release, it will also attach release artifacts and publish extension to the marketplace
+
 ## Conventions
 
 General:
