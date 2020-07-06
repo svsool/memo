@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - '**'
+    tags:
+      - 'v*'
   release:
     types:
       - created
@@ -47,9 +49,27 @@ jobs:
         uses: GabrielBB/xvfb-action@v1.0
         with:
           run: yarn test
+  create_release:
+    name: Create Release
+    if: success() && startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - name: Setup Node
+        uses: actions/setup-node@v1
+      - name: Install Dependencies
+        run: yarn
+      - name: Package
+        run: yarn package
+      - uses: "marvinpinto/action-automatic-releases@v1.0.0"
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          prerelease: false
+          files: |
+            markdown-memo-*.vsix
   publish:
     name: Publish
-    if: success() && startsWith(github.ref, 'refs/tags/')
+    if: success() && startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-18.04
     needs: [check-types, lint, tests]
     steps:
