@@ -1,15 +1,13 @@
 import vscode from 'vscode';
-import path from 'path';
 import fs from 'fs';
 
 import {
   containsImageExt,
   getWorkspaceCache,
-  isLongRef,
   getConfigProperty,
   getReferenceAtPosition,
   isUncPath,
-  containsMarkdownExt,
+  findUriByRef,
 } from '../utils';
 
 export default class ReferenceHoverProvider implements vscode.HoverProvider {
@@ -25,24 +23,7 @@ export default class ReferenceHoverProvider implements vscode.HoverProvider {
       const { ref, range } = refResult;
       const uris = [...getWorkspaceCache().imageUris, ...getWorkspaceCache().markdownUris];
 
-      // TODO: Move to utils as findUriByRef
-      const foundUri = uris.find((uri) => {
-        if (containsImageExt(ref)) {
-          if (isLongRef(ref)) {
-            return uri.fsPath.toLowerCase().endsWith(ref.toLowerCase());
-          }
-
-          return path.basename(uri.fsPath).toLowerCase() === ref.toLowerCase();
-        }
-
-        if (isLongRef(ref)) {
-          return uri.fsPath.toLowerCase().endsWith(`${ref.toLowerCase()}.md`);
-        }
-
-        const name = path.parse(uri.fsPath).name.toLowerCase();
-
-        return containsMarkdownExt(path.basename(uri.fsPath)) && name === ref.toLowerCase();
-      });
+      const foundUri = findUriByRef(uris, ref);
 
       const hoverRange = new vscode.Range(
         new vscode.Position(range.start.line, range.start.character + 2),

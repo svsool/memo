@@ -23,7 +23,7 @@ describe('extendMarkdownIt contribution', () => {
     expect(md.render('')).toBe('');
   });
 
-  it('should render invalid link', async () => {
+  it('should render html link with tooltip about broken reference', async () => {
     const md = extendMarkdownIt(MarkdownIt());
 
     await cacheWorkspace();
@@ -34,8 +34,9 @@ describe('extendMarkdownIt contribution', () => {
     `);
   });
 
-  it('should render link to existing note without label', async () => {
+  it('should render html link to the existing note without a label', async () => {
     const name = rndName();
+
     await createFile(`${name}.md`);
 
     const md = extendMarkdownIt(MarkdownIt());
@@ -49,8 +50,9 @@ describe('extendMarkdownIt contribution', () => {
     );
   });
 
-  it('should render link to existing note with label', async () => {
+  it('should render html link to the existing note with a label', async () => {
     const name = rndName();
+
     await createFile(`${name}.md`);
 
     const md = extendMarkdownIt(MarkdownIt());
@@ -66,8 +68,9 @@ describe('extendMarkdownIt contribution', () => {
     );
   });
 
-  it('should render link to existing image', async () => {
+  it('should render image', async () => {
     const name = rndName();
+
     await createFile(`${name}.png`);
 
     const md = extendMarkdownIt(MarkdownIt());
@@ -89,8 +92,9 @@ describe('extendMarkdownIt contribution', () => {
     expect(md.render('[[]]')).toBe('<p>[[]]</p>\n');
   });
 
-  it('should render link to document even when brackets unbalanced', async () => {
+  it('should render html link to the note even when brackets unbalanced', async () => {
     const name = rndName();
+
     await createFile(`${name}.md`);
 
     const md = extendMarkdownIt(MarkdownIt());
@@ -106,8 +110,9 @@ describe('extendMarkdownIt contribution', () => {
     );
   });
 
-  it('should embed image even when brackets unbalanced', async () => {
+  it('should render an image even when brackets unbalanced', async () => {
     const name = rndName();
+
     await createFile(`${name}.png`);
 
     const md = extendMarkdownIt(MarkdownIt());
@@ -118,6 +123,42 @@ describe('extendMarkdownIt contribution', () => {
       `<p>[[<div><img src="${getImgUrlForMarkdownPreview(
         path.join(getWorkspaceFolder()!, `${name}.png`),
       )}" alt="${name}.png" /></div>]]]]</p>\n`,
+    );
+  });
+
+  it('should render proper html link to the note on partial match', async () => {
+    const name = rndName();
+
+    await createFile(`/a/first-${name}.md`);
+    await createFile(`/b/${name}.md`);
+
+    const md = extendMarkdownIt(MarkdownIt());
+
+    await cacheWorkspace();
+
+    const notePath = `${path.join(getWorkspaceFolder()!, 'b', name)}.md`;
+
+    expect(md.render(`[[${name}]]`)).toBe(
+      `<p><a title="${name}" href="${getFileUrlForMarkdownPreview(notePath)}">${name}</a></p>\n`,
+    );
+  });
+
+  it('should render html link to the note on short link without extension', async () => {
+    const name = rndName();
+
+    await createFile(`/a/${name}.gif`);
+    await createFile(`/a/${name}.png`);
+    await createFile(`/b/${name}.md`);
+    await createFile(`${name}.md`);
+
+    const md = extendMarkdownIt(MarkdownIt());
+
+    await cacheWorkspace();
+
+    const notePath = `${path.join(getWorkspaceFolder()!, name)}.md`;
+
+    expect(md.render(`[[${name}]]`)).toBe(
+      `<p><a title="${name}" href="${getFileUrlForMarkdownPreview(notePath)}">${name}</a></p>\n`,
     );
   });
 });

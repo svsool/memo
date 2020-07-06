@@ -32,7 +32,6 @@ const replaceRefs = ({
       if (new RegExp(pattern, 'i').exec(content)) {
         onMatch && onMatch();
 
-        // TODO: Figure how to use WorkspaceEdit API instead to make undo work properly
         const nextContent = content.replace(new RegExp(pattern, 'gi'), ($0, $1) => {
           onReplace && onReplace();
 

@@ -1,16 +1,18 @@
 import vscode, { workspace } from 'vscode';
 import path from 'path';
-export { sort as sortPaths } from 'cross-path-sort';
+import { sort as sortPaths } from 'cross-path-sort';
 import fs from 'fs';
 
 import getWordRangeAtPosition from './getWordRangeAtPosition';
 import { WorkspaceCache, RefT, FoundRefT } from '../types';
 
-const allExtsRegex = /\.(md|png|jpg|jpeg|svg|gif)/;
+export { sortPaths };
 
-const markdownExtRegex = /\.md$/;
+const allExtsRegex = /\.(md|png|jpg|jpeg|svg|gif)/i;
 
-const imageExtsRegex = /\.(png|jpg|jpeg|svg|gif)/;
+const markdownExtRegex = /\.md$/i;
+
+const imageExtsRegex = /\.(png|jpg|jpeg|svg|gif)/i;
 
 export const refPattern = '(\\[\\[)([^\\[\\]]+?)(\\]\\])';
 
@@ -85,18 +87,24 @@ export const extractShortRef = (pathParam: string, preserveExtension?: boolean):
 const workspaceCache: WorkspaceCache = {
   imageUris: [],
   markdownUris: [],
+  allUris: [],
 };
 
 export const getWorkspaceCache = (): WorkspaceCache => workspaceCache;
 
 export const cacheWorkspace = async () => {
-  workspaceCache.imageUris = await workspace.findFiles('**/*.{png,jpg,jpeg,svg,gif}');
-  workspaceCache.markdownUris = await workspace.findFiles('**/*.md');
+  const imageUris = await workspace.findFiles('**/*.{png,jpg,jpeg,svg,gif}');
+  const markdownUris = await workspace.findFiles('**/*.md');
+
+  workspaceCache.imageUris = sortPaths(imageUris, { shallowFirst: true });
+  workspaceCache.markdownUris = sortPaths(markdownUris, { shallowFirst: true });
+  workspaceCache.allUris = sortPaths([...markdownUris, ...imageUris], { shallowFirst: true });
 };
 
 export const cleanWorkspaceCache = () => {
   workspaceCache.imageUris = [];
   workspaceCache.markdownUris = [];
+  workspaceCache.allUris = [];
 };
 
 export const getWorkspaceFolder = () =>
@@ -207,3 +215,22 @@ export const getImgUrlForMarkdownPreview = (imagePath: string): string =>
 const uncPathRegex = /^[\\\/]{2,}[^\\\/]+[\\\/]+[^\\\/]+/;
 
 export const isUncPath = (path: string): boolean => uncPathRegex.test(path);
+
+export const findUriByRef = (uris: vscode.Uri[], ref: string): vscode.Uri | undefined =>
+  uris.find((uri) => {
+    if (containsImageExt(ref)) {
+      if (isLongRef(ref)) {
+        return uri.fsPath.toLowerCase().endsWith(ref.toLowerCase());
+      }
+
+      return path.basename(uri.fsPath).toLowerCase() === ref.toLowerCase();
+    }
+
+    if (isLongRef(ref)) {
+      return uri.fsPath.toLowerCase().endsWith(`${ref.toLowerCase()}.md`);
+    }
+
+    const name = path.parse(uri.fsPath).name.toLowerCase();
+
+    return containsMarkdownExt(path.basename(uri.fsPath)) && name === ref.toLowerCase();
+  });

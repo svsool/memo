@@ -6,6 +6,7 @@ import {
   getImgUrlForMarkdownPreview,
   getFileUrlForMarkdownPreview,
   containsImageExt,
+  findUriByRef,
 } from '../utils';
 
 const getInvalidRefAnchor = (text: string) =>
@@ -22,13 +23,8 @@ const extendMarkdownIt = (md: MarkdownIt) => {
       replace: (ref: string) => {
         const [refStr, label = ''] = ref.split('|');
 
-        const refStrNormalized = refStr.toLowerCase();
-
-        if (containsImageExt(refStrNormalized)) {
-          // TODO: Fix includes here, it can provide wrong file path
-          const imagePath = getWorkspaceCache().imageUris.find(({ fsPath: path }) =>
-            path.toLowerCase().includes(refStrNormalized),
-          )?.fsPath;
+        if (containsImageExt(refStr)) {
+          const imagePath = findUriByRef(getWorkspaceCache().imageUris, refStr)?.fsPath;
 
           if (imagePath) {
             return `<div><img src="${getImgUrlForMarkdownPreview(imagePath)}" alt="${
@@ -37,10 +33,7 @@ const extendMarkdownIt = (md: MarkdownIt) => {
           }
         }
 
-        const markdownUri = getWorkspaceCache().markdownUris.find(({ fsPath: path }) =>
-          // TODO: Fix includes here, it can provide wrong file path
-          path.toLowerCase().includes(refStrNormalized),
-        )?.fsPath;
+        const markdownUri = findUriByRef(getWorkspaceCache().markdownUris, refStr)?.fsPath;
 
         if (!markdownUri) {
           return getInvalidRefAnchor(label || refStr);
@@ -55,10 +48,7 @@ const extendMarkdownIt = (md: MarkdownIt) => {
       replace: (ref: string) => {
         const [refStr, label = ''] = ref.split('|');
 
-        const markdownUri = getWorkspaceCache().markdownUris.find(({ fsPath: path }) =>
-          // TODO: Fix includes here, it can provide wrong file path
-          path.toLowerCase().includes(refStr.toLowerCase()),
-        )?.fsPath;
+        const markdownUri = findUriByRef(getWorkspaceCache().markdownUris, refStr)?.fsPath;
 
         if (!markdownUri) {
           return getInvalidRefAnchor(label || refStr);
