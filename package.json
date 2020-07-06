@@ -79,8 +79,8 @@
   },
   "scripts": {
     "vscode:prepublish": "webpack --mode production",
-    "deploy": "vsce publish",
-    "package": "vsce package",
+    "deploy": "vsce publish --yarn",
+    "package": "vsce package --yarn",
     "clean": "rimraf dist out",
     "lint": "eslint src --ext ts",
     "webpack": "webpack --mode development",
