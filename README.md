@@ -56,6 +56,6 @@ If you want to try out Memo just install it via marketplace using [this link](ht
 
     - ![Open today's note command](./help/Attachments/Open%20today's%20note.gif)
 
-  - "Open random note" command which allows your to explore you knowledge base a little bit
+  - "Open random note" command which allows you to explore your knowledge base a little bit
 
     - ![Open random note command](./help/Attachments/Open%20random%20note.gif)
