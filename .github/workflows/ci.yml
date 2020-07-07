@@ -77,5 +77,5 @@ jobs:
         run: yarn
       - name: Publish
         env:
-          VSCE_PAT: $
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
         run: yarn deploy
