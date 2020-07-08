@@ -234,3 +234,11 @@ export const findUriByRef = (uris: vscode.Uri[], ref: string): vscode.Uri | unde
 
     return containsMarkdownExt(path.basename(uri.fsPath)) && name === ref.toLowerCase();
   });
+
+export const ensureDirectoryExistence = (filePath: string) => {
+  const dirname = path.dirname(filePath);
+  if (!fs.existsSync(dirname)) {
+    ensureDirectoryExistence(dirname);
+    fs.mkdirSync(dirname);
+  }
+};

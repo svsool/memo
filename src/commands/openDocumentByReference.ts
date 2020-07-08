@@ -2,7 +2,13 @@ import vscode from 'vscode';
 import fs from 'fs';
 import path from 'path';
 
-import { containsImageExt, getWorkspaceCache, sortPaths, findUriByRef } from '../utils';
+import {
+  containsImageExt,
+  getWorkspaceCache,
+  sortPaths,
+  findUriByRef,
+  ensureDirectoryExistence,
+} from '../utils';
 
 const openDocumentByReference = async ({ reference }: { reference: string }) => {
   const [ref] = reference.split('|');
@@ -27,6 +33,7 @@ const openDocumentByReference = async ({ reference }: { reference: string }) => 
 
       // don't override file content if it already exists
       if (!fs.existsSync(filePath)) {
+        ensureDirectoryExistence(filePath);
         fs.writeFileSync(filePath, '');
       }
 

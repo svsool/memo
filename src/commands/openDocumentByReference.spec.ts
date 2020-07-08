@@ -98,4 +98,28 @@ describe('openDocumentByReference command', () => {
 
     expect(getOpenedPaths()).toContain(`${path.join(getWorkspaceFolder()!, 'b', `${name}.md`)}`);
   });
+
+  it('should create note automatically including folder if does not exist yet', async () => {
+    const name = rndName();
+
+    await commands.executeCommand('_memo.openDocumentByReference', {
+      reference: `folder1/folder2/${name}`,
+    });
+
+    expect(getOpenedPaths()).toContain(
+      `${path.join(getWorkspaceFolder()!, 'folder1', 'folder2', `${name}.md`)}`,
+    );
+  });
+
+  it('should create note automatically even with leading slash in the reference', async () => {
+    const name = rndName();
+
+    await commands.executeCommand('_memo.openDocumentByReference', {
+      reference: `/folder1/${name}`,
+    });
+
+    expect(getOpenedPaths()).toContain(
+      `${path.join(getWorkspaceFolder()!, 'folder1', `${name}.md`)}`,
+    );
+  });
 });
