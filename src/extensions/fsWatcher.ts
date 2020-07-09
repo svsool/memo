@@ -12,6 +12,7 @@ import {
   cacheWorkspace,
   getWorkspaceCache,
   sortPaths,
+  escapeForRegExp,
 } from '../utils';
 
 const replaceRefs = ({
@@ -27,7 +28,7 @@ const replaceRefs = ({
 }): string | null => {
   const { updatedOnce, nextContent } = refs.reduce(
     ({ updatedOnce, nextContent }, ref) => {
-      const pattern = `\\[\\[${ref.old}(\\|.*)?\\]\\]`;
+      const pattern = `\\[\\[${escapeForRegExp(ref.old)}(\\|.*)?\\]\\]`;
 
       if (new RegExp(pattern, 'i').exec(content)) {
         onMatch && onMatch();

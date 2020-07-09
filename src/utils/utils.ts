@@ -164,6 +164,8 @@ export const getReferenceAtPosition = (
   };
 };
 
+export const escapeForRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 export const findReferences = async (
   ref: string,
   excludePaths: string[] = [],
@@ -176,7 +178,10 @@ export const findReferences = async (
     }
 
     const fileContent = fs.readFileSync(fsPath).toString();
-    const matches = matchAll(new RegExp(`\\[\\[(${ref}(\\|.*)?)\\]\\]`, 'gi'), fileContent);
+    const matches = matchAll(
+      new RegExp(`\\[\\[(${escapeForRegExp(ref)}(\\|.*)?)\\]\\]`, 'gi'),
+      fileContent,
+    );
 
     if (matches.length) {
       const currentDocument = await vscode.workspace.openTextDocument(vscode.Uri.file(fsPath));
