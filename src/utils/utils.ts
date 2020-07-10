@@ -96,9 +96,12 @@ export const cacheWorkspace = async () => {
   const imageUris = await workspace.findFiles('**/*.{png,jpg,jpeg,svg,gif}');
   const markdownUris = await workspace.findFiles('**/*.md');
 
-  workspaceCache.imageUris = sortPaths(imageUris, { shallowFirst: true });
-  workspaceCache.markdownUris = sortPaths(markdownUris, { shallowFirst: true });
-  workspaceCache.allUris = sortPaths([...markdownUris, ...imageUris], { shallowFirst: true });
+  workspaceCache.imageUris = sortPaths(imageUris, { pathKey: 'path', shallowFirst: true });
+  workspaceCache.markdownUris = sortPaths(markdownUris, { pathKey: 'path', shallowFirst: true });
+  workspaceCache.allUris = sortPaths([...markdownUris, ...imageUris], {
+    pathKey: 'path',
+    shallowFirst: true,
+  });
 };
 
 export const cleanWorkspaceCache = () => {

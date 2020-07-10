@@ -10,13 +10,7 @@ import {
 import path from 'path';
 import groupBy from 'lodash.groupby';
 
-import {
-  getWorkspaceCache,
-  extractLongRef,
-  extractShortRef,
-  sortPaths,
-  containsImageExt,
-} from '../utils';
+import { getWorkspaceCache, extractLongRef, extractShortRef, containsImageExt } from '../utils';
 
 export const provideCompletionItems = (document: TextDocument, position: Position) => {
   const linePrefix = document.lineAt(position).text.substr(0, position.character);
@@ -32,14 +26,9 @@ export const provideCompletionItems = (document: TextDocument, position: Positio
 
   const uris: Uri[] = [
     ...(isResourceAutocomplete
-      ? [
-          ...sortPaths(getWorkspaceCache().imageUris, { pathKey: 'fsPath', shallowFirst: true }),
-          ...sortPaths(getWorkspaceCache().markdownUris, { pathKey: 'fsPath', shallowFirst: true }),
-        ]
+      ? [...getWorkspaceCache().imageUris, ...getWorkspaceCache().markdownUris]
       : []),
-    ...(!isResourceAutocomplete
-      ? sortPaths(getWorkspaceCache().markdownUris, { pathKey: 'fsPath', shallowFirst: true })
-      : []),
+    ...(!isResourceAutocomplete ? getWorkspaceCache().markdownUris : []),
   ];
 
   const urisByPathBasename = groupBy(uris, ({ fsPath }) => path.basename(fsPath).toLowerCase());
