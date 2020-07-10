@@ -32,7 +32,10 @@ export const provideCompletionItems = (document: TextDocument, position: Positio
 
   const uris: Uri[] = [
     ...(isResourceAutocomplete
-      ? [...getWorkspaceCache().imageUris, ...getWorkspaceCache().markdownUris]
+      ? [
+          ...sortPaths(getWorkspaceCache().imageUris, { pathKey: 'fsPath', shallowFirst: true }),
+          ...sortPaths(getWorkspaceCache().markdownUris, { pathKey: 'fsPath', shallowFirst: true }),
+        ]
       : []),
     ...(!isResourceAutocomplete
       ? sortPaths(getWorkspaceCache().markdownUris, { pathKey: 'fsPath', shallowFirst: true })
