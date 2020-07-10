@@ -108,7 +108,7 @@ describe('provideCompletionItems()', () => {
     ]);
   });
 
-  it('should provide links to images', async () => {
+  it('should provide links to images and notes on embedding', async () => {
     const name0 = `a-${rndName()}`;
     const name1 = `b-${rndName()}`;
     const name2 = `c-${rndName()}`;
@@ -140,6 +140,10 @@ describe('provideCompletionItems()', () => {
       expect.objectContaining({
         insertText: `folder1/${name2}.png`,
         label: `folder1/${name2}.png`,
+      }),
+      expect.objectContaining({
+        insertText: name0,
+        label: name0,
       }),
     ]);
   });

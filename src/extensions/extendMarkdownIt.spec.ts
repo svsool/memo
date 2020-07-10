@@ -10,6 +10,7 @@ import {
   closeEditorsAndCleanWorkspace,
   getImgUrlForMarkdownPreview,
   getFileUrlForMarkdownPreview,
+  escapeForRegExp,
 } from '../test/testUtils';
 
 describe('extendMarkdownIt contribution', () => {
@@ -160,5 +161,159 @@ describe('extendMarkdownIt contribution', () => {
     expect(md.render(`[[${name}]]`)).toBe(
       `<p><a title="${name}" href="${getFileUrlForMarkdownPreview(notePath)}">${name}</a></p>\n`,
     );
+  });
+
+  it('should render embedded note', async () => {
+    const name = rndName();
+
+    await createFile(`${name}.md`, '# Hello world');
+
+    const md = extendMarkdownIt(MarkdownIt());
+
+    const notePath = `${path.join(getWorkspaceFolder()!, name)}.md`;
+
+    const html = md.render(`![[${name}]]`);
+
+    expect(
+      html.replace(new RegExp(escapeForRegExp(notePath), 'g'), `/note.md`).replace(name, 'note'),
+    ).toMatchInlineSnapshot(`
+      "<p><div class=\\"memo-markdown-embed\\">
+                <div class=\\"memo-markdown-embed-title\\">note</div>
+                <div class=\\"memo-markdown-embed-link\\">
+                  <a title=\\"/note.md\\" href=\\"/note.md\\">
+                    <i class=\\"icon-link\\"></i>
+                  </a>
+                </div>
+                <div class=\\"memo-markdown-embed-content\\">
+                  <h1>Hello world</h1>
+
+                </div>
+              </div></p>
+      "
+    `);
+  });
+
+  it('should render double embedded note', async () => {
+    const name = rndName();
+    const name1 = rndName();
+
+    await createFile(`${name}.md`, '# Hello world');
+    await createFile(`${name1}.md`, `![[${name}]]`);
+
+    const md = extendMarkdownIt(MarkdownIt());
+
+    const notePath = `${path.join(getWorkspaceFolder()!, name)}.md`;
+    const notePath1 = `${path.join(getWorkspaceFolder()!, name1)}.md`;
+
+    const html = md.render(`![[${name1}]]`);
+
+    expect(
+      html
+        .replace(new RegExp(escapeForRegExp(notePath), 'g'), `/note.md`)
+        .replace(name, 'note')
+        .replace(new RegExp(escapeForRegExp(notePath1), 'g'), `/note1.md`)
+        .replace(name1, 'note1'),
+    ).toMatchInlineSnapshot(`
+      "<p><div class=\\"memo-markdown-embed\\">
+                <div class=\\"memo-markdown-embed-title\\">note1</div>
+                <div class=\\"memo-markdown-embed-link\\">
+                  <a title=\\"/note1.md\\" href=\\"/note1.md\\">
+                    <i class=\\"icon-link\\"></i>
+                  </a>
+                </div>
+                <div class=\\"memo-markdown-embed-content\\">
+                  <p><div class=\\"memo-markdown-embed\\">
+                <div class=\\"memo-markdown-embed-title\\">note</div>
+                <div class=\\"memo-markdown-embed-link\\">
+                  <a title=\\"/note.md\\" href=\\"/note.md\\">
+                    <i class=\\"icon-link\\"></i>
+                  </a>
+                </div>
+                <div class=\\"memo-markdown-embed-content\\">
+                  <h1>Hello world</h1>
+
+                </div>
+              </div></p>
+
+                </div>
+              </div></p>
+      "
+    `);
+  });
+
+  it('should render cyclic linking detected warning', async () => {
+    const name = rndName();
+
+    await createFile(`${name}.md`, `![[${name}]]`);
+
+    const md = extendMarkdownIt(MarkdownIt());
+
+    const notePath = `${path.join(getWorkspaceFolder()!, name)}.md`;
+
+    const html = md.render(`![[${name}]]`);
+
+    expect(
+      html.replace(new RegExp(escapeForRegExp(notePath), 'g'), `/note.md`).replace(name, 'note'),
+    ).toMatchInlineSnapshot(`
+      "<p><div class=\\"memo-markdown-embed\\">
+                <div class=\\"memo-markdown-embed-title\\">note</div>
+                <div class=\\"memo-markdown-embed-link\\">
+                  <a title=\\"/note.md\\" href=\\"/note.md\\">
+                    <i class=\\"icon-link\\"></i>
+                  </a>
+                </div>
+                <div class=\\"memo-markdown-embed-content\\">
+                  <div style=\\"text-align: center\\">Cyclic linking detected 💥.</div>
+                </div>
+              </div></p>
+      "
+    `);
+  });
+
+  it('should render cyclic linking detected warning for deep link', async () => {
+    const name = rndName();
+    const name1 = rndName();
+
+    await createFile(`${name}.md`, `![[${name1}]]`);
+    await createFile(`${name1}.md`, `![[${name}]]`);
+
+    const md = extendMarkdownIt(MarkdownIt());
+
+    const notePath = `${path.join(getWorkspaceFolder()!, name)}.md`;
+    const notePath1 = `${path.join(getWorkspaceFolder()!, name1)}.md`;
+
+    const html = md.render(`![[${name}]]`);
+
+    expect(
+      html
+        .replace(new RegExp(escapeForRegExp(notePath), 'g'), `/note.md`)
+        .replace(name, 'note')
+        .replace(new RegExp(escapeForRegExp(notePath1), 'g'), `/note1.md`)
+        .replace(name1, 'note1'),
+    ).toMatchInlineSnapshot(`
+      "<p><div class=\\"memo-markdown-embed\\">
+                <div class=\\"memo-markdown-embed-title\\">note</div>
+                <div class=\\"memo-markdown-embed-link\\">
+                  <a title=\\"/note.md\\" href=\\"/note.md\\">
+                    <i class=\\"icon-link\\"></i>
+                  </a>
+                </div>
+                <div class=\\"memo-markdown-embed-content\\">
+                  <p><div class=\\"memo-markdown-embed\\">
+                <div class=\\"memo-markdown-embed-title\\">note1</div>
+                <div class=\\"memo-markdown-embed-link\\">
+                  <a title=\\"/note1.md\\" href=\\"/note1.md\\">
+                    <i class=\\"icon-link\\"></i>
+                  </a>
+                </div>
+                <div class=\\"memo-markdown-embed-content\\">
+                  <div style=\\"text-align: center\\">Cyclic linking detected 💥.</div>
+                </div>
+              </div></p>
+
+                </div>
+              </div></p>
+      "
+    `);
   });
 });

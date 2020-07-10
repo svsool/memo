@@ -166,6 +166,16 @@ export const getReferenceAtPosition = (
 
 export const escapeForRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
+export const extractEmbedRefs = (content: string) => {
+  const matches = matchAll(new RegExp(`\\[\\[(([^\\[\\]]+?)(\\|.*)?)\\]\\]`, 'gi'), content);
+
+  return matches.map((match) => {
+    const [, $1] = match;
+
+    return $1;
+  });
+};
+
 export const findReferences = async (
   ref: string,
   excludePaths: string[] = [],

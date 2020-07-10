@@ -1,5 +1,7 @@
 import MarkdownIt from 'markdown-it';
 import markdownItRegex from 'markdown-it-regex';
+import path from 'path';
+import fs from 'fs';
 
 import {
   getWorkspaceCache,
@@ -7,6 +9,7 @@ import {
   getFileUrlForMarkdownPreview,
   containsImageExt,
   findUriByRef,
+  extractEmbedRefs,
 } from '../utils';
 
 const getInvalidRefAnchor = (text: string) =>
@@ -16,7 +19,9 @@ const getRefAnchor = (href: string, text: string) =>
   `<a title="${text}" href="${href}">${text}</a>`;
 
 const extendMarkdownIt = (md: MarkdownIt) => {
-  return md
+  const refsStack: string[] = [];
+
+  const mdExtended = md
     .use(markdownItRegex, {
       name: 'ref-resource',
       regex: /!\[\[([^\[\]]+?)\]\]/,
@@ -33,13 +38,46 @@ const extendMarkdownIt = (md: MarkdownIt) => {
           }
         }
 
-        const markdownUri = findUriByRef(getWorkspaceCache().markdownUris, refStr)?.fsPath;
+        const fsPath = findUriByRef(getWorkspaceCache().markdownUris, refStr)?.fsPath;
 
-        if (!markdownUri) {
+        if (!fsPath) {
           return getInvalidRefAnchor(label || refStr);
         }
 
-        return getRefAnchor(getFileUrlForMarkdownPreview(markdownUri), label || refStr);
+        const name = path.parse(fsPath).name;
+
+        const content = fs.readFileSync(fsPath).toString();
+
+        const refs = extractEmbedRefs(content).map((ref) => ref.toLowerCase());
+
+        const cyclicLinkDetected =
+          refs.includes(refStr.toLowerCase()) || refs.some((ref) => refsStack.includes(ref));
+
+        if (!cyclicLinkDetected) {
+          refsStack.push(refStr.toLowerCase());
+        }
+
+        const html = `<div class="memo-markdown-embed">
+          <div class="memo-markdown-embed-title">${name}</div>
+          <div class="memo-markdown-embed-link">
+            <a title="${fsPath}" href="${fsPath}">
+              <i class="icon-link"></i>
+            </a>
+          </div>
+          <div class="memo-markdown-embed-content">
+            ${
+              !cyclicLinkDetected
+                ? (mdExtended as any).render(content, undefined, true)
+                : '<div style="text-align: center">Cyclic linking detected 💥.</div>'
+            }
+          </div>
+        </div>`;
+
+        if (!cyclicLinkDetected) {
+          refsStack.pop();
+        }
+
+        return html;
       },
     })
     .use(markdownItRegex, {
@@ -48,15 +86,17 @@ const extendMarkdownIt = (md: MarkdownIt) => {
       replace: (ref: string) => {
         const [refStr, label = ''] = ref.split('|');
 
-        const markdownUri = findUriByRef(getWorkspaceCache().markdownUris, refStr)?.fsPath;
+        const fsPath = findUriByRef(getWorkspaceCache().markdownUris, refStr)?.fsPath;
 
-        if (!markdownUri) {
+        if (!fsPath) {
           return getInvalidRefAnchor(label || refStr);
         }
 
-        return getRefAnchor(getFileUrlForMarkdownPreview(markdownUri), label || refStr);
+        return getRefAnchor(getFileUrlForMarkdownPreview(fsPath), label || refStr);
       },
     });
+
+  return mdExtended;
 };
 
 export default extendMarkdownIt;

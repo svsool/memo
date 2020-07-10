@@ -10,7 +10,13 @@ import {
 import path from 'path';
 import groupBy from 'lodash.groupby';
 
-import { getWorkspaceCache, extractLongRef, extractShortRef, sortPaths } from '../utils';
+import {
+  getWorkspaceCache,
+  extractLongRef,
+  extractShortRef,
+  sortPaths,
+  containsImageExt,
+} from '../utils';
 
 export const provideCompletionItems = (document: TextDocument, position: Position) => {
   const linePrefix = document.lineAt(position).text.substr(0, position.character);
@@ -24,26 +30,31 @@ export const provideCompletionItems = (document: TextDocument, position: Positio
 
   const completionItems: CompletionItem[] = [];
 
-  const uris: Uri[] = sortPaths(
-    [
-      ...(isResourceAutocomplete ? getWorkspaceCache().imageUris : []),
-      ...(!isResourceAutocomplete ? getWorkspaceCache().markdownUris : []),
-    ],
-    { pathKey: 'fsPath', shallowFirst: true },
-  );
+  const uris: Uri[] = [
+    ...(isResourceAutocomplete
+      ? [...getWorkspaceCache().imageUris, ...getWorkspaceCache().markdownUris]
+      : []),
+    ...(!isResourceAutocomplete
+      ? sortPaths(getWorkspaceCache().markdownUris, { pathKey: 'fsPath', shallowFirst: true })
+      : []),
+  ];
 
   const urisByPathBasename = groupBy(uris, ({ fsPath }) => path.basename(fsPath).toLowerCase());
 
-  for (const uri of uris) {
+  uris.forEach((uri) => {
     const workspaceFolder = workspace.getWorkspaceFolder(uri);
 
     if (!workspaceFolder) {
-      continue;
+      return;
     }
 
-    const longRef = extractLongRef(workspaceFolder.uri.fsPath, uri.fsPath, isResourceAutocomplete);
+    const longRef = extractLongRef(
+      workspaceFolder.uri.fsPath,
+      uri.fsPath,
+      containsImageExt(uri.fsPath),
+    );
 
-    const shortRef = extractShortRef(uri.fsPath, isResourceAutocomplete);
+    const shortRef = extractShortRef(uri.fsPath, containsImageExt(uri.fsPath));
 
     const urisGroup = urisByPathBasename[path.basename(uri.fsPath).toLowerCase()] || [];
 
@@ -51,7 +62,7 @@ export const provideCompletionItems = (document: TextDocument, position: Positio
       urisGroup.findIndex((uriParam) => uriParam.fsPath === uri.fsPath) === 0;
 
     if (!longRef || !shortRef) {
-      continue;
+      return;
     }
 
     const item = new CompletionItem(longRef.ref, CompletionItemKind.File);
@@ -59,7 +70,7 @@ export const provideCompletionItems = (document: TextDocument, position: Positio
     item.insertText = isFirstUriInGroup ? shortRef.ref : longRef.ref;
 
     completionItems.push(item);
-  }
+  });
 
   return completionItems;
 };

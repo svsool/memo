@@ -6,9 +6,19 @@ export { default as waitForExpect } from 'wait-for-expect';
 import * as utils from '../utils';
 import { WorkspaceCache } from '../types';
 
-const { getWorkspaceFolder, getImgUrlForMarkdownPreview, getFileUrlForMarkdownPreview } = utils;
+const {
+  getWorkspaceFolder,
+  getImgUrlForMarkdownPreview,
+  getFileUrlForMarkdownPreview,
+  escapeForRegExp,
+} = utils;
 
-export { getWorkspaceFolder, getImgUrlForMarkdownPreview, getFileUrlForMarkdownPreview };
+export {
+  getWorkspaceFolder,
+  getImgUrlForMarkdownPreview,
+  getFileUrlForMarkdownPreview,
+  escapeForRegExp,
+};
 
 export const cleanWorkspace = () => {
   const workspaceFolder = utils.getWorkspaceFolder();

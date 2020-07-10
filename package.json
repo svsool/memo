@@ -72,7 +72,11 @@
           "name": "Backlinks"
         }
       ]
-    }
+    },
+    "markdown.previewStyles": [
+      "./media/fontello/css/fontello.css",
+      "./media/markdown.css"
+    ]
   },
   "lint-staged": {
     "*.ts": [
