@@ -1,4 +1,4 @@
-import { window } from 'vscode';
+import { window, Uri } from 'vscode';
 import path from 'path';
 
 import BacklinksTreeDataProvider from './BacklinksTreeDataProvider';
@@ -43,7 +43,7 @@ describe('BacklinksTreeDataProvider()', () => {
     const doc = await openTextDocument(`${link}.md`);
     await window.showTextDocument(doc);
 
-    expect(toPlainObject(await getChildren())).toEqual([
+    expect(toPlainObject(await getChildren())).toMatchObject([
       {
         collapsibleState: 2,
         label: `a-${name0}.md`,
@@ -53,11 +53,10 @@ describe('BacklinksTreeDataProvider()', () => {
         command: {
           command: 'vscode.open',
           arguments: [
-            {
-              $mid: 1,
-              path: `${path.join(getWorkspaceFolder()!, `a-${name0}.md`)}`,
+            expect.objectContaining({
+              path: Uri.file(path.join(getWorkspaceFolder()!, `a-${name0}.md`)).path,
               scheme: 'file',
-            },
+            }),
             {
               selection: [
                 {
@@ -82,12 +81,10 @@ describe('BacklinksTreeDataProvider()', () => {
             command: {
               command: 'vscode.open',
               arguments: [
-                {
-                  $mid: 1,
-                  fsPath: `${path.join(getWorkspaceFolder()!, `a-${name0}.md`)}`,
-                  path: `${path.join(getWorkspaceFolder()!, `a-${name0}.md`)}`,
+                expect.objectContaining({
+                  path: Uri.file(path.join(getWorkspaceFolder()!, `a-${name0}.md`)).path,
                   scheme: 'file',
-                },
+                }),
                 {
                   selection: [
                     {
@@ -109,39 +106,16 @@ describe('BacklinksTreeDataProvider()', () => {
       {
         collapsibleState: 2,
         label: `b-${name1}.md`,
-        refs: [
-          {
-            location: {
-              uri: {
-                $mid: 1,
-                fsPath: `${path.join(getWorkspaceFolder()!, `b-${name1}.md`)}`,
-                path: `${path.join(getWorkspaceFolder()!, `b-${name1}.md`)}`,
-                scheme: 'file',
-              },
-              range: [
-                {
-                  line: 0,
-                  character: 28,
-                },
-                {
-                  line: 0,
-                  character: expect.any(Number),
-                },
-              ],
-            },
-            matchText: `[[${link}]]`,
-          },
-        ],
+        refs: expect.any(Array),
         description: '(1) ',
         tooltip: `${path.join(getWorkspaceFolder()!, `b-${name1}.md`)}`,
         command: {
           command: 'vscode.open',
           arguments: [
-            {
-              $mid: 1,
-              path: `${path.join(getWorkspaceFolder()!, `b-${name1}.md`)}`,
+            expect.objectContaining({
+              path: Uri.file(path.join(getWorkspaceFolder()!, `b-${name1}.md`)).path,
               scheme: 'file',
-            },
+            }),
             {
               selection: [
                 {
@@ -166,12 +140,10 @@ describe('BacklinksTreeDataProvider()', () => {
             command: {
               command: 'vscode.open',
               arguments: [
-                {
-                  $mid: 1,
-                  fsPath: `${path.join(getWorkspaceFolder()!, `b-${name1}.md`)}`,
-                  path: `${path.join(getWorkspaceFolder()!, `b-${name1}.md`)}`,
+                expect.objectContaining({
+                  path: Uri.file(path.join(getWorkspaceFolder()!, `b-${name1}.md`)).path,
                   scheme: 'file',
-                },
+                }),
                 {
                   selection: [
                     {
@@ -205,7 +177,7 @@ describe('BacklinksTreeDataProvider()', () => {
     const doc = await openTextDocument(`${link}.md`);
     await window.showTextDocument(doc);
 
-    expect(toPlainObject(await getChildren())).toEqual([
+    expect(toPlainObject(await getChildren())).toMatchObject([
       {
         collapsibleState: 2,
         label: `a-${name0}.md`,
@@ -215,11 +187,10 @@ describe('BacklinksTreeDataProvider()', () => {
         command: {
           command: 'vscode.open',
           arguments: [
-            {
-              $mid: 1,
-              path: `${path.join(getWorkspaceFolder()!, `a-${name0}.md`)}`,
+            expect.objectContaining({
+              path: Uri.file(path.join(getWorkspaceFolder()!, `a-${name0}.md`)).path,
               scheme: 'file',
-            },
+            }),
             {
               selection: [
                 {
@@ -244,12 +215,10 @@ describe('BacklinksTreeDataProvider()', () => {
             command: {
               command: 'vscode.open',
               arguments: [
-                {
-                  $mid: 1,
-                  fsPath: `${path.join(getWorkspaceFolder()!, `a-${name0}.md`)}`,
-                  path: `${path.join(getWorkspaceFolder()!, `a-${name0}.md`)}`,
+                expect.objectContaining({
+                  path: Uri.file(path.join(getWorkspaceFolder()!, `a-${name0}.md`)).path,
                   scheme: 'file',
-                },
+                }),
                 {
                   selection: [
                     {
@@ -271,39 +240,16 @@ describe('BacklinksTreeDataProvider()', () => {
       {
         collapsibleState: 2,
         label: `b-${name1}.md`,
-        refs: [
-          {
-            location: {
-              uri: {
-                $mid: 1,
-                fsPath: `${path.join(getWorkspaceFolder()!, `b-${name1}.md`)}`,
-                path: `${path.join(getWorkspaceFolder()!, `b-${name1}.md`)}`,
-                scheme: 'file',
-              },
-              range: [
-                {
-                  line: 0,
-                  character: 28,
-                },
-                {
-                  line: 0,
-                  character: expect.any(Number),
-                },
-              ],
-            },
-            matchText: `[[${link}]]`,
-          },
-        ],
+        refs: expect.any(Array),
         description: '(1) ',
         tooltip: `${path.join(getWorkspaceFolder()!, `b-${name1}.md`)}`,
         command: {
           command: 'vscode.open',
           arguments: [
-            {
-              $mid: 1,
-              path: `${path.join(getWorkspaceFolder()!, `b-${name1}.md`)}`,
+            expect.objectContaining({
+              path: Uri.file(path.join(getWorkspaceFolder()!, `b-${name1}.md`)).path,
               scheme: 'file',
-            },
+            }),
             {
               selection: [
                 {
@@ -328,12 +274,10 @@ describe('BacklinksTreeDataProvider()', () => {
             command: {
               command: 'vscode.open',
               arguments: [
-                {
-                  $mid: 1,
-                  fsPath: `${path.join(getWorkspaceFolder()!, `b-${name1}.md`)}`,
-                  path: `${path.join(getWorkspaceFolder()!, `b-${name1}.md`)}`,
+                expect.objectContaining({
+                  path: Uri.file(path.join(getWorkspaceFolder()!, `b-${name1}.md`)).path,
                   scheme: 'file',
-                },
+                }),
                 {
                   selection: [
                     {
