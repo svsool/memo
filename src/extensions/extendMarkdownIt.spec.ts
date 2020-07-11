@@ -24,7 +24,7 @@ describe('extendMarkdownIt contribution', () => {
     expect(md.render('')).toBe('');
   });
 
-  it('should render html link with tooltip about broken reference', async () => {
+  it('should render html link with tooltip about broken reference to note', async () => {
     const md = extendMarkdownIt(MarkdownIt());
 
     await cacheWorkspace();
@@ -46,9 +46,9 @@ describe('extendMarkdownIt contribution', () => {
 
     const notePath = `${path.join(getWorkspaceFolder()!, name)}.md`;
 
-    expect(md.render(`[[${name}]]`)).toBe(
-      `<p><a title="${name}" href="${getFileUrlForMarkdownPreview(notePath)}">${name}</a></p>\n`,
-    );
+    const url = getFileUrlForMarkdownPreview(notePath);
+
+    expect(md.render(`[[${name}]]`)).toBe(`<p><a title="${url}" href="${url}">${name}</a></p>\n`);
   });
 
   it('should render html link to the existing note with a label', async () => {
@@ -62,11 +62,59 @@ describe('extendMarkdownIt contribution', () => {
 
     const notePath = `${path.join(getWorkspaceFolder()!, `${name}.md`)}`;
 
+    const url = getFileUrlForMarkdownPreview(notePath);
+
     expect(md.render(`[[${name}|Test Label]]`)).toBe(
-      `<p><a title="Test Label" href="${getFileUrlForMarkdownPreview(
-        notePath,
-      )}">Test Label</a></p>\n`,
+      `<p><a title="${url}" href="${url}">Test Label</a></p>\n`,
     );
+  });
+
+  it('should render html link to the existing image without a label', async () => {
+    const name = rndName();
+
+    await createFile(`${name}.png`);
+
+    const md = extendMarkdownIt(MarkdownIt());
+
+    await cacheWorkspace();
+
+    const imagePath = `${path.join(getWorkspaceFolder()!, name)}.png`;
+
+    const url = getFileUrlForMarkdownPreview(imagePath);
+
+    expect(md.render(`[[${name}.png]]`)).toBe(
+      `<p><a title="${url}" href="${url}">${name}.png</a></p>\n`,
+    );
+  });
+
+  it('should render html link to the existing image with a label', async () => {
+    const name = rndName();
+
+    await createFile(`${name}.png`);
+
+    const md = extendMarkdownIt(MarkdownIt());
+
+    await cacheWorkspace();
+
+    const imagePath = `${path.join(getWorkspaceFolder()!, name)}.png`;
+
+    const url = getFileUrlForMarkdownPreview(imagePath);
+
+    expect(md.render(`[[${name}.png|Test Label]]`)).toBe(
+      `<p><a title="${url}" href="${url}">Test Label</a></p>\n`,
+    );
+  });
+
+  it('should render html link with tooltip about broken reference to image', async () => {
+    const md = extendMarkdownIt(MarkdownIt());
+
+    await cacheWorkspace();
+
+    expect(md.render('[[invalid-link.png]]').replace(getWorkspaceFolder()!, ''))
+      .toMatchInlineSnapshot(`
+      "<p><a data-invalid-ref style=\\"color: #cc0013; cursor: not-allowed;\\" title=\\"Link does not exist yet. Please use cmd / ctrl + click in text editor to create a new one.\\" href=\\"javascript:void(0)\\">invalid-link.png</a></p>
+      "
+    `);
   });
 
   it('should render image', async () => {
@@ -104,10 +152,10 @@ describe('extendMarkdownIt contribution', () => {
 
     const notePath = `${path.join(getWorkspaceFolder()!, name)}.md`;
 
+    const url = getFileUrlForMarkdownPreview(notePath);
+
     expect(md.render(`[[[[${name}]]]]]]`)).toBe(
-      `<p>[[<a title="${name}" href="${getFileUrlForMarkdownPreview(
-        notePath,
-      )}">${name}</a>]]]]</p>\n`,
+      `<p>[[<a title="${url}" href="${url}">${name}</a>]]]]</p>\n`,
     );
   });
 
@@ -139,9 +187,9 @@ describe('extendMarkdownIt contribution', () => {
 
     const notePath = `${path.join(getWorkspaceFolder()!, 'b', name)}.md`;
 
-    expect(md.render(`[[${name}]]`)).toBe(
-      `<p><a title="${name}" href="${getFileUrlForMarkdownPreview(notePath)}">${name}</a></p>\n`,
-    );
+    const url = getFileUrlForMarkdownPreview(notePath);
+
+    expect(md.render(`[[${name}]]`)).toBe(`<p><a title="${url}" href="${url}">${name}</a></p>\n`);
   });
 
   it('should render html link to the note on short link without extension', async () => {
@@ -158,9 +206,9 @@ describe('extendMarkdownIt contribution', () => {
 
     const notePath = `${path.join(getWorkspaceFolder()!, name)}.md`;
 
-    expect(md.render(`[[${name}]]`)).toBe(
-      `<p><a title="${name}" href="${getFileUrlForMarkdownPreview(notePath)}">${name}</a></p>\n`,
-    );
+    const url = getFileUrlForMarkdownPreview(notePath);
+
+    expect(md.render(`[[${name}]]`)).toBe(`<p><a title="${url}" href="${url}">${name}</a></p>\n`);
   });
 
   it('should render embedded note', async () => {

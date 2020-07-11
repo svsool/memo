@@ -16,7 +16,7 @@ const getInvalidRefAnchor = (text: string) =>
   `<a data-invalid-ref style="color: #cc0013; cursor: not-allowed;" title="Link does not exist yet. Please use cmd / ctrl + click in text editor to create a new one." href="javascript:void(0)">${text}</a>`;
 
 const getRefAnchor = (href: string, text: string) =>
-  `<a title="${text}" href="${href}">${text}</a>`;
+  `<a title="${href}" href="${href}">${text}</a>`;
 
 const extendMarkdownIt = (md: MarkdownIt) => {
   const refsStack: string[] = [];
@@ -86,13 +86,15 @@ const extendMarkdownIt = (md: MarkdownIt) => {
       replace: (ref: string) => {
         const [refStr, label = ''] = ref.split('|');
 
-        const fsPath = findUriByRef(getWorkspaceCache().markdownUris, refStr)?.fsPath;
+        const fsPath = findUriByRef(getWorkspaceCache().allUris, refStr)?.fsPath;
 
         if (!fsPath) {
           return getInvalidRefAnchor(label || refStr);
         }
 
-        return getRefAnchor(getFileUrlForMarkdownPreview(fsPath), label || refStr);
+        const url = getFileUrlForMarkdownPreview(fsPath);
+
+        return getRefAnchor(url, label || refStr);
       },
     });
 
