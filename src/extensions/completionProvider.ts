@@ -12,6 +12,8 @@ import groupBy from 'lodash.groupby';
 
 import { getWorkspaceCache, extractLongRef, extractShortRef, containsImageExt } from '../utils';
 
+const padWithZero = (n: number): string => (n < 10 ? '0' + n : String(n));
+
 export const provideCompletionItems = (document: TextDocument, position: Position) => {
   const linePrefix = document.lineAt(position).text.substr(0, position.character);
 
@@ -28,12 +30,14 @@ export const provideCompletionItems = (document: TextDocument, position: Positio
     ...(isResourceAutocomplete
       ? [...getWorkspaceCache().imageUris, ...getWorkspaceCache().markdownUris]
       : []),
-    ...(!isResourceAutocomplete ? getWorkspaceCache().markdownUris : []),
+    ...(!isResourceAutocomplete
+      ? [...getWorkspaceCache().markdownUris, ...getWorkspaceCache().imageUris]
+      : []),
   ];
 
   const urisByPathBasename = groupBy(uris, ({ fsPath }) => path.basename(fsPath).toLowerCase());
 
-  uris.forEach((uri) => {
+  uris.forEach((uri, index) => {
     const workspaceFolder = workspace.getWorkspaceFolder(uri);
 
     if (!workspaceFolder) {
@@ -60,6 +64,9 @@ export const provideCompletionItems = (document: TextDocument, position: Positio
     const item = new CompletionItem(longRef.ref, CompletionItemKind.File);
 
     item.insertText = isFirstUriInGroup ? shortRef.ref : longRef.ref;
+
+    // prepend index with 0, so a lexicographic sort doesn't mess things up
+    item.sortText = padWithZero(index);
 
     completionItems.push(item);
   });
