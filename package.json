@@ -55,7 +55,7 @@
     ],
     "configuration": {
       "type": "object",
-      "title": "Memo configuration",
+      "title": "Memo",
       "properties": {
         "memo.imagePreviewMaxHeight": {
           "default": "200",
