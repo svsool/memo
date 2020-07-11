@@ -89,8 +89,8 @@
     "package": "vsce package --yarn",
     "clean": "rimraf dist out",
     "lint": "eslint src --ext ts",
-    "webpack": "webpack --mode development",
-    "watch": "webpack --mode development",
+    "compile": "webpack --mode development",
+    "watch": "webpack --mode development -w",
     "pretest": "tsc -p ./ && yarn run webpack",
     "ts": "tsc --noEmit",
     "test": "node ./out/test/runTest.js"
