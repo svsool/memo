@@ -10,6 +10,7 @@ import {
 import path from 'path';
 import groupBy from 'lodash.groupby';
 
+import completionProviderTriggerCharacters from './completionProviderTriggerCharacters';
 import { getWorkspaceCache, extractLongRef, extractShortRef, containsImageExt } from '../utils';
 
 const padWithZero = (n: number): string => (n < 10 ? '0' + n : String(n));
@@ -17,8 +18,8 @@ const padWithZero = (n: number): string => (n < 10 ? '0' + n : String(n));
 export const provideCompletionItems = (document: TextDocument, position: Position) => {
   const linePrefix = document.lineAt(position).text.substr(0, position.character);
 
-  const isResourceAutocomplete = linePrefix.endsWith('![[');
-  const isDocsAutocomplete = linePrefix.endsWith('[[');
+  const isResourceAutocomplete = linePrefix.match(/\!\[\[\w*$/);
+  const isDocsAutocomplete = linePrefix.match(/\[\[\w*$/);
 
   if (!isDocsAutocomplete && !isResourceAutocomplete) {
     return undefined;
@@ -80,6 +81,6 @@ export const activate = async () => {
     {
       provideCompletionItems,
     },
-    '[',
+    ...completionProviderTriggerCharacters,
   );
 };
