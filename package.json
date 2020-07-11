@@ -62,6 +62,12 @@
           "scope": "resource",
           "description": "The maximum height of the image preview",
           "type": "number"
+        },
+        "memo.useEnhancedTriggerSuggest": {
+          "default": false,
+          "scope": "resource",
+          "description": "Requires reload. Triggers suggest also on typing other character than \"[\". But keep in mind that other autocomplete providers may contribute to the result due to that.",
+          "type": "boolean"
         }
       }
     },

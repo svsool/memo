@@ -11,7 +11,13 @@ import path from 'path';
 import groupBy from 'lodash.groupby';
 
 import completionProviderTriggerCharacters from './completionProviderTriggerCharacters';
-import { getWorkspaceCache, extractLongRef, extractShortRef, containsImageExt } from '../utils';
+import {
+  getWorkspaceCache,
+  extractLongRef,
+  extractShortRef,
+  containsImageExt,
+  getConfigProperty,
+} from '../utils';
 
 const padWithZero = (n: number): string => (n < 10 ? '0' + n : String(n));
 
@@ -76,11 +82,15 @@ export const provideCompletionItems = (document: TextDocument, position: Positio
 };
 
 export const activate = async () => {
+  const useEnhancedTriggerSuggest = getConfigProperty('useEnhancedTriggerSuggest', false);
+
+  const triggerCharacters = useEnhancedTriggerSuggest ? completionProviderTriggerCharacters : ['['];
+
   languages.registerCompletionItemProvider(
     'markdown',
     {
       provideCompletionItems,
     },
-    ...completionProviderTriggerCharacters,
+    ...triggerCharacters,
   );
 };

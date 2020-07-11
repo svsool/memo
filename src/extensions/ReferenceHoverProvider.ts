@@ -12,10 +12,7 @@ import {
 
 export default class ReferenceHoverProvider implements vscode.HoverProvider {
   public provideHover(document: vscode.TextDocument, position: vscode.Position) {
-    const imagePreviewMaxHeight = Math.max(
-      getConfigProperty(document, 'imagePreviewMaxHeight', 200),
-      10,
-    );
+    const imagePreviewMaxHeight = Math.max(getConfigProperty('imagePreviewMaxHeight', 200), 10);
 
     const refResult = getReferenceAtPosition(document, position);
 

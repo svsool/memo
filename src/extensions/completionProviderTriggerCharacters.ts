@@ -32,24 +32,28 @@ const mixCharactersAllLatin = '!LjFljñM mNÈÆnNjnjO)*+,oP>pR?r';
 const mixCharactersSomeCyrillicNoAlpha = "'Ћ<=>?ћУуФфХхЦцЧчЏ%4џШ12ш♥";
 const mixCharactersAllLatinNoAlpha = "'Ć<=>?ćUuFfHhCcČčDž%4džŠ12š♥";
 
-const triggerCharacters = (
-  serbianAlphabetCyrillic +
-  serbianAlphabetLatin +
-  montenegrinAlphabetCyrillic +
-  montenegrinAlphabetLatin +
-  macedonianAlphabetCyrillic +
-  macedonianAlphabetLatin +
-  russianAlphabetCyrillic +
-  tajik_alphabet_cyrillic +
-  tajik_alphabet_latin +
-  special_chars +
-  diacriticChars +
-  numericalChars +
-  alphabetChars +
-  mixCharactersSomeCyrillic +
-  mixCharactersAllLatin +
-  mixCharactersSomeCyrillicNoAlpha +
-  mixCharactersAllLatinNoAlpha
-).split('');
+const triggerCharacters = Array.from(
+  new Set(
+    (
+      serbianAlphabetCyrillic +
+      serbianAlphabetLatin +
+      montenegrinAlphabetCyrillic +
+      montenegrinAlphabetLatin +
+      macedonianAlphabetCyrillic +
+      macedonianAlphabetLatin +
+      russianAlphabetCyrillic +
+      tajik_alphabet_cyrillic +
+      tajik_alphabet_latin +
+      special_chars +
+      diacriticChars +
+      numericalChars +
+      alphabetChars +
+      mixCharactersSomeCyrillic +
+      mixCharactersAllLatin +
+      mixCharactersSomeCyrillicNoAlpha +
+      mixCharactersAllLatinNoAlpha
+    ).split(''),
+  ),
+);
 
 export default triggerCharacters;

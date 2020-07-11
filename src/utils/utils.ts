@@ -115,19 +115,8 @@ export const getWorkspaceFolder = () =>
 
 export const getDateInYYYYMMDDFormat = () => new Date().toISOString().slice(0, 10);
 
-const isEditor = (
-  documentOrEditor: vscode.TextDocument | vscode.TextEditor,
-): documentOrEditor is vscode.TextEditor =>
-  'document' in documentOrEditor && documentOrEditor.document !== null;
-
-export function getConfigProperty<T>(
-  documentOrEditor: vscode.TextDocument | vscode.TextEditor,
-  property: string,
-  fallback: T,
-): T {
-  const document = isEditor(documentOrEditor) ? documentOrEditor.document : documentOrEditor;
-  const config = vscode.workspace.getConfiguration('memo', document ? document.uri : undefined);
-  return config.get(property.toLowerCase(), config.get(property, fallback));
+export function getConfigProperty<T>(property: string, fallback: T): T {
+  return vscode.workspace.getConfiguration().get(`memo.${property}`, fallback);
 }
 
 export const matchAll = (pattern: RegExp, text: string): Array<RegExpMatchArray> => {
