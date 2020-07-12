@@ -26,6 +26,10 @@ If you want to try out Memo just install it via marketplace using [this link](ht
 
     - ![Links navigation](./help/Attachments/Links%20navigation.gif)
 
+  - Embedding notes and images
+
+    - ![Embedding notes and images](./help/Attachments/Embed%20files.gif)
+
   - Automatic links synchronization
 
     - ![Automatic links synchronization](./help/Attachments/Automatic%20link%20synchronization.gif)
@@ -38,7 +42,7 @@ If you want to try out Memo just install it via marketplace using [this link](ht
 
     - ![Support short and full links on filename clash](./help/Attachments/Short%20and%20long%20links%20support%202.png)
 
-- 🖼️ **Notes and images preview**
+- 🖼️ **Notes and images preview (built-in & on hover)**
 
 ![Notes and images preview](./help/Attachments/Notes%20and%20images%20preview.gif)
 
