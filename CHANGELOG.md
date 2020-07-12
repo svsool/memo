@@ -3,16 +3,42 @@
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
 ## [Unreleased]
+https://github.com/svsool/vscode-memo/compare/v0.1.7...HEAD
+
+## [v0.1.7] - 2020-07-08
+### Fixed
+- Fix backlinks lookup for filenames with special characters
+
+## [v0.1.6] - 2020-07-08
 ### Added
-- Refs `[[you name it]]` highlight in preview and text editor
-- Refs `[[you name it]]` following in preview and text editor using `cmd + click` or `editor.action.openLink` command which can be assigned with shortcut
-- Embed images using `![[your-image-name.png]]`
-- Create a note automatically on clicking nonexistent ref
-- Refs autocomplete on typing `[[` or `![[` for embedding images
-- Open today note command
-- Open random note command for exploring already existing notes
-- Automatic links synchronization on file move / rename
-- Ref labels `[[your ref|your label]]`, it will be rendered as link with `your label` text in markdown preview
-- Support long refs in case if ref name is not unique across multiple folder
-- Image and file preview on hover
-- Option `memo.imagePreviewMaxHeight` for configuring image preview height on hover
+- Creating a note from a long link even when folder does not exist
+
+## [v0.1.5] - 2020-07-07
+### Fixed
+- Fix links resolution in the built-in preview. Sometimes links were not referring to a correct file.
+
+## [v0.1.4] - 2020-07-06
+### Added
+- Publishing via CI
+### Fixed
+- Fix opening a note via a short link when note and image share the same name
+
+## [v0.1.1] - 2020-07-05
+### Added
+- Help docs
+- Features demo in README.md
+- Hover hint for links referring to nonexistent files
+
+## [v0.1.0] - 2020-07-04
+### Added
+- Links support
+  - Creating links
+  - Links navigation on `cmd+click` for macOS or `ctrl+click` for Windows
+  - Automatic links synchronization on file rename
+  - Support for short and full links if filename is not unique in the workspace
+- Notes & images preview in the built-in Markdown preview or on hovering a link
+- Creating notes on the fly from the links that are not created yet to the filesystem
+- Simple backlinks panel
+- Two new commands added
+  - Open today's note command — creates a note with a title in this format `yyyy-mm-dd` or opens already existing one
+  - Open random note — allows you to explore your knowledge base a little bit

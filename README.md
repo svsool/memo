@@ -63,3 +63,20 @@ If you want to try out Memo just install it via marketplace using [this link](ht
   - "Open random note" command which allows you to explore your knowledge base a little bit
 
     - ![Open random note command](./help/Attachments/Open%20random%20note.gif)
+
+## FAQ
+
+- How to follow link on `cmd+enter` or `ctrl+enter` like in Obsidian?
+  - Bind built-in `editor.action.openLink` command to `cmd+enter` ([see example](https://github.com/svsool/vscode-memo/issues/2#issuecomment-654981827)) or use `cmd+click` on the link
+
+## Contributing
+
+- File bugs, feature requests in [GitHub Issues](https://github.com/svsool/vscode-memo/issues).
+- Leave a review on [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=svsool.markdown-memo).
+- Read [CONTRIBUTING.md](CONTRIBUTING.md) for contributing to the code base.
+
+Some ideas for contribution can be found [here](https://github.com/svsool/vscode-memo/issues/1#issuecomment-655004112).
+
+## Changelog
+
+See changelog [here](CHANGELOG.md).

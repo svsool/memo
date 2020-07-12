@@ -13,10 +13,19 @@ src
  └── utils - common utils
 ```
 
+## Contributing
+
+1. Fork this repository
+2. Create your feature branch: `git checkout -b my-new-feature`
+3. Commit your changes: `git commit -am 'Add some feature'`
+4. Push to the branch: `git push origin my-new-feature`
+5. Submit a pull request
+
 ## Development
 
-* `cd <project-root> && yarn`
+* `cd <project-root> && yarn && yarn watch`
 * Open project in VSCode using `code <project-root>` or via `File -> Open...` and press `F5` to open a new window with the extension loaded.
+* After making modifications run `Developer: Restart Extension Host` command from the command palette to restart the extension and quickly pick up your changes.
 * Set breakpoints in your code inside `src/extension.ts` to debug the extension.
 * Find output from the extension in the debug console.
 
