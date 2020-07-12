@@ -37,6 +37,10 @@
   color: #000000;
 }
 
+.vscode-dark .memo-markdown-embed-link:hover i {
+  color: #ffffff;
+}
+
 .memo-markdown-embed-content {
   max-height: 500px;
   overflow-y: auto;
