@@ -97,7 +97,7 @@
     "lint": "eslint src --ext ts",
     "compile": "webpack --mode development",
     "watch": "webpack --mode development -w",
-    "pretest": "tsc -p ./ && yarn run webpack",
+    "pretest": "tsc -p ./ && yarn run webpack --development",
     "ts": "tsc --noEmit",
     "test": "node ./out/test/runTest.js"
   },

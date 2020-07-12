@@ -8,10 +8,19 @@ import {
   getReferenceAtPosition,
   isUncPath,
   findUriByRef,
+  isInCodeSpan,
+  isInFencedCodeBlock,
 } from '../utils';
 
 export default class ReferenceHoverProvider implements vscode.HoverProvider {
   public provideHover(document: vscode.TextDocument, position: vscode.Position) {
+    if (
+      isInFencedCodeBlock(document, position.line) ||
+      isInCodeSpan(document, position.line, position.character)
+    ) {
+      return null;
+    }
+
     const imagePreviewMaxHeight = Math.max(getConfigProperty('imagePreviewMaxHeight', 200), 10);
 
     const refResult = getReferenceAtPosition(document, position);

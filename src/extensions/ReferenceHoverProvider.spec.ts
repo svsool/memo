@@ -96,4 +96,41 @@ describe('ReferenceHoverProvider', () => {
       ],
     });
   });
+
+  it('should not provide hover for a link within code span', async () => {
+    const name0 = rndName();
+    const name1 = rndName();
+
+    await createFile(`${name0}.md`, `\`[[${name1}]]\``);
+    await createFile(`/b/${name1}.md`, '# Hello world');
+
+    const doc = await openTextDocument(`${name0}.md`);
+
+    const referenceHoverProvider = new ReferenceHoverProvider();
+
+    expect(referenceHoverProvider.provideHover(doc, new vscode.Position(0, 4))).toBeNull();
+  });
+
+  it.only('should not provide hover for a link within fenced code block', async () => {
+    const name0 = rndName();
+    const name1 = rndName();
+
+    await createFile(
+      `${name0}.md`,
+      `
+    \`\`\`
+    Preceding text
+    [[${name1}]]
+    Following text
+    \`\`\`
+    `,
+    );
+    await createFile(`/b/${name1}.md`, '# Hello world');
+
+    const doc = await openTextDocument(`${name0}.md`);
+
+    const referenceHoverProvider = new ReferenceHoverProvider();
+
+    expect(referenceHoverProvider.provideHover(doc, new vscode.Position(0, 4))).toBeNull();
+  });
 });

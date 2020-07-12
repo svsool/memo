@@ -1,39 +1,47 @@
 import * as vscode from 'vscode';
 
-import { refPattern, matchAll } from '../utils';
+import { refPattern, matchAll, isInCodeSpan, isInFencedCodeBlock } from '../utils';
 
 export default class DocumentLinkProvider implements vscode.DocumentLinkProvider {
   private readonly refPattern = new RegExp(refPattern, 'g');
 
   public provideDocumentLinks(document: vscode.TextDocument): vscode.DocumentLink[] {
     const results: vscode.DocumentLink[] = [];
-    const text = document.getText();
 
-    for (const match of matchAll(this.refPattern, text)) {
-      let linkStart: vscode.Position;
-      let linkEnd: vscode.Position;
+    document
+      .getText()
+      .split(/\r?\n/g)
+      .forEach((lineText, lineNum) => {
+        for (const match of matchAll(this.refPattern, lineText)) {
+          let linkStart: vscode.Position;
+          let linkEnd: vscode.Position;
 
-      const reference = match[2];
-      if (reference) {
-        const offset = (match.index || 0) + 2;
+          const reference = match[2];
+          if (reference) {
+            const offset = (match.index || 0) + 2;
 
-        linkStart = document.positionAt(offset);
-        linkEnd = document.positionAt(offset + reference.length);
+            if (isInFencedCodeBlock(document, lineNum) || isInCodeSpan(document, lineNum, offset)) {
+              continue;
+            }
 
-        const link = new vscode.DocumentLink(
-          new vscode.Range(linkStart, linkEnd),
-          vscode.Uri.parse(
-            `command:_memo.openDocumentByReference?${encodeURIComponent(
-              JSON.stringify({ reference }),
-            )}`,
-          ),
-        );
+            linkStart = new vscode.Position(lineNum, offset);
+            linkEnd = new vscode.Position(lineNum, offset + reference.length);
 
-        link.tooltip = 'Follow link';
+            const link = new vscode.DocumentLink(
+              new vscode.Range(linkStart, linkEnd),
+              vscode.Uri.parse(
+                `command:_memo.openDocumentByReference?${encodeURIComponent(
+                  JSON.stringify({ reference }),
+                )}`,
+              ),
+            );
 
-        results.push(link);
-      }
-    }
+            link.tooltip = 'Follow link';
+
+            results.push(link);
+          }
+        }
+      });
 
     return results;
   }

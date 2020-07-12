@@ -3,6 +3,7 @@ import { window, workspace, Position, Range, TextEditor, TextEditorDecorationTyp
 import {
   isFileTooLarge,
   isInFencedCodeBlock,
+  isInCodeSpan,
   isMdEditor,
   mathEnvCheck,
   refPattern,
@@ -45,7 +46,6 @@ export const getDecorations = (textEditor: TextEditor): { [decorTypeName: string
         return;
       }
 
-      // Trick. Match `[alt](link)` and `![alt](link)` first and remember those greyed out ranges
       const noDecorRanges: [number, number][] = [];
 
       Object.keys(regexToDecorationTypes).forEach((reText) => {
@@ -55,6 +55,10 @@ export const getDecorations = (textEditor: TextEditor): { [decorTypeName: string
         let match: RegExpExecArray | null;
         while ((match = regex.exec(lineText)) !== null) {
           let startIndex = match.index;
+
+          if (isInCodeSpan(doc, lineNum, startIndex)) {
+            continue;
+          }
 
           if (
             noDecorRanges.some(
@@ -69,7 +73,7 @@ export const getDecorations = (textEditor: TextEditor): { [decorTypeName: string
           }
 
           for (let i = 0; i < decorTypeNames.length; i++) {
-            //// Skip if in math environment
+            // Skip if in math environment
             if (mathEnvCheck(doc, new Position(lineNum, startIndex)) !== '') {
               break;
             }
@@ -84,7 +88,7 @@ export const getDecorations = (textEditor: TextEditor): { [decorTypeName: string
             const range = new Range(lineNum, startIndex, lineNum, startIndex + caughtGroup.length);
             startIndex += caughtGroup.length;
 
-            //// Needed for `[alt](link)` rule. And must appear after `startIndex += caughtGroup.length;`
+            // Needed for `[alt](link)` rule. And must appear after `startIndex += caughtGroup.length;`
             if (decorTypeName.length === 0) {
               continue;
             }

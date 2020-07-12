@@ -14,8 +14,17 @@ export const REGEX_FENCED_CODE_BLOCK = /^( {0,3}|\t)```[^`\r\n]*$[\w\W]+?^( {0,3
 export const isInFencedCodeBlock = (doc: TextDocument, lineNum: number): boolean => {
   let textBefore = doc.getText(new Range(new Position(0, 0), new Position(lineNum, 0)));
   textBefore = textBefore.replace(REGEX_FENCED_CODE_BLOCK, '').replace(/<!--[\W\w]+?-->/g, '');
-  //// So far `textBefore` should contain no valid fenced code block or comment
+  // So far `textBefore` should contain no valid fenced code block or comment
   return /^( {0,3}|\t)```[^`\r\n]*$[\w\W]*$/gm.test(textBefore);
+};
+
+const REGEX_CODE_SPAN = /`[^`]*?`/gm;
+
+export const isInCodeSpan = (doc: TextDocument, lineNum: number, offset: number): boolean => {
+  let textBefore = doc.getText(new Range(new Position(0, 0), new Position(lineNum, offset)));
+  textBefore = textBefore.replace(REGEX_CODE_SPAN, '').trim();
+  // So far `textBefore` should contain no valid fenced code block or comment
+  return /`[^`]*$/gm.test(textBefore);
 };
 
 export const mathEnvCheck = (doc: TextDocument, pos: Position): string => {

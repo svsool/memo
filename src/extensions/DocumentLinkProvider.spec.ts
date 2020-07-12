@@ -140,4 +140,94 @@ describe('DocumentLinkProvider', () => {
       tooltip: 'Follow link',
     });
   });
+
+  it('should provide nothing for link within code span', async () => {
+    const noteName0 = rndName();
+    const noteName1 = rndName();
+
+    await createFile(`${noteName0}.md`, `\`[[${noteName1}]]\``);
+    await createFile(`${noteName1}.md`);
+
+    const doc = await openTextDocument(`${noteName0}.md`);
+
+    const linkProvider = new DocumentLinkProvider();
+
+    const links = linkProvider.provideDocumentLinks(doc);
+
+    expect(links).toHaveLength(0);
+  });
+
+  it('should provide nothing for link within fenced code block', async () => {
+    const noteName0 = rndName();
+    const noteName1 = rndName();
+
+    await createFile(
+      `${noteName0}.md`,
+      `
+    \`\`\`
+    Preceding text
+    [[1234512345]]
+    Following text
+    \`\`\`
+    `,
+    );
+    await createFile(`${noteName1}.md`);
+
+    const doc = await openTextDocument(`${noteName0}.md`);
+
+    const linkProvider = new DocumentLinkProvider();
+
+    const links = linkProvider.provideDocumentLinks(doc);
+
+    expect(links).toHaveLength(0);
+  });
+
+  it('should provide reference only for last link in the file', async () => {
+    const noteName0 = rndName();
+
+    await createFile(
+      `${noteName0}.md`,
+      `
+    To create a link to any resource you can use \`[[DemoNote]]\` notation and for embedding resource to show it in the built-in preview (only images supported at the moment) please use \`![[]]\` notation with \`!\` in the beginning.
+
+    \`[[DemoNote]]\` \`[[DemoNote]] [[DemoNote]]\`
+
+    \`\`\`
+    [[DemoNote]]
+    \`\`\`
+
+    [[DemoNote]]
+    `,
+    );
+
+    const doc = await openTextDocument(`${noteName0}.md`);
+
+    const linkProvider = new DocumentLinkProvider();
+
+    const links = linkProvider.provideDocumentLinks(doc);
+
+    expect(links).toMatchInlineSnapshot(`
+      Array [
+        oe {
+          "range": Array [
+            Object {
+              "character": 6,
+              "line": 9,
+            },
+            Object {
+              "character": 14,
+              "line": 9,
+            },
+          ],
+          "target": Object {
+            "$mid": 1,
+            "path": "_memo.openDocumentByReference",
+            "query": "{\\"reference\\":\\"DemoNote\\"}",
+            "scheme": "command",
+          },
+          "tooltip": "Follow link",
+        },
+      ]
+    `);
+  });
 });

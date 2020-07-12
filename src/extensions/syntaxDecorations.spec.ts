@@ -242,4 +242,47 @@ describe('getDecorations', () => {
       }
     `);
   });
+
+  it('should not color ref within code span', async () => {
+    const noteFilename = `${rndName()}.md`;
+
+    await createFile(noteFilename, '`[[1234512345]]`');
+
+    const doc = await openTextDocument(noteFilename);
+
+    const editor = await window.showTextDocument(doc);
+
+    expect(getDecorations(editor)).toMatchInlineSnapshot(`
+      Object {
+        "gray": Array [],
+        "lightBlue": Array [],
+      }
+    `);
+  });
+
+  it('should not color ref within fenced code block', async () => {
+    const noteFilename = `${rndName()}.md`;
+
+    await createFile(
+      noteFilename,
+      `
+    \`\`\`
+    Preceding text
+    [[1234512345]]
+    Following text
+    \`\`\`
+    `,
+    );
+
+    const doc = await openTextDocument(noteFilename);
+
+    const editor = await window.showTextDocument(doc);
+
+    expect(getDecorations(editor)).toMatchInlineSnapshot(`
+      Object {
+        "gray": Array [],
+        "lightBlue": Array [],
+      }
+    `);
+  });
 });
