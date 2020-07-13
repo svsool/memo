@@ -3,7 +3,16 @@
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
 ## [Unreleased]
-https://github.com/svsool/vscode-memo/compare/v0.1.7...HEAD
+https://github.com/svsool/vscode-memo/compare/v0.1.8...HEAD
+
+## [v0.1.8] - 2020-07-13
+### Added
+- Embedding other notes using `![[Your note]]` syntax
+- Support regular links to images `[[image.png]]` are now supported, previously it was possible only to refer an image using embed link `![[image.png]]`
+- Add `memo.useEnhancedTriggerSuggest` setting that instructs Memo to continuously trigger suggest after `[[` characters typed, so it makes easier to re-trigger suggest if you make a mistake while typing
+- Embed files feature added to help documentation
+### Fixed
+- Regular and embed links won't be interpreted anymore within code span and fenced code blocks. So you can use it for escaping links and rendering them as is.
 
 ## [v0.1.7] - 2020-07-08
 ### Fixed
