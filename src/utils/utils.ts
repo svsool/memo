@@ -8,17 +8,21 @@ import { WorkspaceCache, RefT, FoundRefT } from '../types';
 
 export { sortPaths };
 
-const allExtsRegex = /\.(md|png|jpg|jpeg|svg|gif)/i;
+const allExtsRegex = /\.(md|png|jpg|jpeg|svg|gif|doc|docx|odt|pdf|rtf|tex|txt|wpd)/i;
 
 const markdownExtRegex = /\.md$/i;
 
 const imageExtsRegex = /\.(png|jpg|jpeg|svg|gif)/i;
+
+const otherExtsRegex = /\.(doc|docx|odt|pdf|rtf|tex|txt|wpd)$/i;
 
 export const refPattern = '(\\[\\[)([^\\[\\]]+?)(\\]\\])';
 
 export const containsImageExt = (path: string): boolean => !!imageExtsRegex.exec(path);
 
 export const containsMarkdownExt = (path: string): boolean => !!markdownExtRegex.exec(path);
+
+export const containsOtherKnownExts = (path: string): boolean => !!otherExtsRegex.exec(path);
 
 export const trimLeadingSlash = (value: string) => value.replace(/^\/+|^\\+/g, '');
 export const trimTrailingSlash = (value: string) => value.replace(/\/+|^\\+$/g, '');
@@ -87,6 +91,7 @@ export const extractShortRef = (pathParam: string, preserveExtension?: boolean):
 const workspaceCache: WorkspaceCache = {
   imageUris: [],
   markdownUris: [],
+  otherUris: [],
   allUris: [],
 };
 
@@ -95,10 +100,12 @@ export const getWorkspaceCache = (): WorkspaceCache => workspaceCache;
 export const cacheWorkspace = async () => {
   const imageUris = await workspace.findFiles('**/*.{png,jpg,jpeg,svg,gif}');
   const markdownUris = await workspace.findFiles('**/*.md');
+  const otherUris = await workspace.findFiles('**/*.{doc,docx,odt,pdf,rtf,tex,txt,wpd}');
 
   workspaceCache.imageUris = sortPaths(imageUris, { pathKey: 'path', shallowFirst: true });
   workspaceCache.markdownUris = sortPaths(markdownUris, { pathKey: 'path', shallowFirst: true });
-  workspaceCache.allUris = sortPaths([...markdownUris, ...imageUris], {
+  workspaceCache.otherUris = sortPaths(otherUris, { pathKey: 'path', shallowFirst: true });
+  workspaceCache.allUris = sortPaths([...markdownUris, ...imageUris, ...otherUris], {
     pathKey: 'path',
     shallowFirst: true,
   });
@@ -107,6 +114,7 @@ export const cacheWorkspace = async () => {
 export const cleanWorkspaceCache = () => {
   workspaceCache.imageUris = [];
   workspaceCache.markdownUris = [];
+  workspaceCache.otherUris = [];
   workspaceCache.allUris = [];
 };
 
@@ -225,7 +233,7 @@ export const isUncPath = (path: string): boolean => uncPathRegex.test(path);
 
 export const findUriByRef = (uris: vscode.Uri[], ref: string): vscode.Uri | undefined =>
   uris.find((uri) => {
-    if (containsImageExt(ref)) {
+    if (containsImageExt(ref) || containsOtherKnownExts(ref)) {
       if (isLongRef(ref)) {
         return uri.fsPath.toLowerCase().endsWith(ref.toLowerCase());
       }

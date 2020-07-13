@@ -1,8 +1,10 @@
 import vscode from 'vscode';
 import fs from 'fs';
+import path from 'path';
 
 import {
   containsImageExt,
+  containsOtherKnownExts,
   getWorkspaceCache,
   getConfigProperty,
   getReferenceAtPosition,
@@ -27,7 +29,7 @@ export default class ReferenceHoverProvider implements vscode.HoverProvider {
 
     if (refResult) {
       const { ref, range } = refResult;
-      const uris = [...getWorkspaceCache().imageUris, ...getWorkspaceCache().markdownUris];
+      const uris = getWorkspaceCache().allUris;
 
       const foundUri = findUriByRef(uris, ref);
 
@@ -44,6 +46,9 @@ export default class ReferenceHoverProvider implements vscode.HoverProvider {
                 ? 'UNC paths are not supported for images preview due to VSCode Content Security Policy. Use markdown preview or open image via cmd (ctrl) + click instead.'
                 : ''
             }](${vscode.Uri.file(foundUri.fsPath).toString()}|height=${imagePreviewMaxHeight})`;
+          } else if (containsOtherKnownExts(foundUri.fsPath)) {
+            const ext = path.parse(foundUri.fsPath).ext;
+            return `Preview is not supported for "${ext}" file type. Click to open in the default app.`;
           }
 
           return fs.readFileSync(foundUri.fsPath).toString();

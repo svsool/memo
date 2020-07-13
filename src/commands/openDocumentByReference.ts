@@ -1,9 +1,11 @@
 import vscode from 'vscode';
 import fs from 'fs';
 import path from 'path';
+import open from 'open';
 
 import {
   containsImageExt,
+  containsOtherKnownExts,
   getWorkspaceCache,
   sortPaths,
   findUriByRef,
@@ -13,7 +15,7 @@ import {
 const openDocumentByReference = async ({ reference }: { reference: string }) => {
   const [ref] = reference.split('|');
 
-  const uris = sortPaths([...getWorkspaceCache().markdownUris, ...getWorkspaceCache().imageUris], {
+  const uris = sortPaths(getWorkspaceCache().allUris, {
     pathKey: 'fsPath',
     shallowFirst: true,
   });
@@ -21,7 +23,11 @@ const openDocumentByReference = async ({ reference }: { reference: string }) => 
   const uri = findUriByRef(uris, ref);
 
   if (uri) {
-    await vscode.commands.executeCommand('vscode.open', uri);
+    if (containsOtherKnownExts(uri.fsPath)) {
+      open(uri.fsPath);
+    } else {
+      await vscode.commands.executeCommand('vscode.open', uri);
+    }
   } else if (!containsImageExt(reference)) {
     // Create missing file if does not exist yet (there is no way to edit image in VSCode so don't do anything in this case)
     const workspaceFolder =

@@ -16,6 +16,7 @@ import {
   extractLongRef,
   extractShortRef,
   containsImageExt,
+  containsOtherKnownExts,
   getConfigProperty,
 } from '../utils';
 
@@ -38,7 +39,11 @@ export const provideCompletionItems = (document: TextDocument, position: Positio
       ? [...getWorkspaceCache().imageUris, ...getWorkspaceCache().markdownUris]
       : []),
     ...(!isResourceAutocomplete
-      ? [...getWorkspaceCache().markdownUris, ...getWorkspaceCache().imageUris]
+      ? [
+          ...getWorkspaceCache().markdownUris,
+          ...getWorkspaceCache().imageUris,
+          ...getWorkspaceCache().otherUris,
+        ]
       : []),
   ];
 
@@ -54,10 +59,13 @@ export const provideCompletionItems = (document: TextDocument, position: Positio
     const longRef = extractLongRef(
       workspaceFolder.uri.fsPath,
       uri.fsPath,
-      containsImageExt(uri.fsPath),
+      containsImageExt(uri.fsPath) || containsOtherKnownExts(uri.fsPath),
     );
 
-    const shortRef = extractShortRef(uri.fsPath, containsImageExt(uri.fsPath));
+    const shortRef = extractShortRef(
+      uri.fsPath,
+      containsImageExt(uri.fsPath) || containsOtherKnownExts(uri.fsPath),
+    );
 
     const urisGroup = urisByPathBasename[path.basename(uri.fsPath).toLowerCase()] || [];
 
