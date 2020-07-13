@@ -9,3 +9,5 @@ You can embed any other note, for instance: ![[Features]]
 Or you can embed an image: ![[Backlinks panel.png]]
 
 At this point you can run `Markdown: Open Preview` command using the VSCode command palette to see what it looks like in the built-in preview.
+
+See also: ![[Accepted File Formats]]

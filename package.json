@@ -107,6 +107,7 @@
     "@types/lodash.groupby": "^4.6.6",
     "@types/markdown-it": "^10.0.1",
     "@types/node": "^13.11.0",
+    "@types/open": "^6.2.1",
     "@types/rimraf": "^3.0.0",
     "@types/vscode": "^1.45.0",
     "@typescript-eslint/eslint-plugin": "^2.30.0",
@@ -135,6 +136,7 @@
     "cross-path-sort": "^1.0.0",
     "lodash.groupby": "^4.6.0",
     "markdown-it": "^11.0.0",
-    "markdown-it-regex": "^0.2.0"
+    "markdown-it-regex": "^0.2.0",
+    "open": "^7.0.4"
   }
 }

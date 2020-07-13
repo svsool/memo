@@ -5,6 +5,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## [Unreleased]
 https://github.com/svsool/vscode-memo/compare/v0.1.8...HEAD
 
+## [Unreleased]
+### Added
+- Support opening common file types in the default app
+
 ## [v0.1.8] - 2020-07-13
 ### Added
 - Embedding other notes using `![[Your note]]` syntax
