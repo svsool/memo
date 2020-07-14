@@ -7,7 +7,6 @@ import {
   containsImageExt,
   containsOtherKnownExts,
   getWorkspaceCache,
-  sortPaths,
   findUriByRef,
   ensureDirectoryExistence,
 } from '../utils';
@@ -15,12 +14,7 @@ import {
 const openDocumentByReference = async ({ reference }: { reference: string }) => {
   const [ref] = reference.split('|');
 
-  const uris = sortPaths(getWorkspaceCache().allUris, {
-    pathKey: 'fsPath',
-    shallowFirst: true,
-  });
-
-  const uri = findUriByRef(uris, ref);
+  const uri = findUriByRef(getWorkspaceCache().allUris, ref);
 
   if (uri) {
     if (containsOtherKnownExts(uri.fsPath)) {
