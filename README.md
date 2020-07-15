@@ -30,10 +30,6 @@ If you want to try out Memo just install it via marketplace using [this link](ht
 
     - ![Embedding notes and images](./help/Attachments/Embed%20files.gif)
 
-  - Opening common file types in the default app
-
-    - ![Opening common file types in the default app](./help/Attachments/Opening%20common%20file%20types%20in%20the%20default%20app.gif)
-
   - Automatic links synchronization
 
     - ![Automatic links synchronization](./help/Attachments/Automatic%20link%20synchronization.gif)
