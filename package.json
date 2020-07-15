@@ -123,7 +123,7 @@
     "lint-staged": "^10.2.9",
     "prettier": "^2.0.5",
     "rimraf": "^3.0.2",
-    "ts-jest": "^26.1.0",
+    "ts-jest": "^26.1.2",
     "ts-loader": "^7.0.5",
     "typescript": "^3.8.3",
     "vsce": "^1.77.0",
