@@ -103,7 +103,7 @@
   },
   "devDependencies": {
     "@types/glob": "^7.1.1",
-    "@types/jest": "^26.0.0",
+    "@types/jest": "^26.0.4",
     "@types/lodash.groupby": "^4.6.6",
     "@types/markdown-it": "^10.0.1",
     "@types/node": "^13.11.0",
