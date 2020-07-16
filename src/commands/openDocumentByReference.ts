@@ -23,7 +23,6 @@ const openDocumentByReference = async ({ reference }: { reference: string }) => 
       await vscode.commands.executeCommand('vscode.open', uri);
     }
   } else if (!containsImageExt(reference)) {
-    // Create missing file if does not exist yet (there is no way to edit image in VSCode so don't do anything in this case)
     const workspaceFolder =
       vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders[0];
     if (workspaceFolder) {
