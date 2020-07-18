@@ -208,7 +208,7 @@ describe('DocumentLinkProvider', () => {
 
     expect(links).toMatchInlineSnapshot(`
       Array [
-        oe {
+        se {
           "range": Array [
             Object {
               "character": 6,

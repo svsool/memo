@@ -1,8 +1,4 @@
-declare module 'markdown-it-regex' {
-  const MarkdownItRegex: any;
-
-  export default MarkdownItRegex;
-}
+declare module 'markdown-it-regex';
 
 declare module 'cross-path-sort' {
   type SortOptions = {

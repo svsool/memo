@@ -13,11 +13,10 @@ const macedonianAlphabetLatin =
 const russianAlphabetCyrillic =
   'АаБбВвГгДдЕеЁёЖжЗзИиЙйКкЛлМмНнОоПпРрСсТтУуФфХхЦцЧчШшЩщЪъЫыЬьЭэЮюЯя';
 
-const tajik_alphabet_cyrillic =
-  'АаБбВвГгҒғДдЕеЁёЖжЗзИиӢӣЙйКкЛлМмНнОоПпРрСсТтУуӮӯФфХхҲҳЧчҶҷШшъЭэЮюЯя';
-const tajik_alphabet_latin = 'AaBbVvGgǦǧDdEeËëŽžZzIiĪīJjKkLlMmNnOoPpRrSsTtUuŪūFfHhḨḩČčÇçŠš’ÈèÛûÂâ';
+const tajikAlphabetCyrillic = 'АаБбВвГгҒғДдЕеЁёЖжЗзИиӢӣЙйКкЛлМмНнОоПпРрСсТтУуӮӯФфХхҲҳЧчҶҷШшъЭэЮюЯя';
+const tajikAlphabetLatin = 'AaBbVvGgǦǧDdEeËëŽžZzIiĪīJjKkLlMmNnOoPpRrSsTtUuŪūFfHhḨḩČčÇçŠš’ÈèÛûÂâ';
 
-const special_chars =
+const specialChars =
   '‘’‚“”„†‡‰‹›♠♣♥♦‾←↑→↓™!"#$%&\'()*+,-./ :;<=>?@[\\]^_`{|}~…–—¡¢£¤¥¦§¨©ª«¬®¯°±²³´µ¶·¸¹º»¼½¾¿×';
 
 const diacriticChars = 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝàáâãäåæçèéêëìíîïðñòóôõöøùúûüý';
@@ -42,9 +41,9 @@ const triggerCharacters = Array.from(
       macedonianAlphabetCyrillic +
       macedonianAlphabetLatin +
       russianAlphabetCyrillic +
-      tajik_alphabet_cyrillic +
-      tajik_alphabet_latin +
-      special_chars +
+      tajikAlphabetCyrillic +
+      tajikAlphabetLatin +
+      specialChars +
       diacriticChars +
       numericalChars +
       alphabetChars +
