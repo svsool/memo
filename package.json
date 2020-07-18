@@ -68,6 +68,12 @@
           "scope": "resource",
           "description": "Requires reload. Triggers suggest also on typing other character than \"[\". But keep in mind that other autocomplete providers may contribute to the result due to that.",
           "type": "boolean"
+        },
+        "memo.backlinksPanelFilesCollapsedState": {
+          "default": "true",
+          "scope": "resource",
+          "description": "Collapse backlinks panel.",
+          "type": "boolean"
         }
       }
     },

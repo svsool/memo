@@ -8,6 +8,7 @@ import {
   getWorkspaceFolder,
   trimSlashes,
   sortPaths,
+  getConfigProperty,
 } from '../utils';
 import { FoundRefT } from '../types';
 
@@ -61,11 +62,18 @@ export default class BacklinksTreeDataProvider implements vscode.TreeDataProvide
         return noInfoToShow;
       }
 
+      const backlinksPanelFilesCollapsedState = getConfigProperty(
+        'backlinksPanelFilesCollapsedState',
+        true,
+      );
+
       return pathsSorted.map((pathParam) => {
         const backlink = new Backlink(
           path.basename(pathParam),
           referencesByPath[pathParam],
-          vscode.TreeItemCollapsibleState.Expanded,
+          backlinksPanelFilesCollapsedState
+            ? vscode.TreeItemCollapsibleState.Collapsed
+            : vscode.TreeItemCollapsibleState.Expanded,
         );
         backlink.description = `(${referencesByPath[pathParam].length}) ${trimSlashes(
           pathParam
