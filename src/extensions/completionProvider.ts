@@ -6,6 +6,7 @@ import {
   workspace,
   CompletionItemKind,
   Uri,
+  ExtensionContext,
 } from 'vscode';
 import path from 'path';
 import groupBy from 'lodash.groupby';
@@ -89,16 +90,18 @@ export const provideCompletionItems = (document: TextDocument, position: Positio
   return completionItems;
 };
 
-export const activate = async () => {
+export const activate = async (context: ExtensionContext) => {
   const useEnhancedTriggerSuggest = getConfigProperty('useEnhancedTriggerSuggest', false);
 
   const triggerCharacters = useEnhancedTriggerSuggest ? completionProviderTriggerCharacters : ['['];
 
-  languages.registerCompletionItemProvider(
-    'markdown',
-    {
-      provideCompletionItems,
-    },
-    ...triggerCharacters,
+  context.subscriptions.push(
+    languages.registerCompletionItemProvider(
+      'markdown',
+      {
+        provideCompletionItems,
+      },
+      ...triggerCharacters,
+    ),
   );
 };

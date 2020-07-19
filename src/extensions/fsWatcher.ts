@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { workspace, window } from 'vscode';
+import { workspace, window, ExtensionContext } from 'vscode';
 import groupBy from 'lodash.groupby';
 
 import {
@@ -54,13 +54,13 @@ const replaceRefs = ({
   return updatedOnce ? nextContent : null;
 };
 
-export const activate = () => {
+export const activate = (context: ExtensionContext) => {
   const fileWatcher = workspace.createFileSystemWatcher('**/*.{md,png,jpg,jpeg,svg,gif}');
 
-  fileWatcher.onDidCreate(cacheWorkspace);
-  fileWatcher.onDidDelete(cacheWorkspace);
+  const createListenerDisposable = fileWatcher.onDidCreate(cacheWorkspace);
+  const deleteListenerDisposable = fileWatcher.onDidDelete(cacheWorkspace);
 
-  workspace.onDidRenameFiles(async ({ files }) => {
+  const renameFilesDisposable = workspace.onDidRenameFiles(async ({ files }) => {
     if (files.some(({ newUri }) => fs.lstatSync(newUri.fsPath).isDirectory())) {
       window.showWarningMessage(
         'Recursive links update on renaming / moving directory is not supported yet.',
@@ -173,4 +173,10 @@ export const activate = () => {
       );
     }
   });
+
+  context.subscriptions.push(
+    createListenerDisposable,
+    deleteListenerDisposable,
+    renameFilesDisposable,
+  );
 };

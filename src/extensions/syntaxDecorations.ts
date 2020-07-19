@@ -1,4 +1,12 @@
-import { window, workspace, Position, Range, TextEditor, TextEditorDecorationType } from 'vscode';
+import {
+  window,
+  workspace,
+  Position,
+  Range,
+  TextEditor,
+  TextEditorDecorationType,
+  ExtensionContext,
+} from 'vscode';
 
 import {
   isFileTooLarge,
@@ -116,23 +124,24 @@ const updateDecorations = (textEditor?: TextEditor) => {
   });
 };
 
-export const activate = () => {
-  window.onDidChangeActiveTextEditor(updateDecorations);
+export const activate = (context: ExtensionContext) => {
+  context.subscriptions.push(
+    window.onDidChangeActiveTextEditor(updateDecorations),
+    workspace.onDidChangeTextDocument((event) => {
+      const editor = window.activeTextEditor;
+      let timeout: NodeJS.Timeout | null = null;
+      const triggerUpdateDecorations = (editor: TextEditor) => {
+        if (timeout) {
+          clearTimeout(timeout);
+        }
+        timeout = setTimeout(() => updateDecorations(editor), 200);
+      };
 
-  workspace.onDidChangeTextDocument((event) => {
-    const editor = window.activeTextEditor;
-    let timeout: NodeJS.Timeout | null = null;
-    const triggerUpdateDecorations = (editor: TextEditor) => {
-      if (timeout) {
-        clearTimeout(timeout);
+      if (editor !== undefined && event.document === editor.document) {
+        triggerUpdateDecorations(editor);
       }
-      timeout = setTimeout(() => updateDecorations(editor), 200);
-    };
-
-    if (editor !== undefined && event.document === editor.document) {
-      triggerUpdateDecorations(editor);
-    }
-  });
+    }),
+  );
 
   const editor = window.activeTextEditor;
   if (editor) {

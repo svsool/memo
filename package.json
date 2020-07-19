@@ -32,6 +32,7 @@
     "onLanguage:markdown",
     "onCommand:memo.openRandomNote",
     "onCommand:memo.openTodayNote",
+    "onCommand:memo.openReferenceInDefaultApp",
     "onCommand:_memo.openReference",
     "onCommand:_memo.cacheWorkspace",
     "onCommand:_memo.cleanWorkspaceCache",
@@ -50,6 +51,11 @@
       {
         "command": "memo.openRandomNote",
         "title": "Open random note",
+        "category": "Memo"
+      },
+      {
+        "command": "memo.openReferenceInDefaultApp",
+        "title": "Open link in the default app",
         "category": "Memo"
       }
     ],
@@ -70,6 +76,21 @@
           "type": "boolean"
         }
       }
+    },
+    "menus": {
+      "editor/context": [
+        {
+          "when": "editorLangId == markdown && memo:cursorAtExistingReference",
+          "group": "memo",
+          "command": "memo.openReferenceInDefaultApp"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "memo.openReferenceInDefaultApp",
+          "when": "editorLangId == markdown && memo:cursorAtExistingReference"
+        }
+      ]
     },
     "views": {
       "explorer": [
@@ -97,7 +118,7 @@
     "lint": "eslint src --ext ts",
     "compile": "webpack --mode development",
     "watch": "webpack --mode development -w",
-    "pretest": "tsc -p ./ && yarn run webpack --development",
+    "pretest": "tsc -p ./ && yarn run webpack --mode development",
     "ts": "tsc --noEmit",
     "test": "node ./out/test/runTest.js"
   },

@@ -1,11 +1,9 @@
 import vscode from 'vscode';
 import fs from 'fs';
 import path from 'path';
-import open from 'open';
 
 import {
   containsImageExt,
-  containsOtherKnownExts,
   getWorkspaceCache,
   findUriByRef,
   ensureDirectoryExistence,
@@ -17,11 +15,7 @@ const openDocumentByReference = async ({ reference }: { reference: string }) => 
   const uri = findUriByRef(getWorkspaceCache().allUris, ref);
 
   if (uri) {
-    if (containsOtherKnownExts(uri.fsPath)) {
-      open(uri.fsPath);
-    } else {
-      await vscode.commands.executeCommand('vscode.open', uri);
-    }
+    await vscode.commands.executeCommand('vscode.open', uri);
   } else if (!containsImageExt(reference)) {
     const workspaceFolder =
       vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders[0];
