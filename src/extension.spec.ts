@@ -11,7 +11,7 @@ describe('extension', () => {
 
   it('should find extension in extensions list', () => {
     expect(vscode.extensions.all.some((extension) => extension.id === MEMO_EXTENSION_ID)).toBe(
-      true,
+      false,
     );
   });
 
