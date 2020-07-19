@@ -140,7 +140,7 @@ export const matchAll = (pattern: RegExp, text: string): Array<RegExpMatchArray>
 export const getReferenceAtPosition = (
   document: vscode.TextDocument,
   position: vscode.Position,
-): { range: vscode.Range; ref: string } | null => {
+): { range: vscode.Range; ref: string; label: string } | null => {
   const range = getWordRangeAtPosition(
     document.lineAt(position.line).text,
     position,
@@ -151,7 +151,7 @@ export const getReferenceAtPosition = (
     return null;
   }
 
-  const [ref] = document
+  const [ref, label = ''] = document
     .getText(range)
     .replace('![[', '')
     .replace('[[', '')
@@ -160,6 +160,7 @@ export const getReferenceAtPosition = (
 
   return {
     ref,
+    label,
     range,
   };
 };

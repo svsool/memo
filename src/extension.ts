@@ -7,6 +7,7 @@ import {
   DocumentLinkProvider,
   ReferenceHoverProvider,
   ReferenceProvider,
+  ReferenceRenameProvider,
   BacklinksTreeDataProvider,
   extendMarkdownIt,
 } from './extensions';
@@ -28,6 +29,7 @@ export const activate = async (context: vscode.ExtensionContext) => {
   vscode.languages.registerDocumentLinkProvider(mdLangSelector, new DocumentLinkProvider());
   vscode.languages.registerHoverProvider(mdLangSelector, new ReferenceHoverProvider());
   vscode.languages.registerReferenceProvider(mdLangSelector, new ReferenceProvider());
+  vscode.languages.registerRenameProvider(mdLangSelector, new ReferenceRenameProvider());
   fsWatcher.activate();
   completionProvider.activate();
 

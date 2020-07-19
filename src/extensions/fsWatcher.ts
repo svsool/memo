@@ -7,11 +7,9 @@ import {
   extractShortRef,
   extractLongRef,
   getWorkspaceFolder,
-  containsImageExt,
   containsMarkdownExt,
   cacheWorkspace,
   getWorkspaceCache,
-  sortPaths,
   escapeForRegExp,
 } from '../utils';
 
@@ -69,21 +67,16 @@ export const activate = () => {
       );
     }
 
-    const oldUris = sortPaths(
-      [...getWorkspaceCache().markdownUris, ...getWorkspaceCache().imageUris],
-      { pathKey: 'fsPath', shallowFirst: true },
-    );
+    const oldUris = getWorkspaceCache().allUris;
 
     const oldUrisByPathBasename = groupBy(oldUris, ({ fsPath }) =>
       path.basename(fsPath).toLowerCase(),
     );
 
+    // TODO: I think it's not going to work after introducing full-blown indexing
     await cacheWorkspace();
 
-    const newUris = sortPaths(
-      [...getWorkspaceCache().markdownUris, ...getWorkspaceCache().imageUris],
-      { pathKey: 'fsPath', shallowFirst: true },
-    );
+    const newUris = getWorkspaceCache().allUris;
 
     const newUrisByPathBasename = groupBy(newUris, ({ fsPath }) =>
       path.basename(fsPath).toLowerCase(),
@@ -112,66 +105,64 @@ export const activate = () => {
     };
 
     files.forEach(({ oldUri, newUri }) => {
-      const isImage = containsImageExt(oldUri.fsPath) && containsImageExt(newUri.fsPath);
-      const isMarkdown = containsMarkdownExt(oldUri.fsPath) && containsMarkdownExt(newUri.fsPath);
-      if (isImage || isMarkdown) {
-        const workspaceFolder = getWorkspaceFolder()!;
-        const oldShortRef = extractShortRef(oldUri.fsPath, isImage)?.ref;
-        const newShortRef = extractShortRef(newUri.fsPath, isImage)?.ref;
-        const oldLongRef = extractLongRef(workspaceFolder, oldUri.fsPath, isImage)?.ref;
-        const newLongRef = extractLongRef(workspaceFolder, newUri.fsPath, isImage)?.ref;
-        const oldUriIsShortRef = isShortRefAllowed(oldUri.fsPath, oldUrisByPathBasename);
-        const newUriIsShortRef = isShortRefAllowed(newUri.fsPath, newUrisByPathBasename);
+      const preserveOldExtension = !containsMarkdownExt(oldUri.fsPath);
+      const preserveNewExtension = !containsMarkdownExt(newUri.fsPath);
+      const workspaceFolder = getWorkspaceFolder()!;
+      const oldShortRef = extractShortRef(oldUri.fsPath, preserveOldExtension)?.ref;
+      const newShortRef = extractShortRef(newUri.fsPath, preserveNewExtension)?.ref;
+      const oldLongRef = extractLongRef(workspaceFolder, oldUri.fsPath, preserveOldExtension)?.ref;
+      const newLongRef = extractLongRef(workspaceFolder, newUri.fsPath, preserveNewExtension)?.ref;
+      const oldUriIsShortRef = isShortRefAllowed(oldUri.fsPath, oldUrisByPathBasename);
+      const newUriIsShortRef = isShortRefAllowed(newUri.fsPath, newUrisByPathBasename);
 
-        if (!oldShortRef || !newShortRef || !oldLongRef || !newLongRef) {
-          return;
+      if (!oldShortRef || !newShortRef || !oldLongRef || !newLongRef) {
+        return;
+      }
+
+      newUris.forEach(({ fsPath: p }) => {
+        const fileContent = fs.readFileSync(p).toString();
+        let nextContent: string | null = null;
+
+        if (!oldUriIsShortRef && !newUriIsShortRef) {
+          // replace long ref with long ref
+          // TODO: Consider finding previous short ref and make it point to long ref
+          nextContent = replaceRefs({
+            refs: [{ old: oldLongRef, new: newLongRef }],
+            content: fileContent,
+            onMatch: () => addToPathsUpdated(p),
+            onReplace: incrementRefsCounter,
+          });
+        } else if (!oldUriIsShortRef && newUriIsShortRef) {
+          // replace long ref with short ref
+          nextContent = replaceRefs({
+            refs: [{ old: oldLongRef, new: newShortRef }],
+            content: fileContent,
+            onMatch: () => addToPathsUpdated(p),
+            onReplace: incrementRefsCounter,
+          });
+        } else if (oldUriIsShortRef && !newUriIsShortRef) {
+          // replace short ref with long ref
+          // TODO: Consider finding new short ref and making long refs point to new short ref
+          nextContent = replaceRefs({
+            refs: [{ old: oldShortRef, new: newLongRef }],
+            content: fileContent,
+            onMatch: () => addToPathsUpdated(p),
+            onReplace: incrementRefsCounter,
+          });
+        } else {
+          // replace short ref with short ref
+          nextContent = replaceRefs({
+            refs: [{ old: oldShortRef, new: newShortRef }],
+            content: fileContent,
+            onMatch: () => addToPathsUpdated(p),
+            onReplace: incrementRefsCounter,
+          });
         }
 
-        newUris.forEach(({ fsPath: p }) => {
-          const fileContent = fs.readFileSync(p).toString();
-          let nextContent: string | null = null;
-
-          if (!oldUriIsShortRef && !newUriIsShortRef) {
-            // replace long ref with long ref
-            // TODO: Consider finding previous short ref and make it point to long ref
-            nextContent = replaceRefs({
-              refs: [{ old: oldLongRef, new: newLongRef }],
-              content: fileContent,
-              onMatch: () => addToPathsUpdated(p),
-              onReplace: incrementRefsCounter,
-            });
-          } else if (!oldUriIsShortRef && newUriIsShortRef) {
-            // replace long ref with short ref
-            nextContent = replaceRefs({
-              refs: [{ old: oldLongRef, new: newShortRef }],
-              content: fileContent,
-              onMatch: () => addToPathsUpdated(p),
-              onReplace: incrementRefsCounter,
-            });
-          } else if (oldUriIsShortRef && !newUriIsShortRef) {
-            // replace short ref with long ref
-            // TODO: Consider finding new short ref and making long refs point to new short ref
-            nextContent = replaceRefs({
-              refs: [{ old: oldShortRef, new: newLongRef }],
-              content: fileContent,
-              onMatch: () => addToPathsUpdated(p),
-              onReplace: incrementRefsCounter,
-            });
-          } else {
-            // replace short ref with short ref
-            nextContent = replaceRefs({
-              refs: [{ old: oldShortRef, new: newShortRef }],
-              content: fileContent,
-              onMatch: () => addToPathsUpdated(p),
-              onReplace: incrementRefsCounter,
-            });
-          }
-
-          if (nextContent !== null) {
-            fs.writeFileSync(p, nextContent);
-          }
-        });
-      }
+        if (nextContent !== null) {
+          fs.writeFileSync(p, nextContent);
+        }
+      });
     });
 
     if (pathsUpdated.length > 0) {
