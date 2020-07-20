@@ -158,6 +158,6 @@
     "lodash.groupby": "^4.6.0",
     "markdown-it": "^11.0.0",
     "markdown-it-regex": "^0.2.0",
-    "open": "^7.0.4"
+    "open": "^7.1.0"
   }
 }
