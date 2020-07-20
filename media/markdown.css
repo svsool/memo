@@ -46,3 +46,8 @@
   overflow-y: auto;
   padding-right: 10px;
 }
+
+.memo-invalid-link {
+  color: #cc0013 !important;
+  cursor: not-allowed;
+}

@@ -30,7 +30,7 @@ describe('extendMarkdownIt contribution', () => {
     await cacheWorkspace();
 
     expect(md.render('[[invalid-link]]').replace(getWorkspaceFolder()!, '')).toMatchInlineSnapshot(`
-      "<p><a data-invalid-ref style=\\"color: #cc0013; cursor: not-allowed;\\" title=\\"Link does not exist yet. Please use cmd / ctrl + click in text editor to create a new one.\\" href=\\"javascript:void(0)\\">invalid-link</a></p>
+      "<p><a class=\\"memo-invalid-link\\" title=\\"Link does not exist yet. Please use cmd / ctrl + click in text editor to create a new one.\\" href=\\"javascript:void(0)\\">invalid-link</a></p>
       "
     `);
   });
@@ -112,7 +112,7 @@ describe('extendMarkdownIt contribution', () => {
 
     expect(md.render('[[invalid-link.png]]').replace(getWorkspaceFolder()!, ''))
       .toMatchInlineSnapshot(`
-      "<p><a data-invalid-ref style=\\"color: #cc0013; cursor: not-allowed;\\" title=\\"Link does not exist yet. Please use cmd / ctrl + click in text editor to create a new one.\\" href=\\"javascript:void(0)\\">invalid-link.png</a></p>
+      "<p><a class=\\"memo-invalid-link\\" title=\\"Link does not exist yet. Please use cmd / ctrl + click in text editor to create a new one.\\" href=\\"javascript:void(0)\\">invalid-link.png</a></p>
       "
     `);
   });
