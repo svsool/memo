@@ -1,4 +1,4 @@
-import vscode, { workspace } from 'vscode';
+import vscode from 'vscode';
 import path from 'path';
 import { sort as sortPaths } from 'cross-path-sort';
 import fs from 'fs';
@@ -98,9 +98,9 @@ const workspaceCache: WorkspaceCache = {
 export const getWorkspaceCache = (): WorkspaceCache => workspaceCache;
 
 export const cacheWorkspace = async () => {
-  const imageUris = await workspace.findFiles('**/*.{png,jpg,jpeg,svg,gif}');
-  const markdownUris = await workspace.findFiles('**/*.md');
-  const otherUris = await workspace.findFiles('**/*.{doc,docx,odt,pdf,rtf,tex,txt,wpd}');
+  const imageUris = await vscode.workspace.findFiles('**/*.{png,jpg,jpeg,svg,gif}');
+  const markdownUris = await vscode.workspace.findFiles('**/*.md');
+  const otherUris = await vscode.workspace.findFiles('**/*.{doc,docx,odt,pdf,rtf,tex,txt,wpd}');
 
   workspaceCache.imageUris = sortPaths(imageUris, { pathKey: 'path', shallowFirst: true });
   workspaceCache.markdownUris = sortPaths(markdownUris, { pathKey: 'path', shallowFirst: true });
@@ -119,7 +119,7 @@ export const cleanWorkspaceCache = () => {
 };
 
 export const getWorkspaceFolder = () =>
-  workspace.workspaceFolders && workspace.workspaceFolders[0].uri.fsPath;
+  vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders[0].uri.fsPath;
 
 export const getDateInYYYYMMDDFormat = () => new Date().toISOString().slice(0, 10);
 
@@ -257,4 +257,14 @@ export const ensureDirectoryExistence = (filePath: string) => {
     ensureDirectoryExistence(dirname);
     fs.mkdirSync(dirname);
   }
+};
+
+export const getRefUriUnderCursor = (): vscode.Uri | null | undefined => {
+  const activeTextEditor = vscode.window.activeTextEditor;
+
+  const refResult =
+    activeTextEditor &&
+    getReferenceAtPosition(activeTextEditor.document, activeTextEditor.selection.start);
+
+  return refResult && findUriByRef(getWorkspaceCache().allUris, refResult.ref);
 };

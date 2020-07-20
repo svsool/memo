@@ -1,3 +1,4 @@
+import { window, Selection } from 'vscode';
 import path from 'path';
 
 import {
@@ -5,6 +6,7 @@ import {
   rndName,
   cleanWorkspace,
   closeEditorsAndCleanWorkspace,
+  openTextDocument,
 } from '../test/testUtils';
 import {
   containsImageExt,
@@ -15,6 +17,7 @@ import {
   getWorkspaceCache,
   cacheWorkspace,
   cleanWorkspaceCache,
+  getRefUriUnderCursor,
 } from './utils';
 
 describe('containsImageExt()', () => {
@@ -189,5 +192,41 @@ describe('getWorkspaceCache()', () => {
 
     expect(uris).toHaveLength(2);
     expect(uris.map(({ fsPath }) => path.basename(fsPath))).toEqual([noteFilename, imageFilename]);
+  });
+});
+
+describe.only('getRefUriUnderCursor()', () => {
+  beforeEach(closeEditorsAndCleanWorkspace);
+
+  afterEach(closeEditorsAndCleanWorkspace);
+
+  it('should return reference uri under cursor', async () => {
+    const name0 = rndName();
+    const name1 = rndName();
+
+    await createFile(`${name0}.md`);
+    await createFile(`${name1}.md`, `[[${name0}]]`);
+
+    const doc = await openTextDocument(`${name1}.md`);
+    const editor = await window.showTextDocument(doc);
+
+    editor.selection = new Selection(0, 2, 0, 2);
+
+    expect(getRefUriUnderCursor()!.fsPath).toContain(`${name0}.md`);
+  });
+
+  it('should not return reference uri under cursor', async () => {
+    const name0 = rndName();
+    const name1 = rndName();
+
+    await createFile(`${name0}.md`);
+    await createFile(`${name1}.md`, `  [[${name0}]]`);
+
+    const doc = await openTextDocument(`${name1}.md`);
+    const editor = await window.showTextDocument(doc);
+
+    editor.selection = new Selection(0, 0, 0, 0);
+
+    expect(getRefUriUnderCursor()).toBeNull();
   });
 });
