@@ -2,13 +2,13 @@ import { window, workspace, commands, ExtensionContext } from 'vscode';
 
 import { getRefUriUnderCursor } from '../utils';
 
-const updateReferenceContext = () =>
-  commands.executeCommand('setContext', 'memo:cursorAtExistingReference', !!getRefUriUnderCursor());
+const updateRefExistsContext = () =>
+  commands.executeCommand('setContext', 'memo:refUnderCursorExists', !!getRefUriUnderCursor());
 
 export const activate = (context: ExtensionContext) => {
   context.subscriptions.push(
-    window.onDidChangeTextEditorSelection(updateReferenceContext),
-    window.onDidChangeActiveTextEditor(updateReferenceContext),
-    workspace.onDidChangeTextDocument(updateReferenceContext),
+    window.onDidChangeTextEditorSelection(updateRefExistsContext),
+    window.onDidChangeActiveTextEditor(updateRefExistsContext),
+    workspace.onDidChangeTextDocument(updateRefExistsContext),
   );
 };

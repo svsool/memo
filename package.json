@@ -80,7 +80,7 @@
     "menus": {
       "editor/context": [
         {
-          "when": "editorLangId == markdown && memo:cursorAtExistingReference",
+          "when": "editorLangId == markdown && memo:refUnderCursorExists",
           "group": "memo",
           "command": "memo.openReferenceInDefaultApp"
         }
@@ -88,7 +88,7 @@
       "commandPalette": [
         {
           "command": "memo.openReferenceInDefaultApp",
-          "when": "editorLangId == markdown && memo:cursorAtExistingReference"
+          "when": "editorLangId == markdown && memo:refUnderCursorExists"
         }
       ]
     },
