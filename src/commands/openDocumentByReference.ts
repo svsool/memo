@@ -18,6 +18,7 @@ const openDocumentByReference = async ({ reference }: { reference: string }) => 
   if (uri) {
     await vscode.commands.executeCommand('vscode.open', uri);
   } else if (!containsImageExt(reference)) {
+    // TODO: Open document regardless of extension
     const workspaceFolder =
       vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders[0];
     if (workspaceFolder) {

@@ -8,8 +8,6 @@ import { WorkspaceCache, RefT, FoundRefT } from '../types';
 
 export { sortPaths };
 
-const allExtsRegex = /\.(md|png|jpg|jpeg|svg|gif|doc|docx|odt|pdf|rtf|tex|txt|wpd)/i;
-
 const markdownExtRegex = /\.md$/i;
 
 const imageExtsRegex = /\.(png|jpg|jpeg|svg|gif)/i;
@@ -30,6 +28,8 @@ export const trimSlashes = (value: string) => trimLeadingSlash(trimTrailingSlash
 
 export const isLongRef = (path: string) => path.split('/').length > 1;
 
+const normalizeSlashes = (value: string) => value.replace(/\\/gi, '/');
+
 export const fsPathToRef = ({
   path: fsPath,
   keepExt,
@@ -41,7 +41,7 @@ export const fsPathToRef = ({
 }): string | null => {
   const ref =
     basePath && fsPath.startsWith(basePath)
-      ? fsPath.replace(basePath, '').replace(/\\/gi, '/')
+      ? normalizeSlashes(fsPath.replace(basePath, ''))
       : path.basename(fsPath);
 
   if (keepExt) {
@@ -196,14 +196,14 @@ export const findUriByRef = (uris: vscode.Uri[], ref: string): vscode.Uri | unde
   uris.find((uri) => {
     if (containsImageExt(ref) || containsOtherKnownExts(ref)) {
       if (isLongRef(ref)) {
-        return uri.fsPath.toLowerCase().endsWith(ref.toLowerCase());
+        return normalizeSlashes(uri.fsPath.toLowerCase()).endsWith(ref.toLowerCase());
       }
 
       return path.basename(uri.fsPath).toLowerCase() === ref.toLowerCase();
     }
 
     if (isLongRef(ref)) {
-      return uri.fsPath.toLowerCase().endsWith(`${ref.toLowerCase()}.md`);
+      return normalizeSlashes(uri.fsPath.toLowerCase()).endsWith(`${ref.toLowerCase()}.md`);
     }
 
     const name = path.parse(uri.fsPath).name.toLowerCase();
