@@ -1,4 +1,4 @@
-import vscode from 'vscode';
+import vscode, { Position, window } from 'vscode';
 
 import ReferenceRenameProvider from './ReferenceRenameProvider';
 import {
@@ -24,7 +24,39 @@ describe('ReferenceRenameProvider', () => {
 
     expect(() =>
       referenceRenameProvider.prepareRename(doc, new vscode.Position(0, 2)),
-    ).toThrowError();
+    ).toThrowError('Rename is not available for nonexistent links.');
+  });
+
+  it('should not provide rename for file with unsaved changes', async () => {
+    const filename = `${rndName()}.md`;
+
+    await createFile(filename, '[[nonexistenlink]]');
+
+    const doc = await openTextDocument(filename);
+
+    const editor = await window.showTextDocument(doc);
+
+    await editor.edit((edit) => edit.insert(new Position(0, 5), 'test'));
+
+    const referenceRenameProvider = new ReferenceRenameProvider();
+
+    expect(() =>
+      referenceRenameProvider.prepareRename(doc, new vscode.Position(0, 2)),
+    ).toThrowError('Rename is not available for unsaved files.');
+  });
+
+  it('should not provide rename for multiline link', async () => {
+    const filename = `${rndName()}.md`;
+
+    await createFile(filename, '[[nonexisten\nlink]]');
+
+    const doc = await openTextDocument(filename);
+
+    const referenceRenameProvider = new ReferenceRenameProvider();
+
+    expect(() =>
+      referenceRenameProvider.prepareRename(doc, new vscode.Position(0, 2)),
+    ).toThrowError('Rename is not available.');
   });
 
   it('should provide rename for a link to the existing file', async () => {

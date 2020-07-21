@@ -17,11 +17,17 @@ import {
   getWorkspaceFolder,
 } from '../utils';
 
+const openBracketsLength = 2;
+
 export default class ReferenceRenameProvider implements RenameProvider {
   public prepareRename(
     document: TextDocument,
     position: Position,
   ): ProviderResult<Range | { range: Range; placeholder: string }> {
+    if (document.isDirty) {
+      throw new Error('Rename is not available for unsaved files. Please save your changes first.');
+    }
+
     const refAtPos = getReferenceAtPosition(document, position);
 
     if (refAtPos) {
@@ -34,8 +40,8 @@ export default class ReferenceRenameProvider implements RenameProvider {
       }
 
       return new Range(
-        new Position(range.start.line, range.start.character + 2),
-        new Position(range.start.line, range.start.character + 2 + ref.length),
+        new Position(range.start.line, range.start.character + openBracketsLength),
+        new Position(range.start.line, range.start.character + openBracketsLength + ref.length),
       );
     }
 
