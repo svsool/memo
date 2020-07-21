@@ -14,8 +14,7 @@ import groupBy from 'lodash.groupby';
 import completionProviderTriggerCharacters from './completionProviderTriggerCharacters';
 import {
   getWorkspaceCache,
-  extractLongRef,
-  extractShortRef,
+  fsPathToRef,
   containsImageExt,
   containsOtherKnownExts,
   getConfigProperty,
@@ -57,16 +56,16 @@ export const provideCompletionItems = (document: TextDocument, position: Positio
       return;
     }
 
-    const longRef = extractLongRef(
-      workspaceFolder.uri.fsPath,
-      uri.fsPath,
-      containsImageExt(uri.fsPath) || containsOtherKnownExts(uri.fsPath),
-    );
+    const longRef = fsPathToRef({
+      path: uri.fsPath,
+      basePath: workspaceFolder.uri.fsPath,
+      keepExt: containsImageExt(uri.fsPath) || containsOtherKnownExts(uri.fsPath),
+    });
 
-    const shortRef = extractShortRef(
-      uri.fsPath,
-      containsImageExt(uri.fsPath) || containsOtherKnownExts(uri.fsPath),
-    );
+    const shortRef = fsPathToRef({
+      path: uri.fsPath,
+      keepExt: containsImageExt(uri.fsPath) || containsOtherKnownExts(uri.fsPath),
+    });
 
     const urisGroup = urisByPathBasename[path.basename(uri.fsPath).toLowerCase()] || [];
 
@@ -77,9 +76,9 @@ export const provideCompletionItems = (document: TextDocument, position: Positio
       return;
     }
 
-    const item = new CompletionItem(longRef.ref, CompletionItemKind.File);
+    const item = new CompletionItem(longRef, CompletionItemKind.File);
 
-    item.insertText = isFirstUriInGroup ? shortRef.ref : longRef.ref;
+    item.insertText = isFirstUriInGroup ? shortRef : longRef;
 
     // prepend index with 0, so a lexicographic sort doesn't mess things up
     item.sortText = padWithZero(index);

@@ -4,8 +4,7 @@ import { workspace, window, ExtensionContext } from 'vscode';
 import groupBy from 'lodash.groupby';
 
 import {
-  extractShortRef,
-  extractLongRef,
+  fsPathToRef,
   getWorkspaceFolder,
   containsMarkdownExt,
   cacheWorkspace,
@@ -67,9 +66,7 @@ export const activate = (context: ExtensionContext) => {
       );
     }
 
-    const oldUris = getWorkspaceCache().allUris;
-
-    const oldUrisByPathBasename = groupBy(oldUris, ({ fsPath }) =>
+    const oldUrisByPathBasename = groupBy(getWorkspaceCache().allUris, ({ fsPath }) =>
       path.basename(fsPath).toLowerCase(),
     );
 
@@ -108,10 +105,24 @@ export const activate = (context: ExtensionContext) => {
       const preserveOldExtension = !containsMarkdownExt(oldUri.fsPath);
       const preserveNewExtension = !containsMarkdownExt(newUri.fsPath);
       const workspaceFolder = getWorkspaceFolder()!;
-      const oldShortRef = extractShortRef(oldUri.fsPath, preserveOldExtension)?.ref;
-      const newShortRef = extractShortRef(newUri.fsPath, preserveNewExtension)?.ref;
-      const oldLongRef = extractLongRef(workspaceFolder, oldUri.fsPath, preserveOldExtension)?.ref;
-      const newLongRef = extractLongRef(workspaceFolder, newUri.fsPath, preserveNewExtension)?.ref;
+      const oldShortRef = fsPathToRef({
+        path: oldUri.fsPath,
+        keepExt: preserveOldExtension,
+      });
+      const newShortRef = fsPathToRef({
+        path: newUri.fsPath,
+        keepExt: preserveNewExtension,
+      });
+      const oldLongRef = fsPathToRef({
+        path: oldUri.fsPath,
+        basePath: workspaceFolder,
+        keepExt: preserveOldExtension,
+      });
+      const newLongRef = fsPathToRef({
+        path: newUri.fsPath,
+        basePath: workspaceFolder,
+        keepExt: preserveNewExtension,
+      });
       const oldUriIsShortRef = isShortRefAllowed(oldUri.fsPath, oldUrisByPathBasename);
       const newUriIsShortRef = isShortRefAllowed(newUri.fsPath, newUrisByPathBasename);
 

@@ -11,8 +11,7 @@ import {
 import {
   containsImageExt,
   containsMarkdownExt,
-  extractLongRef,
-  extractShortRef,
+  fsPathToRef,
   trimLeadingSlash,
   getWorkspaceCache,
   cacheWorkspace,
@@ -54,57 +53,62 @@ describe('trimLeadingSlash()', () => {
   });
 });
 
-describe('extractLongRef()', () => {
-  it('should extract long ref', () => {
-    expect(extractLongRef('/Users/memo', '/Users/memo/Diary/Notes/note.md')).toEqual({
-      label: '',
-      ref: 'Diary/Notes/note',
+describe('fsPathToRef()', () => {
+  it('should return short ref', () => {
+    expect(fsPathToRef({ path: '/Users/memo/Diary/Notes/note.md' })).toEqual('note');
+  });
+
+  it('should return short ref with extension', () => {
+    expect(fsPathToRef({ path: '/Users/memo/Diary/Attachments/image.png', keepExt: true })).toEqual(
+      'image.png',
+    );
+  });
+
+  it('should omit arbitrary extension from short ref', () => {
+    expect(fsPathToRef({ path: '/Users/memo/Diary/Notes/note.any-extension' })).toEqual('note');
+  });
+
+  it('should return short ref for arbitrary extension', () => {
+    expect(
+      fsPathToRef({ path: '/Users/memo/Diary/Notes/note.any-extension', keepExt: true }),
+    ).toEqual('note.any-extension');
+  });
+
+  describe('with basePath', () => {
+    it('should return long ref', () => {
+      expect(
+        fsPathToRef({ path: '/Users/memo/Diary/Notes/note.md', basePath: '/Users/memo' }),
+      ).toEqual('Diary/Notes/note');
     });
-  });
 
-  it('should extract long ref with extension', () => {
-    expect(extractLongRef('/Users/memo', '/Users/memo/Diary/Attachments/image.png', true)).toEqual({
-      label: '',
-      ref: 'Diary/Attachments/image.png',
+    it('should return long ref with extension', () => {
+      expect(
+        fsPathToRef({
+          path: '/Users/memo/Diary/Attachments/image.png',
+          basePath: '/Users/memo',
+          keepExt: true,
+        }),
+      ).toEqual('Diary/Attachments/image.png');
     });
-  });
 
-  it('should extract long ref with label', () => {
-    expect(extractLongRef('/Users/memo', '/Users/memo/Diary/Notes/note.md|Test Label')).toEqual({
-      label: 'Test Label',
-      ref: 'Diary/Notes/note',
+    it('should omit arbitrary extension from long ref', () => {
+      expect(
+        fsPathToRef({
+          path: '/Users/memo/Diary/Notes/note.any-extension',
+          basePath: '/Users/memo',
+        }),
+      ).toEqual('Diary/Notes/note');
     });
-  });
 
-  it('should return null if input contains unknown extension', () => {
-    expect(extractLongRef('/Users/memo', '/Users/memo/Diary/Notes/website.psd')).toBeNull();
-  });
-});
-
-describe('extractShortRef()', () => {
-  it('should extract short ref', () => {
-    expect(extractShortRef('/Users/memo/Diary/Notes/note.md')).toEqual({
-      label: '',
-      ref: 'note',
+    it('should return long ref for arbitrary extension', () => {
+      expect(
+        fsPathToRef({
+          path: '/Users/memo/Diary/Notes/note.any-extension',
+          basePath: '/Users/memo',
+          keepExt: true,
+        }),
+      ).toEqual('Diary/Notes/note.any-extension');
     });
-  });
-
-  it('should extract short ref with extension', () => {
-    expect(extractShortRef('/Users/memo/Diary/Attachments/image.png', true)).toEqual({
-      label: '',
-      ref: 'image.png',
-    });
-  });
-
-  it('should extract short ref with label', () => {
-    expect(extractShortRef('/Users/memo/Diary/Notes/note.md|Test Label')).toEqual({
-      label: 'Test Label',
-      ref: 'note',
-    });
-  });
-
-  it('should return null if input contains unknown extension', () => {
-    expect(extractShortRef('/Users/memo/Diary/Notes/website.psd')).toBeNull();
   });
 });
 

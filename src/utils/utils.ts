@@ -30,62 +30,25 @@ export const trimSlashes = (value: string) => trimLeadingSlash(trimTrailingSlash
 
 export const isLongRef = (path: string) => path.split('/').length > 1;
 
-export const extractLongRef = (
-  basePathParam: string,
-  pathParam: string,
-  preserveExtension?: boolean,
-): RefT | null => {
-  const allExtsMatch = allExtsRegex.exec(pathParam);
+export const fsPathToRef = ({
+  path: fsPath,
+  keepExt,
+  basePath,
+}: {
+  path: string;
+  keepExt?: boolean;
+  basePath?: string;
+}): string | null => {
+  const ref =
+    basePath && fsPath.startsWith(basePath)
+      ? fsPath.replace(basePath, '').replace(/\\/gi, '/')
+      : path.basename(fsPath);
 
-  if (allExtsMatch) {
-    const ref = pathParam.replace(basePathParam, '').replace(/\\/gi, '/');
-
-    if (preserveExtension) {
-      const [refStr, label = ''] = trimLeadingSlash(ref).split('|');
-
-      return {
-        ref: refStr,
-        label,
-      };
-    }
-
-    const refNoExts = trimLeadingSlash(ref.replace(allExtsRegex, ''));
-    const [refStr, label = ''] = refNoExts.split('|');
-
-    return {
-      ref: refStr,
-      label,
-    };
+  if (keepExt) {
+    return trimLeadingSlash(ref);
   }
 
-  return null;
-};
-
-export const extractShortRef = (pathParam: string, preserveExtension?: boolean): RefT | null => {
-  const allExtsMatch = allExtsRegex.exec(pathParam);
-
-  if (allExtsMatch) {
-    const ref = path.basename(pathParam);
-
-    if (preserveExtension) {
-      const [refStr, label = ''] = trimLeadingSlash(ref).split('|');
-
-      return {
-        ref: refStr,
-        label,
-      };
-    }
-
-    const refNoExts = trimLeadingSlash(ref.replace(allExtsRegex, ''));
-    const [refStr, label = ''] = refNoExts.split('|');
-
-    return {
-      ref: refStr,
-      label,
-    };
-  }
-
-  return null;
+  return trimLeadingSlash(ref.includes('.') ? ref.slice(0, ref.lastIndexOf('.')) : ref);
 };
 
 const workspaceCache: WorkspaceCache = {
