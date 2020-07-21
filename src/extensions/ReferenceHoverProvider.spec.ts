@@ -111,7 +111,7 @@ describe('ReferenceHoverProvider', () => {
     expect(referenceHoverProvider.provideHover(doc, new vscode.Position(0, 4))).toBeNull();
   });
 
-  it.only('should not provide hover for a link within fenced code block', async () => {
+  it('should not provide hover for a link within fenced code block', async () => {
     const name0 = rndName();
     const name1 = rndName();
 

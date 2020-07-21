@@ -195,7 +195,7 @@ describe('getWorkspaceCache()', () => {
   });
 });
 
-describe.only('getRefUriUnderCursor()', () => {
+describe('getRefUriUnderCursor()', () => {
   beforeEach(closeEditorsAndCleanWorkspace);
 
   afterEach(closeEditorsAndCleanWorkspace);
