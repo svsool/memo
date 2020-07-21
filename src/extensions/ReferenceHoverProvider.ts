@@ -10,26 +10,16 @@ import {
   getReferenceAtPosition,
   isUncPath,
   findUriByRef,
-  isInCodeSpan,
-  isInFencedCodeBlock,
 } from '../utils';
 
 export default class ReferenceHoverProvider implements vscode.HoverProvider {
   public provideHover(document: vscode.TextDocument, position: vscode.Position) {
-    if (
-      isInFencedCodeBlock(document, position.line) ||
-      isInCodeSpan(document, position.line, position.character)
-    ) {
-      return null;
-    }
-
-    const imagePreviewMaxHeight = Math.max(getConfigProperty('imagePreviewMaxHeight', 200), 10);
-
     const refAtPos = getReferenceAtPosition(document, position);
 
     if (refAtPos) {
       const { ref, range } = refAtPos;
       const uris = getWorkspaceCache().allUris;
+      const imagePreviewMaxHeight = Math.max(getConfigProperty('imagePreviewMaxHeight', 200), 10);
 
       const foundUri = findUriByRef(uris, ref);
 

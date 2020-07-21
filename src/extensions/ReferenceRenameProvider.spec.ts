@@ -105,4 +105,45 @@ describe('ReferenceRenameProvider', () => {
 
     expect(workspaceEdit!).not.toBeNull();
   });
+
+  it('should not provide rename for a link within code span', async () => {
+    const name0 = rndName();
+    const name1 = rndName();
+
+    await createFile(`${name0}.md`, `\`[[${name1}]]\``);
+    await createFile(`${name1}.md`);
+
+    const doc = await openTextDocument(`${name0}.md`);
+
+    const referenceRenameProvider = new ReferenceRenameProvider();
+
+    expect(() =>
+      referenceRenameProvider.prepareRename(doc, new vscode.Position(0, 2)),
+    ).toThrowError('Rename is not available.');
+  });
+
+  it('should not provide rename for a link within fenced code block', async () => {
+    const name0 = rndName();
+    const name1 = rndName();
+
+    await createFile(
+      `${name0}.md`,
+      `
+    \`\`\`
+    Preceding text
+    [[${name1}]]
+    Following text
+    \`\`\`
+    `,
+    );
+    await createFile(`${name1}.md`);
+
+    const doc = await openTextDocument(`${name0}.md`);
+
+    const referenceRenameProvider = new ReferenceRenameProvider();
+
+    expect(() =>
+      referenceRenameProvider.prepareRename(doc, new vscode.Position(0, 2)),
+    ).toThrowError('Rename is not available.');
+  });
 });

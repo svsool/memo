@@ -5,6 +5,7 @@ import fs from 'fs';
 
 import getWordRangeAtPosition from './getWordRangeAtPosition';
 import { WorkspaceCache, RefT, FoundRefT } from '../types';
+import { isInCodeSpan, isInFencedCodeBlock } from './externalUtils';
 
 export { sortPaths };
 
@@ -104,6 +105,13 @@ export const getReferenceAtPosition = (
   document: vscode.TextDocument,
   position: vscode.Position,
 ): { range: vscode.Range; ref: string; label: string } | null => {
+  if (
+    isInFencedCodeBlock(document, position.line) ||
+    isInCodeSpan(document, position.line, position.character)
+  ) {
+    return null;
+  }
+
   const range = getWordRangeAtPosition(
     document.lineAt(position.line).text,
     position,
