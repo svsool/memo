@@ -127,7 +127,7 @@
     "@types/jest": "^26.0.5",
     "@types/lodash.groupby": "^4.6.6",
     "@types/markdown-it": "^10.0.1",
-    "@types/node": "^14.0.23",
+    "@types/node": "^14.0.24",
     "@types/open": "^6.2.1",
     "@types/rimraf": "^3.0.0",
     "@types/vscode": "^1.47.0",
