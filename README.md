@@ -66,10 +66,10 @@ If you want to try out Memo just install it via marketplace using [this link](ht
 
 ## FAQ
 
-- How to follow link on `cmd+enter` or `ctrl+enter` like in Obsidian?
-  - Bind built-in `editor.action.openLink` command to `cmd+enter` ([see example](https://github.com/svsool/vscode-memo/issues/2#issuecomment-654981827)) or use `cmd+click` on the link
 - [Memo vs Foam](https://github.com/svsool/vscode-memo/issues/9#issuecomment-658346216)
 - [Memo vs Obsidian](https://github.com/svsool/vscode-memo/issues/1#issuecomment-655004112)
+- How to follow link on `cmd+enter` or `ctrl+enter` like in Obsidian?
+  - Bind built-in `editor.action.openLink` command to `cmd+enter` ([see example](https://github.com/svsool/vscode-memo/issues/2#issuecomment-654981827)) or use `cmd+click` on the link
 
 ## Contributing
 
