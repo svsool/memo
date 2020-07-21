@@ -22,10 +22,10 @@ export default class ReferenceRenameProvider implements RenameProvider {
     document: TextDocument,
     position: Position,
   ): ProviderResult<Range | { range: Range; placeholder: string }> {
-    const refDef = getReferenceAtPosition(document, position);
+    const refAtPos = getReferenceAtPosition(document, position);
 
-    if (refDef) {
-      const { range, ref, label } = refDef;
+    if (refAtPos) {
+      const { range, ref } = refAtPos;
 
       if (!findUriByRef(getWorkspaceCache().allUris, ref)) {
         throw new Error(
@@ -33,11 +33,9 @@ export default class ReferenceRenameProvider implements RenameProvider {
         );
       }
 
-      // TODO: Labels don't work well for refs with multiple |||
-      // needs testing and fixes
       return new Range(
         new Position(range.start.line, range.start.character + 2),
-        new Position(range.end.line, range.end.character - 2 - label.length),
+        new Position(range.start.line, range.start.character + 2 + ref.length),
       );
     }
 
@@ -49,10 +47,10 @@ export default class ReferenceRenameProvider implements RenameProvider {
     position: Position,
     newName: string,
   ): ProviderResult<WorkspaceEdit> {
-    const refDef = getReferenceAtPosition(document, position);
+    const refAtPos = getReferenceAtPosition(document, position);
 
-    if (refDef) {
-      const { ref } = refDef;
+    if (refAtPos) {
+      const { ref } = refAtPos;
 
       const workspaceEdit = new WorkspaceEdit();
 

@@ -7,13 +7,13 @@ const openReferenceInDefaultApp = async () => {
   const activeTextEditor = vscode.window.activeTextEditor;
 
   if (activeTextEditor) {
-    const refResult = getReferenceAtPosition(
+    const refAtPos = getReferenceAtPosition(
       activeTextEditor.document,
       activeTextEditor.selection.start,
     );
 
-    if (refResult) {
-      const uri = findUriByRef(getWorkspaceCache().allUris, refResult.ref);
+    if (refAtPos) {
+      const uri = findUriByRef(getWorkspaceCache().allUris, refAtPos.ref);
 
       if (uri) {
         open(uri.fsPath);

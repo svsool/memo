@@ -25,10 +25,10 @@ export default class ReferenceHoverProvider implements vscode.HoverProvider {
 
     const imagePreviewMaxHeight = Math.max(getConfigProperty('imagePreviewMaxHeight', 200), 10);
 
-    const refResult = getReferenceAtPosition(document, position);
+    const refAtPos = getReferenceAtPosition(document, position);
 
-    if (refResult) {
-      const { ref, range } = refResult;
+    if (refAtPos) {
+      const { ref, range } = refAtPos;
       const uris = getWorkspaceCache().allUris;
 
       const foundUri = findUriByRef(uris, ref);

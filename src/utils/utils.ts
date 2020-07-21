@@ -259,11 +259,11 @@ export const ensureDirectoryExistence = (filePath: string) => {
 export const getRefUriUnderCursor = (): vscode.Uri | null | undefined => {
   const activeTextEditor = vscode.window.activeTextEditor;
 
-  const refResult =
+  const refAtPos =
     activeTextEditor &&
     getReferenceAtPosition(activeTextEditor.document, activeTextEditor.selection.start);
 
-  return refResult && findUriByRef(getWorkspaceCache().allUris, refResult.ref);
+  return refAtPos && findUriByRef(getWorkspaceCache().allUris, refAtPos.ref);
 };
 
 export const parseRef = (rawRef: string): RefT => {
