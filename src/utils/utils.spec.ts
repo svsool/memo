@@ -18,6 +18,7 @@ import {
   cacheWorkspace,
   cleanWorkspaceCache,
   getRefUriUnderCursor,
+  parseRef,
 } from './utils';
 
 describe('containsImageExt()', () => {
@@ -228,5 +229,23 @@ describe('getRefUriUnderCursor()', () => {
     editor.selection = new Selection(0, 0, 0, 0);
 
     expect(getRefUriUnderCursor()).toBeNull();
+  });
+});
+
+describe('parseRef()', () => {
+  it('should fail on providing wrong parameter type', () => {
+    expect(() => parseRef((undefined as unknown) as string)).toThrowError();
+  });
+
+  it('should return empty ref and label', () => {
+    expect(parseRef('')).toEqual({ ref: '', label: '' });
+  });
+
+  it('should parse raw ref and return ref and label', () => {
+    expect(parseRef('link|Label')).toEqual({ ref: 'link', label: 'Label' });
+  });
+
+  it('should favour only first divider', () => {
+    expect(parseRef('link|||Label')).toEqual({ ref: 'link', label: '||Label' });
   });
 });

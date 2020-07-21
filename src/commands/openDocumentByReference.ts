@@ -7,10 +7,11 @@ import {
   getWorkspaceCache,
   findUriByRef,
   ensureDirectoryExistence,
+  parseRef,
 } from '../utils';
 
 const openDocumentByReference = async ({ reference }: { reference: string }) => {
-  const [ref] = reference.split('|');
+  const { ref } = parseRef(reference);
 
   const uri = findUriByRef(getWorkspaceCache().allUris, ref);
 

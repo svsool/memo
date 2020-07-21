@@ -10,6 +10,7 @@ import {
   containsImageExt,
   findUriByRef,
   extractEmbedRefs,
+  parseRef,
 } from '../utils';
 
 const getInvalidRefAnchor = (text: string) =>
@@ -25,23 +26,23 @@ const extendMarkdownIt = (md: MarkdownIt) => {
     .use(markdownItRegex, {
       name: 'ref-resource',
       regex: /!\[\[([^\[\]]+?)\]\]/,
-      replace: (ref: string) => {
-        const [refStr, label = ''] = ref.split('|');
+      replace: (rawRef: string) => {
+        const { ref, label } = parseRef(rawRef);
 
-        if (containsImageExt(refStr)) {
-          const imagePath = findUriByRef(getWorkspaceCache().imageUris, refStr)?.fsPath;
+        if (containsImageExt(ref)) {
+          const imagePath = findUriByRef(getWorkspaceCache().imageUris, ref)?.fsPath;
 
           if (imagePath) {
             return `<div><img src="${getImgUrlForMarkdownPreview(imagePath)}" alt="${
-              label || refStr
+              label || ref
             }" /></div>`;
           }
         }
 
-        const fsPath = findUriByRef(getWorkspaceCache().markdownUris, refStr)?.fsPath;
+        const fsPath = findUriByRef(getWorkspaceCache().markdownUris, ref)?.fsPath;
 
         if (!fsPath) {
-          return getInvalidRefAnchor(label || refStr);
+          return getInvalidRefAnchor(label || ref);
         }
 
         const name = path.parse(fsPath).name;
@@ -51,10 +52,10 @@ const extendMarkdownIt = (md: MarkdownIt) => {
         const refs = extractEmbedRefs(content).map((ref) => ref.toLowerCase());
 
         const cyclicLinkDetected =
-          refs.includes(refStr.toLowerCase()) || refs.some((ref) => refsStack.includes(ref));
+          refs.includes(ref.toLowerCase()) || refs.some((ref) => refsStack.includes(ref));
 
         if (!cyclicLinkDetected) {
-          refsStack.push(refStr.toLowerCase());
+          refsStack.push(ref.toLowerCase());
         }
 
         const html = `<div class="memo-markdown-embed">
@@ -83,16 +84,16 @@ const extendMarkdownIt = (md: MarkdownIt) => {
     .use(markdownItRegex, {
       name: 'ref-document',
       regex: /\[\[([^\[\]]+?)\]\]/,
-      replace: (ref: string) => {
-        const [refStr, label = ''] = ref.split('|');
+      replace: (rawRef: string) => {
+        const { ref, label } = parseRef(rawRef);
 
-        const fsPath = findUriByRef(getWorkspaceCache().allUris, refStr)?.fsPath;
+        const fsPath = findUriByRef(getWorkspaceCache().allUris, ref)?.fsPath;
 
         if (!fsPath) {
-          return getInvalidRefAnchor(label || refStr);
+          return getInvalidRefAnchor(label || ref);
         }
 
-        return getRefAnchor(getFileUrlForMarkdownPreview(fsPath), label || refStr);
+        return getRefAnchor(getFileUrlForMarkdownPreview(fsPath), label || ref);
       },
     });
 

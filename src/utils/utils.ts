@@ -151,12 +151,9 @@ export const getReferenceAtPosition = (
     return null;
   }
 
-  const [ref, label = ''] = document
-    .getText(range)
-    .replace('![[', '')
-    .replace('[[', '')
-    .replace(']]', '')
-    .split('|');
+  const { ref, label } = parseRef(
+    document.getText(range).replace('![[', '').replace('[[', '').replace(']]', ''),
+  );
 
   return {
     ref,
@@ -267,4 +264,13 @@ export const getRefUriUnderCursor = (): vscode.Uri | null | undefined => {
     getReferenceAtPosition(activeTextEditor.document, activeTextEditor.selection.start);
 
   return refResult && findUriByRef(getWorkspaceCache().allUris, refResult.ref);
+};
+
+export const parseRef = (rawRef: string): RefT => {
+  const dividerPosition = rawRef.indexOf('|');
+
+  return {
+    ref: dividerPosition !== -1 ? rawRef.slice(0, dividerPosition) : rawRef,
+    label: dividerPosition !== -1 ? rawRef.slice(dividerPosition + 1, rawRef.length) : '',
+  };
 };
