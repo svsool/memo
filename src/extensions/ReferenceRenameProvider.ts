@@ -17,7 +17,7 @@ import {
   getWorkspaceFolder,
 } from '../utils';
 
-const openBracketsLength = 2;
+const openingBracketsLength = 2;
 
 export default class ReferenceRenameProvider implements RenameProvider {
   public prepareRename(
@@ -40,8 +40,8 @@ export default class ReferenceRenameProvider implements RenameProvider {
       }
 
       return new Range(
-        new Position(range.start.line, range.start.character + openBracketsLength),
-        new Position(range.start.line, range.start.character + openBracketsLength + ref.length),
+        new Position(range.start.line, range.start.character + openingBracketsLength),
+        new Position(range.start.line, range.start.character + openingBracketsLength + ref.length),
       );
     }
 
