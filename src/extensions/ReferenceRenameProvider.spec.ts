@@ -22,9 +22,9 @@ describe('ReferenceRenameProvider', () => {
 
     const referenceRenameProvider = new ReferenceRenameProvider();
 
-    expect(() =>
+    await expect(
       referenceRenameProvider.prepareRename(doc, new vscode.Position(0, 2)),
-    ).toThrowError('Rename is not available for nonexistent links.');
+    ).rejects.toThrow('Rename is not available for nonexistent links.');
   });
 
   it('should not provide rename for file with unsaved changes', async () => {
@@ -40,9 +40,9 @@ describe('ReferenceRenameProvider', () => {
 
     const referenceRenameProvider = new ReferenceRenameProvider();
 
-    expect(() =>
+    await expect(
       referenceRenameProvider.prepareRename(doc, new vscode.Position(0, 2)),
-    ).toThrowError('Rename is not available for unsaved files.');
+    ).rejects.toThrow('Rename is not available for unsaved files.');
   });
 
   it('should not provide rename for multiline link', async () => {
@@ -54,9 +54,9 @@ describe('ReferenceRenameProvider', () => {
 
     const referenceRenameProvider = new ReferenceRenameProvider();
 
-    expect(() =>
+    await expect(
       referenceRenameProvider.prepareRename(doc, new vscode.Position(0, 2)),
-    ).toThrowError('Rename is not available.');
+    ).rejects.toThrow('Rename is not available.');
   });
 
   it('should provide rename for a link to the existing file', async () => {
@@ -70,7 +70,7 @@ describe('ReferenceRenameProvider', () => {
 
     const referenceRenameProvider = new ReferenceRenameProvider();
 
-    expect(referenceRenameProvider.prepareRename(doc, new vscode.Position(0, 2)))
+    expect(await referenceRenameProvider.prepareRename(doc, new vscode.Position(0, 2)))
       .toMatchInlineSnapshot(`
       Array [
         Object {
@@ -79,6 +79,32 @@ describe('ReferenceRenameProvider', () => {
         },
         Object {
           "character": 7,
+          "line": 0,
+        },
+      ]
+    `);
+  });
+
+  it('should provide rename for a link to the existing file with an unknown extension', async () => {
+    const name0 = rndName();
+    const name1 = rndName();
+
+    await createFile(`${name0}.md`, `[[${name1}.unknown]]`);
+    await createFile(`${name1}.unknown`);
+
+    const doc = await openTextDocument(`${name0}.md`);
+
+    const referenceRenameProvider = new ReferenceRenameProvider();
+
+    expect(await referenceRenameProvider.prepareRename(doc, new vscode.Position(0, 2)))
+      .toMatchInlineSnapshot(`
+      Array [
+        Object {
+          "character": 2,
+          "line": 0,
+        },
+        Object {
+          "character": 15,
           "line": 0,
         },
       ]
@@ -106,6 +132,27 @@ describe('ReferenceRenameProvider', () => {
     expect(workspaceEdit!).not.toBeNull();
   });
 
+  it('should provide rename edit for a link to the existing file with unknown extension', async () => {
+    const name0 = rndName();
+    const name1 = rndName();
+    const newLinkName = rndName();
+
+    await createFile(`${name0}.md`, `[[${name1}.unknown]]`);
+    await createFile(`${name1}.unknown`);
+
+    const doc = await openTextDocument(`${name0}.md`);
+
+    const referenceRenameProvider = new ReferenceRenameProvider();
+
+    const workspaceEdit = await referenceRenameProvider.provideRenameEdits(
+      doc,
+      new vscode.Position(0, 2),
+      newLinkName,
+    );
+
+    expect(workspaceEdit!).not.toBeNull();
+  });
+
   it('should not provide rename for a link within code span', async () => {
     const name0 = rndName();
     const name1 = rndName();
@@ -117,9 +164,9 @@ describe('ReferenceRenameProvider', () => {
 
     const referenceRenameProvider = new ReferenceRenameProvider();
 
-    expect(() =>
+    await expect(
       referenceRenameProvider.prepareRename(doc, new vscode.Position(0, 2)),
-    ).toThrowError('Rename is not available.');
+    ).rejects.toThrow('Rename is not available.');
   });
 
   it('should not provide rename for a link within fenced code block', async () => {
@@ -142,8 +189,8 @@ describe('ReferenceRenameProvider', () => {
 
     const referenceRenameProvider = new ReferenceRenameProvider();
 
-    expect(() =>
+    await expect(
       referenceRenameProvider.prepareRename(doc, new vscode.Position(0, 2)),
-    ).toThrowError('Rename is not available.');
+    ).rejects.toThrow('Rename is not available.');
   });
 });

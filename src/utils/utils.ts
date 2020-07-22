@@ -1,4 +1,4 @@
-import vscode from 'vscode';
+import vscode, { workspace } from 'vscode';
 import path from 'path';
 import { sort as sortPaths } from 'cross-path-sort';
 import fs from 'fs';
@@ -11,9 +11,12 @@ export { sortPaths };
 
 const markdownExtRegex = /\.md$/i;
 
-const imageExtsRegex = /\.(png|jpg|jpeg|svg|gif)/i;
+const imageExtsRegex = /\.(png|jpg|jpeg|svg|gif)$/i;
 
-const otherExtsRegex = /\.(doc|docx|odt|pdf|rtf|tex|txt|wpd)$/i;
+const otherExtsRegex = /\.(doc|docx|rtf|txt|odt|xls|xlsx|ppt|pptm|pptx|pdf|pages|mp4|mov|wmv|flv|avi|mkv|mp3|webm|wav|m4a|ogg|3gp|flac)$/i;
+
+export const commonExts =
+  '.md,.png,.jpg,.jpeg,.svg,.gif,.doc,.docx,.rtf,.txt,.odt,.xls,.xlsx,.ppt,.pptm,.pptx,.pdf';
 
 export const refPattern = '(\\[\\[)([^\\[\\]]+?)(\\]\\])';
 
@@ -22,6 +25,12 @@ export const containsImageExt = (path: string): boolean => !!imageExtsRegex.exec
 export const containsMarkdownExt = (path: string): boolean => !!markdownExtRegex.exec(path);
 
 export const containsOtherKnownExts = (path: string): boolean => !!otherExtsRegex.exec(path);
+
+export const containsUnknownExt = (path: string): boolean =>
+  path.includes('.') &&
+  !containsMarkdownExt(path) &&
+  !containsImageExt(path) &&
+  !containsOtherKnownExts(path);
 
 export const trimLeadingSlash = (value: string) => value.replace(/^\/+|^\\+/g, '');
 export const trimTrailingSlash = (value: string) => value.replace(/\/+|^\\+$/g, '');
@@ -200,9 +209,26 @@ const uncPathRegex = /^[\\\/]{2,}[^\\\/]+[\\\/]+[^\\\/]+/;
 
 export const isUncPath = (path: string): boolean => uncPathRegex.test(path);
 
+export const findFilesByExts = async (exts: string[]) =>
+  await workspace.findFiles(`**/*.{${exts.join(',')}}`);
+
+export const findAllUrisWithUnknownExts = async (uris: vscode.Uri[]) => {
+  const unknownExts = Array.from(
+    new Set(
+      uris
+        .filter(({ fsPath }) => containsUnknownExt(fsPath))
+        .map(({ fsPath }) => path.parse(fsPath).ext.replace(/^\./, '')),
+    ),
+  );
+
+  return unknownExts.length ? await findFilesByExts(unknownExts) : [];
+};
+
+export const extractExt = (value: string) => path.parse(value).ext.replace(/^\./, '');
+
 export const findUriByRef = (uris: vscode.Uri[], ref: string): vscode.Uri | undefined =>
   uris.find((uri) => {
-    if (containsImageExt(ref) || containsOtherKnownExts(ref)) {
+    if (containsImageExt(ref) || containsOtherKnownExts(ref) || containsUnknownExt(ref)) {
       if (isLongRef(ref)) {
         return normalizeSlashes(uri.fsPath.toLowerCase()).endsWith(ref.toLowerCase());
       }

@@ -97,6 +97,66 @@ describe('ReferenceHoverProvider', () => {
     });
   });
 
+  it('should provide hover with a warning about unknown extension', async () => {
+    const name0 = rndName();
+    const name1 = rndName();
+
+    await createFile(`${name0}.md`, `[[${name1}.unknown]]`);
+    await createFile(`${name1}.unknown`, '# Hello world');
+
+    const doc = await openTextDocument(`${name0}.md`);
+
+    const referenceHoverProvider = new ReferenceHoverProvider();
+
+    expect(referenceHoverProvider.provideHover(doc, new vscode.Position(0, 4)))
+      .toMatchInlineSnapshot(`
+      B {
+        "contents": Array [
+          "Link contains unknown extension: .unknown. Please use common file extensions .md,.png,.jpg,.jpeg,.svg,.gif,.doc,.docx,.rtf,.txt,.odt,.xls,.xlsx,.ppt,.pptm,.pptx,.pdf to get full support.",
+        ],
+        "range": Array [
+          Object {
+            "character": 2,
+            "line": 0,
+          },
+          Object {
+            "character": 15,
+            "line": 0,
+          },
+        ],
+      }
+    `);
+  });
+
+  it('should provide hover with a warning that file is not created yet', async () => {
+    const name0 = rndName();
+
+    await createFile(`${name0}.md`, `[[any-link]]`);
+
+    const doc = await openTextDocument(`${name0}.md`);
+
+    const referenceHoverProvider = new ReferenceHoverProvider();
+
+    expect(referenceHoverProvider.provideHover(doc, new vscode.Position(0, 4)))
+      .toMatchInlineSnapshot(`
+      B {
+        "contents": Array [
+          "\\"any-link\\" is not created yet. Click to create.",
+        ],
+        "range": Array [
+          Object {
+            "character": 2,
+            "line": 0,
+          },
+          Object {
+            "character": 10,
+            "line": 0,
+          },
+        ],
+      }
+    `);
+  });
+
   it('should not provide hover for a link within code span', async () => {
     const name0 = rndName();
     const name1 = rndName();

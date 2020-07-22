@@ -4,12 +4,14 @@ import path from 'path';
 
 import {
   containsImageExt,
+  containsUnknownExt,
   containsOtherKnownExts,
   getWorkspaceCache,
   getConfigProperty,
   getReferenceAtPosition,
   isUncPath,
   findUriByRef,
+  commonExts,
 } from '../utils';
 
 export default class ReferenceHoverProvider implements vscode.HoverProvider {
@@ -18,15 +20,24 @@ export default class ReferenceHoverProvider implements vscode.HoverProvider {
 
     if (refAtPos) {
       const { ref, range } = refAtPos;
-      const uris = getWorkspaceCache().allUris;
-      const imagePreviewMaxHeight = Math.max(getConfigProperty('imagePreviewMaxHeight', 200), 10);
-
-      const foundUri = findUriByRef(uris, ref);
-
       const hoverRange = new vscode.Range(
         new vscode.Position(range.start.line, range.start.character + 2),
         new vscode.Position(range.end.line, range.end.character - 2),
       );
+
+      if (containsUnknownExt(ref)) {
+        return new vscode.Hover(
+          `Link contains unknown extension: ${
+            path.parse(ref).ext
+          }. Please use common file extensions ${commonExts} to get full support.`,
+          hoverRange,
+        );
+      }
+
+      const uris = getWorkspaceCache().allUris;
+      const imagePreviewMaxHeight = Math.max(getConfigProperty('imagePreviewMaxHeight', 200), 10);
+
+      const foundUri = findUriByRef(uris, ref);
 
       if (foundUri && fs.existsSync(foundUri.fsPath)) {
         const getContent = () => {
@@ -45,9 +56,9 @@ export default class ReferenceHoverProvider implements vscode.HoverProvider {
         };
 
         return new vscode.Hover(getContent(), hoverRange);
-      } else {
-        return new vscode.Hover(`"${ref}" is not created yet. Click to create.`, hoverRange);
       }
+
+      return new vscode.Hover(`"${ref}" is not created yet. Click to create.`, hoverRange);
     }
 
     return null;

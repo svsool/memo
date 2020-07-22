@@ -10,8 +10,11 @@ import {
   cacheWorkspace,
   getWorkspaceCache,
   escapeForRegExp,
+  sortPaths,
+  findAllUrisWithUnknownExts,
 } from '../utils';
 
+// TODO: Extract to utils
 const replaceRefs = ({
   refs,
   content,
@@ -60,20 +63,38 @@ export const activate = (context: ExtensionContext) => {
   const deleteListenerDisposable = fileWatcher.onDidDelete(cacheWorkspace);
 
   const renameFilesDisposable = workspace.onDidRenameFiles(async ({ files }) => {
+    await cacheWorkspace();
+
     if (files.some(({ newUri }) => fs.lstatSync(newUri.fsPath).isDirectory())) {
       window.showWarningMessage(
-        'Recursive links update on renaming / moving directory is not supported yet.',
+        'Recursive links update on directory rename is currently not supported.',
       );
     }
 
-    const oldUrisByPathBasename = groupBy(getWorkspaceCache().allUris, ({ fsPath }) =>
-      path.basename(fsPath).toLowerCase(),
+    const oldFsPaths = files.map(({ oldUri }) => oldUri.fsPath);
+
+    const oldUrisByPathBasename = groupBy(
+      sortPaths(
+        [
+          ...getWorkspaceCache().allUris.filter((uri) => !oldFsPaths.includes(uri.fsPath)),
+          ...files.map(({ oldUri }) => oldUri),
+        ],
+        {
+          pathKey: 'path',
+          shallowFirst: true,
+        },
+      ),
+      ({ fsPath }) => path.basename(fsPath).toLowerCase(),
     );
 
-    // TODO: I think it's not going to work after introducing full-blown indexing
-    await cacheWorkspace();
+    const urisWithUnknownExts = await findAllUrisWithUnknownExts(files.map(({ newUri }) => newUri));
 
-    const newUris = getWorkspaceCache().allUris;
+    const newUris = urisWithUnknownExts.length
+      ? sortPaths([...getWorkspaceCache().allUris, ...urisWithUnknownExts], {
+          pathKey: 'path',
+          shallowFirst: true,
+        })
+      : getWorkspaceCache().allUris;
 
     const newUrisByPathBasename = groupBy(newUris, ({ fsPath }) =>
       path.basename(fsPath).toLowerCase(),
@@ -136,7 +157,7 @@ export const activate = (context: ExtensionContext) => {
 
         if (!oldUriIsShortRef && !newUriIsShortRef) {
           // replace long ref with long ref
-          // TODO: Consider finding previous short ref and make it point to long ref
+          // TODO: Consider finding previous short ref and make it pointing to the long ref
           nextContent = replaceRefs({
             refs: [{ old: oldLongRef, new: newLongRef }],
             content: fileContent,
@@ -153,7 +174,7 @@ export const activate = (context: ExtensionContext) => {
           });
         } else if (oldUriIsShortRef && !newUriIsShortRef) {
           // replace short ref with long ref
-          // TODO: Consider finding new short ref and making long refs point to new short ref
+          // TODO: Consider finding new short ref and making long refs pointing to the new short ref
           nextContent = replaceRefs({
             refs: [{ old: oldShortRef, new: newLongRef }],
             content: fileContent,

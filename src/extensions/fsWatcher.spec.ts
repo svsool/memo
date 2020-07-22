@@ -20,7 +20,7 @@ describe('fsWatcher extension', () => {
   afterEach(closeEditorsAndCleanWorkspace);
 
   describe('automatic refs update on file rename', () => {
-    it('should update short ref without label with short ref without label on file rename', async () => {
+    it('should update short ref with short ref on file rename', async () => {
       const noteName0 = rndName();
       const noteName1 = rndName();
       const nextNoteName1 = rndName();
@@ -130,6 +130,48 @@ describe('fsWatcher extension', () => {
       const doc = await openTextDocument(`${noteName0}.md`);
 
       await waitForExpect(() => expect(doc.getText()).toBe(`[[folder2/${noteName1}]]`));
+    });
+
+    it('should update short ref to short ref with unknown extension on file rename', async () => {
+      const noteName0 = rndName();
+      const noteName1 = rndName();
+      const nextName = rndName();
+
+      await createFile(`${noteName0}.md`, `[[${noteName1}]]`, false);
+      await createFile(`${noteName1}.md`, '', false);
+
+      const edit = new WorkspaceEdit();
+      edit.renameFile(
+        Uri.file(`${getWorkspaceFolder()}/${noteName1}.md`),
+        Uri.file(`${getWorkspaceFolder()}/${nextName}.unknown`),
+      );
+
+      await workspace.applyEdit(edit);
+
+      const doc = await openTextDocument(`${noteName0}.md`);
+
+      await waitForExpect(() => expect(doc.getText()).toBe(`[[${nextName}.unknown]]`));
+    });
+
+    it('should update short ref with unknown extension to short ref with a known extension on file rename', async () => {
+      const noteName0 = rndName();
+      const noteName1 = rndName();
+      const nextName = rndName();
+
+      await createFile(`${noteName0}.md`, `[[${noteName1}.unknown]]`, false);
+      await createFile(`${noteName1}.unknown`, '', false);
+
+      const edit = new WorkspaceEdit();
+      edit.renameFile(
+        Uri.file(`${getWorkspaceFolder()}/${noteName1}.unknown`),
+        Uri.file(`${getWorkspaceFolder()}/${nextName}.gif`),
+      );
+
+      await workspace.applyEdit(edit);
+
+      const doc = await openTextDocument(`${noteName0}.md`);
+
+      await waitForExpect(() => expect(doc.getText()).toBe(`[[${nextName}.gif]]`));
     });
   });
 

@@ -1,12 +1,4 @@
-import {
-  RenameProvider,
-  TextDocument,
-  ProviderResult,
-  Position,
-  Range,
-  WorkspaceEdit,
-  Uri,
-} from 'vscode';
+import { RenameProvider, TextDocument, Position, Range, WorkspaceEdit, Uri } from 'vscode';
 import path from 'path';
 
 import {
@@ -15,15 +7,19 @@ import {
   getWorkspaceCache,
   isLongRef,
   getWorkspaceFolder,
+  containsUnknownExt,
+  findFilesByExts,
+  extractExt,
+  sortPaths,
 } from '../utils';
 
 const openingBracketsLength = 2;
 
 export default class ReferenceRenameProvider implements RenameProvider {
-  public prepareRename(
+  public async prepareRename(
     document: TextDocument,
     position: Position,
-  ): ProviderResult<Range | { range: Range; placeholder: string }> {
+  ): Promise<Range | { range: Range; placeholder: string }> {
     if (document.isDirty) {
       throw new Error('Rename is not available for unsaved files. Please save your changes first.');
     }
@@ -33,7 +29,16 @@ export default class ReferenceRenameProvider implements RenameProvider {
     if (refAtPos) {
       const { range, ref } = refAtPos;
 
-      if (!findUriByRef(getWorkspaceCache().allUris, ref)) {
+      const unknownUris = containsUnknownExt(ref) ? await findFilesByExts([extractExt(ref)]) : [];
+
+      const augmentedUris = unknownUris.length
+        ? sortPaths([...getWorkspaceCache().allUris, ...unknownUris], {
+            pathKey: 'path',
+            shallowFirst: true,
+          })
+        : getWorkspaceCache().allUris;
+
+      if (!findUriByRef(augmentedUris, ref)) {
         throw new Error(
           'Rename is not available for nonexistent links. Create file first by clicking on the link.',
         );
@@ -48,11 +53,11 @@ export default class ReferenceRenameProvider implements RenameProvider {
     throw new Error('Rename is not available. Please try when focused on the link.');
   }
 
-  public provideRenameEdits(
+  public async provideRenameEdits(
     document: TextDocument,
     position: Position,
     newName: string,
-  ): ProviderResult<WorkspaceEdit> {
+  ): Promise<WorkspaceEdit> {
     const refAtPos = getReferenceAtPosition(document, position);
 
     if (refAtPos) {
@@ -60,10 +65,19 @@ export default class ReferenceRenameProvider implements RenameProvider {
 
       const workspaceEdit = new WorkspaceEdit();
 
-      const fsPath = findUriByRef(getWorkspaceCache().allUris, ref)?.fsPath;
+      const unknownUris = containsUnknownExt(ref) ? await findFilesByExts([extractExt(ref)]) : [];
+
+      const augmentedUris = unknownUris.length
+        ? sortPaths([...getWorkspaceCache().allUris, ...unknownUris], {
+            pathKey: 'path',
+            shallowFirst: true,
+          })
+        : getWorkspaceCache().allUris;
+
+      const fsPath = findUriByRef(augmentedUris, ref)?.fsPath;
 
       if (fsPath) {
-        const newRelativePath = `${newName}${!newName.includes('.') ? '.md' : ''}`;
+        const newRelativePath = `${newName}${path.parse(newName).ext === '' ? '.md' : ''}`;
         const newUri = Uri.file(
           isLongRef(ref)
             ? path.join(getWorkspaceFolder()!, newRelativePath)
