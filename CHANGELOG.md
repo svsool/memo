@@ -3,11 +3,15 @@
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
 ## [Unreleased]
-https://github.com/svsool/vscode-memo/compare/v0.1.8...HEAD
+https://github.com/svsool/vscode-memo/compare/v0.1.9...HEAD
 
-## [Unreleased]
+## [v0.1.9] - 2020-07-23
 ### Added
-- Support opening common file types in the default app
+- Add "Open link in the default app" command. Opening link via context menu is also supported
+- Add the possibility to rename links using `F2` or `Rename symbol` command. Renaming via context menu is also supported
+
+### Fixed
+- Fix bug when hover was not available for long references in Windows
 
 ## [v0.1.8] - 2020-07-13
 ### Added
