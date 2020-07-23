@@ -36,7 +36,7 @@ If you want to try out Memo just install it via marketplace using [this link](ht
 
   - Links rename via `Rename Symbol` command
 
-    - ![Links rename via command](./help/Attachments/Automatic%20link%20synchronization 2.gif)
+    - ![Links rename via command](./help/Attachments/Automatic%20link%20synchronization%202.gif)
 
   - Links labeling
 
@@ -46,7 +46,7 @@ If you want to try out Memo just install it via marketplace using [this link](ht
 
     - ![Support short and full links on filename clash](./help/Attachments/Short%20and%20long%20links%20support%202.png)
 
-  - Opening links with unsupported file formats in the default app
+  - Opening links with unsupported file formats in the system default app
 
     - ![Links labeling](./help/Attachments/Opening%20links%20in%20the%20default%20app.gif)
 
@@ -64,6 +64,8 @@ If you want to try out Memo just install it via marketplace using [this link](ht
 
 - 🕹 **Commands**
 
+  - "Open link" command support for links following
+
   - "Open today's note" command which creates a note with a title in this format `yyyy-mm-dd` or opens already existing one
 
     - ![Open today's note command](./help/Attachments/Open%20today's%20note.gif)
@@ -72,7 +74,9 @@ If you want to try out Memo just install it via marketplace using [this link](ht
 
     - ![Open random note command](./help/Attachments/Open%20random%20note.gif)
 
-  - "Open link in the default app" command allows you to open unsupported file formats in the system default app
+  - "Open link in the default app" command for opening unsupported file formats in the system default app
+
+  - "Rename Symbol" command support for renaming links right in the editor
 
 ## FAQ
 
