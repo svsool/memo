@@ -96,10 +96,10 @@ export const getWorkspaceFolder = () =>
 
 const getDateInYYYYMMDDFormat = (date: Date) => date.toISOString().slice(0, 10);
 const getToday = () => new Date();
-const getYesterday = () => ((d) => new Date(d.setDate(d.getDate() - 1)))(new Date());
+const getTomorrow = () => ((d) => new Date(d.setDate(d.getDate() + 1)))(new Date());
 
 export const getTodayDateInYYYYMMDDFormat = () => getDateInYYYYMMDDFormat(getToday());
-export const getYesterdayDateInYYYYMMDDFormat = () => getDateInYYYYMMDDFormat(getYesterday());
+export const getTomorrowDateInYYYYMMDDFormat = () => getDateInYYYYMMDDFormat(getTomorrow());
 
 export function getConfigProperty<T>(property: string, fallback: T): T {
   return vscode.workspace.getConfiguration().get(`memo.${property}`, fallback);

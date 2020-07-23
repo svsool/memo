@@ -32,7 +32,7 @@
     "onLanguage:markdown",
     "onCommand:memo.openRandomNote",
     "onCommand:memo.openTodayNote",
-    "onCommand:memo.openYesterdayNote",
+    "onCommand:memo.openTomorrowNote",
     "onCommand:memo.openReferenceInDefaultApp",
     "onCommand:_memo.openReference",
     "onCommand:_memo.cacheWorkspace",
@@ -50,8 +50,8 @@
         "category": "Memo"
       },
       {
-        "command": "memo.openYesterdayNote",
-        "title": "Open yesterday's note",
+        "command": "memo.openTomorrowNote",
+        "title": "Open Tomorrow's note",
         "category": "Memo"
       },
       {
