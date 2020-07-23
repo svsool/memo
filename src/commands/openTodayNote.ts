@@ -1,10 +1,10 @@
 import { commands } from 'vscode';
 
-import { getDateInYYYYMMDDFormat } from '../utils';
+import { getTodayDateInYYYYMMDDFormat } from '../utils';
 
 const openTodayNote = async () =>
   await commands.executeCommand('_memo.openDocumentByReference', {
-    reference: getDateInYYYYMMDDFormat(),
+    reference: getTodayDateInYYYYMMDDFormat(),
   });
 
 export default openTodayNote;

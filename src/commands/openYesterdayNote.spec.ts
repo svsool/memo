@@ -1,7 +1,7 @@
 import { commands } from 'vscode';
 import fs from 'fs';
 
-import { getYesterdayDateInYYYYMMDDFormat, getDateInYYYYMMDDFormat } from '../utils';
+import { getYesterdayDateInYYYYMMDDFormat, getTodayDateInYYYYMMDDFormat } from '../utils';
 import {
   createFile,
   getWorkspaceFolder,
@@ -20,7 +20,7 @@ describe('openYesterdayNote command', () => {
     await commands.executeCommand('memo.openTodayNote');
 
     expect(await fs.readdirSync(getWorkspaceFolder()!)).toHaveLength(1);
-    expect(getOpenedFilenames()).toContain(`${getDateInYYYYMMDDFormat()}.md`);
+    expect(getOpenedFilenames()).toContain(`${getTodayDateInYYYYMMDDFormat()}.md`);
 
     await commands.executeCommand('memo.openYesterdayNote');
 
