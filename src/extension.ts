@@ -11,6 +11,7 @@ import {
   ReferenceRenameProvider,
   BacklinksTreeDataProvider,
   extendMarkdownIt,
+  newVersionNotifier,
 } from './extensions';
 import { cacheWorkspace } from './utils';
 import commands from './commands';
@@ -18,6 +19,7 @@ import commands from './commands';
 const mdLangSelector = { language: 'markdown', scheme: '*' };
 
 export const activate = async (context: vscode.ExtensionContext) => {
+  newVersionNotifier.activate(context);
   syntaxDecorations.activate(context);
   fsWatcher.activate(context);
   completionProvider.activate(context);

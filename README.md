@@ -91,8 +91,6 @@ If you want to try out Memo just install it via marketplace using [this link](ht
 - Leave a review on [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=svsool.markdown-memo).
 - Read [CONTRIBUTING.md](CONTRIBUTING.md) for contributing to the code base.
 
-Some ideas for contribution can be found [here](https://github.com/svsool/vscode-memo/issues/1#issuecomment-655004112).
-
 ## Changelog
 
 See changelog [here](CHANGELOG.md).

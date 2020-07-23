@@ -8,3 +8,4 @@ export { default as extendMarkdownIt } from './extendMarkdownIt';
 export * as fsWatcher from './fsWatcher';
 export * as referenceContextWatcher from './referenceContextWatcher';
 export * as syntaxDecorations from './syntaxDecorations';
+export * as newVersionNotifier from './newVersionNotifier';

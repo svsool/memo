@@ -18,3 +18,4 @@ yarn-error.log
 **/*.map
 **/*.ts
 node_modules
+VERSION
