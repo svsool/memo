@@ -1,5 +1,14 @@
 # Automatic link synchronization
 
-Let's reference [[SyncNote]] from the `Examples/Links sync` folder and imagine that you decided to rename `SyncNote` to `HelloWorld`. In this case Memo will synchronize [[SyncNote]] links here in this note and all other files automatically. Try to rename that file yourself or check how synchronization looks like from the picture below.
+You have two options for links rename:
+
+1. Rename file in Workspace Explorer and it will automatically synchronize all links pointing to it
+1. Use `F2` or `Rename Symbol` command from command palette when link is under cursor
+
+Links synchronization on **file** rename:
 
 ![[Automatic link synchronization.gif]]
+
+Links synchronization on **symbol** rename:
+
+![[Automatic link synchronization 2.gif]]

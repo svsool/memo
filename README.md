@@ -30,9 +30,13 @@ If you want to try out Memo just install it via marketplace using [this link](ht
 
     - ![Embedding notes and images](./help/Attachments/Embed%20files.gif)
 
-  - Automatic links synchronization
+  - Automatic links synchronization on file rename
 
     - ![Automatic links synchronization](./help/Attachments/Automatic%20link%20synchronization.gif)
+
+  - Links rename via `Rename Symbol` command
+
+    - ![Links rename via command](./help/Attachments/Automatic%20link%20synchronization 2.gif)
 
   - Links labeling
 
