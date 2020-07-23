@@ -31,6 +31,8 @@ src
 
 ## Run tests
 
+Before running tests please ensure all VSCode instances closed since it's integration tests.
+
 ```
 yarn test
 ```
