@@ -6,6 +6,7 @@
   "version": "0.1.9",
   "author": "Svyatoslav Sobol <svyatoslav.sobol@gmail.com>",
   "license": "MIT",
+  "icon": "media/memo.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/svsool/vscode-memo"
@@ -20,6 +21,7 @@
     "Other"
   ],
   "keywords": [
+    "memo",
     "markdown",
     "knowledge base",
     "references",
