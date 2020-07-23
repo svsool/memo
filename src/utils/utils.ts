@@ -95,6 +95,8 @@ export const getWorkspaceFolder = () =>
   vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders[0].uri.fsPath;
 
 export const getDateInYYYYMMDDFormat = () => new Date().toISOString().slice(0, 10);
+export const getYesterdayDateInYYYYMMDDFormat = () =>
+  ((d) => new Date(d.setDate(d.getDate() - 1)).toISOString().slice(0, 10))(new Date());
 
 export function getConfigProperty<T>(property: string, fallback: T): T {
   return vscode.workspace.getConfiguration().get(`memo.${property}`, fallback);
