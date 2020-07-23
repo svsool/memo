@@ -46,6 +46,10 @@ If you want to try out Memo just install it via marketplace using [this link](ht
 
     - ![Support short and full links on filename clash](./help/Attachments/Short%20and%20long%20links%20support%202.png)
 
+  - Opening links with unsupported file formats in the default app
+
+    - ![Links labeling](./help/Attachments/Opening%20links%20in%20the%20default%20app.gif)
+
 - 🖼️ **Notes and images preview (built-in & on hover)**
 
 ![Notes and images preview](./help/Attachments/Notes%20and%20images%20preview.gif)
@@ -67,6 +71,8 @@ If you want to try out Memo just install it via marketplace using [this link](ht
   - "Open random note" command which allows you to explore your knowledge base a little bit
 
     - ![Open random note command](./help/Attachments/Open%20random%20note.gif)
+
+  - "Open link in the default app" command allows you to open unsupported file formats in the system default app
 
 ## FAQ
 

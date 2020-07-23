@@ -1,3 +1,5 @@
+# Embed files
+
 In [[Creating links]] you got acquainted with the links concept, and how one can create links to different resources using `[[Creating links]]` notation.
 
 Another feature that Memo has is attaching other notes and images as part of the current note by using similar notation to regular links but with `!` in the beginning as in `![[Features]]`.
