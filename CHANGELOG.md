@@ -3,7 +3,16 @@
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
 ## [Unreleased]
-https://github.com/svsool/vscode-memo/compare/v0.1.9...HEAD
+https://github.com/svsool/vscode-memo/compare/v0.1.10...HEAD
+
+## [v0.1.10] - 2020-07-24
+### Added
+- Add new help document "Open link in the default app"
+- Add Memo logo for VSCode Marketplace
+
+### Changed
+- Better documentation for "Accepted File Formats" in the help
+- Added information about links rename via "Rename Symbol" command to "Automatic link synchronization" document in the help
 
 ## [v0.1.9] - 2020-07-23
 ### Added
