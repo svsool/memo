@@ -33,7 +33,7 @@
   "activationEvents": [
     "onLanguage:markdown",
     "onCommand:memo.openRandomNote",
-    "onCommand:memo.openTodayNote",
+    "onCommand:memo.openDailyNote",
     "onCommand:memo.openReferenceInDefaultApp",
     "onCommand:_memo.openReference",
     "onCommand:_memo.cacheWorkspace",
@@ -46,8 +46,8 @@
     "markdown.markdownItPlugins": true,
     "commands": [
       {
-        "command": "memo.openTodayNote",
-        "title": "Open today's note",
+        "command": "memo.openDailyNote",
+        "title": "Open daily note",
         "category": "Memo"
       },
       {
@@ -128,7 +128,9 @@
     "@types/glob": "^7.1.1",
     "@types/jest": "^26.0.7",
     "@types/lodash.groupby": "^4.6.6",
+    "@types/lodash.range": "^3.2.6",
     "@types/markdown-it": "^10.0.1",
+    "@types/moment": "^2.13.0",
     "@types/node": "^14.0.25",
     "@types/open": "^6.2.1",
     "@types/rimraf": "^3.0.0",
@@ -158,8 +160,10 @@
   "dependencies": {
     "cross-path-sort": "^1.0.0",
     "lodash.groupby": "^4.6.0",
+    "lodash.range": "^3.2.0",
     "markdown-it": "^11.0.0",
     "markdown-it-regex": "^0.2.0",
+    "moment": "^2.27.0",
     "open": "^7.1.0"
   }
 }

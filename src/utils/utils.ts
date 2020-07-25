@@ -6,8 +6,9 @@ import fs from 'fs';
 import getWordRangeAtPosition from './getWordRangeAtPosition';
 import { WorkspaceCache, RefT, FoundRefT } from '../types';
 import { isInCodeSpan, isInFencedCodeBlock } from './externalUtils';
+import { default as createDailyQuickPick } from './createDailyQuickPick';
 
-export { sortPaths };
+export { sortPaths, createDailyQuickPick };
 
 const markdownExtRegex = /\.md$/i;
 
