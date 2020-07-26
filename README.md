@@ -66,9 +66,9 @@ If you want to try out Memo just install it via marketplace using [this link](ht
 
   - "Open link" command support for links following
 
-  - "Open today's note" command which creates a note with a title in this format `yyyy-mm-dd` or opens already existing one
+  - "Open daily note" command which creates a note with a title in `yyyy-mm-dd` format or opens already existing one
 
-    - ![Open today's note command](./help/Attachments/Open%20today's%20note.gif)
+    - ![Open daily note command](./help/Attachments/Open%20daily%20note.gif)
 
   - "Open random note" command which allows you to explore your knowledge base a little bit
 
