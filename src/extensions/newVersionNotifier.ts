@@ -4,6 +4,7 @@ import { window, commands, Uri, ExtensionContext } from 'vscode';
 
 // Add new version teasers for showing notification on extension update
 const teasers: { [key: string]: string } = {
+  '0.1.11': 'Memo v0.1.11! New "Open daily note" command added.',
   '0.1.10': 'Memo v0.1.10! Links rename, opening links in the default app and more.',
 };
 

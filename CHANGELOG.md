@@ -3,7 +3,14 @@
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
 ## [Unreleased]
-https://github.com/svsool/vscode-memo/compare/v0.1.10...HEAD
+https://github.com/svsool/vscode-memo/compare/v0.1.11...HEAD
+
+## [v0.1.11] - 2020-07-26
+### Added
+- Add new "Open daily note" command
+
+### Removed
+- Remove "Open today's note" command in favor of more flexible "Open daily note" command
 
 ## [v0.1.10] - 2020-07-24
 ### Added
