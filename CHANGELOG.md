@@ -5,6 +5,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## [Unreleased]
 https://github.com/svsool/vscode-memo/compare/v0.1.11...HEAD
 
+###Removed
+- Remove `memo.useEnhancedTriggerSuggest` setting in favor of built-in `"[markdown]": { "editor.quickSuggestions": true }`
+
 ## [v0.1.11] - 2020-07-26
 ### Added
 - Add new "Open daily note" command

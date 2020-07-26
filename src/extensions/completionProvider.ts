@@ -11,7 +11,6 @@ import {
 import path from 'path';
 import groupBy from 'lodash.groupby';
 
-import completionProviderTriggerCharacters from './completionProviderTriggerCharacters';
 import {
   getWorkspaceCache,
   fsPathToRef,
@@ -89,18 +88,13 @@ export const provideCompletionItems = (document: TextDocument, position: Positio
   return completionItems;
 };
 
-export const activate = async (context: ExtensionContext) => {
-  const useEnhancedTriggerSuggest = getConfigProperty('useEnhancedTriggerSuggest', false);
-
-  const triggerCharacters = useEnhancedTriggerSuggest ? completionProviderTriggerCharacters : ['['];
-
+export const activate = async (context: ExtensionContext) =>
   context.subscriptions.push(
     languages.registerCompletionItemProvider(
       'markdown',
       {
         provideCompletionItems,
       },
-      ...triggerCharacters,
+      '[',
     ),
   );
-};
