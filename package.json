@@ -70,6 +70,12 @@
           "scope": "resource",
           "description": "The maximum height of the image preview",
           "type": "number"
+        },
+        "memo.collapseBacklinksPanelItems": {
+          "default": false,
+          "scope": "resource",
+          "description": "Collapse backlinks panel items by default.",
+          "type": "boolean"
         }
       }
     },
@@ -96,6 +102,12 @@
         }
       ]
     },
+    "viewsWelcome": [
+      {
+        "view": "memoBacklinksExplorer",
+        "contents": "No information to show"
+      }
+    ],
     "markdown.previewStyles": [
       "./media/fontello/css/fontello.css",
       "./media/markdown.css"

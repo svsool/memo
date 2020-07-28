@@ -8,6 +8,7 @@ import {
   getWorkspaceFolder,
   trimSlashes,
   sortPaths,
+  getConfigProperty,
 } from '../utils';
 import { FoundRefT } from '../types';
 
@@ -40,12 +41,8 @@ export default class BacklinksTreeDataProvider implements vscode.TreeDataProvide
     if (!element) {
       const fsPath = vscode.window.activeTextEditor?.document.uri.fsPath;
 
-      const noInfoToShow = [
-        new Backlink('No information to show', undefined, vscode.TreeItemCollapsibleState.None),
-      ];
-
       if (!fsPath || (fsPath && !containsMarkdownExt(fsPath))) {
-        return noInfoToShow;
+        return [];
       }
 
       const refFromFilename = path.parse(fsPath).name;
@@ -58,14 +55,18 @@ export default class BacklinksTreeDataProvider implements vscode.TreeDataProvide
       const pathsSorted = sortPaths(Object.keys(referencesByPath), { shallowFirst: true });
 
       if (!pathsSorted.length) {
-        return noInfoToShow;
+        return [];
       }
+
+      const collapsibleState = getConfigProperty('collapseBacklinksPanelItems', false)
+        ? vscode.TreeItemCollapsibleState.Collapsed
+        : vscode.TreeItemCollapsibleState.Expanded;
 
       return pathsSorted.map((pathParam) => {
         const backlink = new Backlink(
           path.basename(pathParam),
           referencesByPath[pathParam],
-          vscode.TreeItemCollapsibleState.Expanded,
+          collapsibleState,
         );
         backlink.description = `(${referencesByPath[pathParam].length}) ${trimSlashes(
           pathParam

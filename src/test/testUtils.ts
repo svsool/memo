@@ -1,6 +1,6 @@
 import rimraf from 'rimraf';
 import path from 'path';
-import { workspace, Uri, commands } from 'vscode';
+import { workspace, Uri, commands, ConfigurationTarget } from 'vscode';
 export { default as waitForExpect } from 'wait-for-expect';
 
 import * as utils from '../utils';
@@ -11,9 +11,11 @@ const {
   getImgUrlForMarkdownPreview,
   getFileUrlForMarkdownPreview,
   escapeForRegExp,
+  getConfigProperty,
 } = utils;
 
 export {
+  getConfigProperty,
   getWorkspaceFolder,
   getImgUrlForMarkdownPreview,
   getFileUrlForMarkdownPreview,
@@ -87,7 +89,33 @@ export const closeAllEditors = async () => {
   await delay(100);
 };
 
+const getDefaultConfigProperties = (): {
+  default?: any;
+  scope?: string;
+  description?: string;
+  type?: string;
+}[] => {
+  return require('../../package.json').contributes.configuration.properties;
+};
+
+export const updateConfigProperty = async (property: string, value: unknown) => {
+  await workspace.getConfiguration().update(property, value, ConfigurationTarget.Workspace);
+};
+
+export const updateMemoConfigProperty = async (property: string, value: unknown) =>
+  await updateConfigProperty(`memo.${property}`, value);
+
+const resetMemoConfigProps = async () =>
+  await Promise.all(
+    Object.entries(getDefaultConfigProperties()).map(([propName, propConfig]) =>
+      propConfig.default !== undefined
+        ? updateConfigProperty(propName, propConfig.default)
+        : undefined,
+    ),
+  );
+
 export const closeEditorsAndCleanWorkspace = async () => {
+  await resetMemoConfigProps();
   await closeAllEditors();
   cleanWorkspace();
   await cleanWorkspaceCache();
@@ -96,4 +124,4 @@ export const closeEditorsAndCleanWorkspace = async () => {
 export const getWorkspaceCache = async (): Promise<WorkspaceCache> =>
   (await commands.executeCommand('_memo.getWorkspaceCache')) as WorkspaceCache;
 
-export const toPlainObject = (value: unknown) => JSON.parse(JSON.stringify(value));
+export const toPlainObject = <R>(value: unknown): R => JSON.parse(JSON.stringify(value));

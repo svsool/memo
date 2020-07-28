@@ -9,6 +9,8 @@ import {
   closeEditorsAndCleanWorkspace,
   getWorkspaceFolder,
   toPlainObject,
+  updateMemoConfigProperty,
+  getConfigProperty,
 } from '../test/testUtils';
 
 const getChildren = async () => {
@@ -297,5 +299,41 @@ describe('BacklinksTreeDataProvider()', () => {
         ],
       },
     ]);
+  });
+
+  it('should collapse parent items according to configuration', async () => {
+    const link = rndName();
+    const name0 = rndName();
+    const name1 = rndName();
+
+    await createFile(`${link}.md`);
+    await createFile(`a-${name0}.md`, `First note with backlink [[${link}]]`);
+    await createFile(`b-${name1}.md`, `Second note with backlink [[${link}]]`);
+
+    const doc = await openTextDocument(`${link}.md`);
+
+    await window.showTextDocument(doc);
+
+    await updateMemoConfigProperty('collapseBacklinksPanelItems', true);
+
+    expect((await getChildren()).every((child) => child.collapsibleState === 1)).toBe(true);
+  });
+
+  it('should expand parent items according to config', async () => {
+    const link = rndName();
+    const name0 = rndName();
+    const name1 = rndName();
+
+    await createFile(`${link}.md`);
+    await createFile(`a-${name0}.md`, `First note with backlink [[${link}]]`);
+    await createFile(`b-${name1}.md`, `Second note with backlink [[${link}]]`);
+
+    const doc = await openTextDocument(`${link}.md`);
+
+    await window.showTextDocument(doc);
+
+    expect(getConfigProperty('collapseBacklinksPanelItems', null)).toBe(false);
+
+    expect((await getChildren()).every((child) => child.collapsibleState === 2)).toBe(true);
   });
 });

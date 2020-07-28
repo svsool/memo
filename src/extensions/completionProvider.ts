@@ -11,13 +11,7 @@ import {
 import path from 'path';
 import groupBy from 'lodash.groupby';
 
-import {
-  getWorkspaceCache,
-  fsPathToRef,
-  containsImageExt,
-  containsOtherKnownExts,
-  getConfigProperty,
-} from '../utils';
+import { getWorkspaceCache, fsPathToRef, containsImageExt, containsOtherKnownExts } from '../utils';
 
 const padWithZero = (n: number): string => (n < 10 ? '0' + n : String(n));
 

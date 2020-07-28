@@ -1,13 +1,11 @@
 import * as vscode from 'vscode';
 
-import { closeAllEditors } from './test/testUtils';
+import { closeEditorsAndCleanWorkspace } from './test/testUtils';
 
 const MEMO_EXTENSION_ID = 'svsool.markdown-memo';
 
 describe('extension', () => {
-  beforeEach(async () => {
-    await closeAllEditors();
-  });
+  beforeEach(closeEditorsAndCleanWorkspace);
 
   it('should find extension in extensions list', () => {
     expect(vscode.extensions.all.some((extension) => extension.id === MEMO_EXTENSION_ID)).toBe(
