@@ -68,11 +68,14 @@ export const removeFile = async (filename: string) =>
     Uri.file(path.join(utils.getWorkspaceFolder()!, ...filename.split('/'))),
   );
 
-export const rndName = (): string =>
-  Math.random()
+export const rndName = (): string => {
+  const name = Math.random()
     .toString(36)
     .replace(/[^a-z]+/g, '')
     .substr(0, 5);
+
+  return name.length !== 5 ? rndName() : name;
+};
 
 export const openTextDocument = async (filename: string) =>
   await workspace.openTextDocument(path.join(utils.getWorkspaceFolder()!, filename));
