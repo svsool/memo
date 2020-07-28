@@ -23,7 +23,7 @@ const REGEX_CODE_SPAN = /`[^`]*?`/gm;
 export const isInCodeSpan = (doc: TextDocument, lineNum: number, offset: number): boolean => {
   let textBefore = doc.getText(new Range(new Position(0, 0), new Position(lineNum, offset)));
   textBefore = textBefore.replace(REGEX_CODE_SPAN, '').trim();
-  // So far `textBefore` should contain no valid fenced code block or comment
+
   return /`[^`]*$/gm.test(textBefore);
 };
 
