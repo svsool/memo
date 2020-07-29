@@ -79,6 +79,14 @@
         }
       }
     },
+    "keybindings": [
+      {
+        "command": "editor.action.openLink",
+        "key": "ctrl+enter",
+        "mac": "cmd+enter",
+        "when": "editorTextFocus && editorLangId == markdown && memo:refUnderCursorExists"
+      }
+    ],
     "menus": {
       "editor/context": [
         {
