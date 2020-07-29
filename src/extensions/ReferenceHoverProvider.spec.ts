@@ -112,7 +112,7 @@ describe('ReferenceHoverProvider', () => {
       .toMatchInlineSnapshot(`
       B {
         "contents": Array [
-          "Link contains unknown extension: .unknown. Please use common file extensions .md,.png,.jpg,.jpeg,.svg,.gif,.doc,.docx,.rtf,.txt,.odt,.xls,.xlsx,.ppt,.pptm,.pptx,.pdf to get full support.",
+          "Link contains unknown extension: .unknown. Please use common file extensions .md,.png,.jpg,.jpeg,.svg,.gif,.doc,.docx,.rtf,.txt,.odt,.xls,.xlsx,.ppt,.pptm,.pptx,.pdf to enable full support.",
         ],
         "range": Array [
           Object {

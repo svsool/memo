@@ -13,9 +13,6 @@ export default class DocumentLinkProvider implements vscode.DocumentLinkProvider
       .split(/\r?\n/g)
       .forEach((lineText, lineNum) => {
         for (const match of matchAll(this.refPattern, lineText)) {
-          let linkStart: vscode.Position;
-          let linkEnd: vscode.Position;
-
           const reference = match[2];
           if (reference) {
             const offset = (match.index || 0) + 2;
@@ -24,8 +21,8 @@ export default class DocumentLinkProvider implements vscode.DocumentLinkProvider
               continue;
             }
 
-            linkStart = new vscode.Position(lineNum, offset);
-            linkEnd = new vscode.Position(lineNum, offset + reference.length);
+            const linkStart = new vscode.Position(lineNum, offset);
+            const linkEnd = new vscode.Position(lineNum, offset + reference.length);
 
             const link = new vscode.DocumentLink(
               new vscode.Range(linkStart, linkEnd),

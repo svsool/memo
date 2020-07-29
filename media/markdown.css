@@ -51,3 +51,7 @@
   color: #cc0013 !important;
   cursor: not-allowed;
 }
+
+.memo-cyclic-link-warning {
+  text-align: center;
+}

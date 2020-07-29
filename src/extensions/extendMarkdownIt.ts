@@ -8,13 +8,20 @@ import {
   getImgUrlForMarkdownPreview,
   getFileUrlForMarkdownPreview,
   containsImageExt,
+  containsUnknownExt,
   findUriByRef,
   extractEmbedRefs,
   parseRef,
+  commonExts,
 } from '../utils';
 
 const getInvalidRefAnchor = (text: string) =>
   `<a class="memo-invalid-link" title="Link does not exist yet. Please use cmd / ctrl + click in text editor to create a new one." href="javascript:void(0)">${text}</a>`;
+
+const getUnknownExtRefAnchor = (text: string, ref: string) =>
+  `<a class="memo-invalid-link" title="${`Link contains unknown extension: ${
+    path.parse(ref).ext
+  }. Please use common file extensions ${commonExts} to enable full support.`}" href="javascript:void(0)">${text}</a>`;
 
 const getRefAnchor = (href: string, text: string) =>
   `<a title="${href}" href="${href}">${text}</a>`;
@@ -37,6 +44,10 @@ const extendMarkdownIt = (md: MarkdownIt) => {
               label || ref
             }" /></div>`;
           }
+        }
+
+        if (containsUnknownExt(ref)) {
+          return getUnknownExtRefAnchor(label || ref, ref);
         }
 
         const fsPath = findUriByRef(getWorkspaceCache().markdownUris, ref)?.fsPath;
@@ -69,7 +80,7 @@ const extendMarkdownIt = (md: MarkdownIt) => {
             ${
               !cyclicLinkDetected
                 ? (mdExtended as any).render(content, undefined, true)
-                : '<div style="text-align: center">Cyclic linking detected 💥.</div>'
+                : '<div class="memo-cyclic-link-warning">Cyclic linking detected 💥.</div>'
             }
           </div>
         </div>`;
@@ -86,6 +97,10 @@ const extendMarkdownIt = (md: MarkdownIt) => {
       regex: /\[\[([^\[\]]+?)\]\]/,
       replace: (rawRef: string) => {
         const { ref, label } = parseRef(rawRef);
+
+        if (containsUnknownExt(ref)) {
+          return getUnknownExtRefAnchor(label || ref, ref);
+        }
 
         const fsPath = findUriByRef(getWorkspaceCache().allUris, ref)?.fsPath;
 

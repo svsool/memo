@@ -29,7 +29,7 @@ export default class ReferenceHoverProvider implements vscode.HoverProvider {
         return new vscode.Hover(
           `Link contains unknown extension: ${
             path.parse(ref).ext
-          }. Please use common file extensions ${commonExts} to get full support.`,
+          }. Please use common file extensions ${commonExts} to enable full support.`,
           hoverRange,
         );
       }

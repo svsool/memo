@@ -29,7 +29,7 @@ describe('extendMarkdownIt contribution', () => {
 
     await cacheWorkspace();
 
-    expect(md.render('[[invalid-link]]').replace(getWorkspaceFolder()!, '')).toMatchInlineSnapshot(`
+    expect(md.render('[[invalid-link]]')).toMatchInlineSnapshot(`
       "<p><a class=\\"memo-invalid-link\\" title=\\"Link does not exist yet. Please use cmd / ctrl + click in text editor to create a new one.\\" href=\\"javascript:void(0)\\">invalid-link</a></p>
       "
     `);
@@ -105,13 +105,12 @@ describe('extendMarkdownIt contribution', () => {
     );
   });
 
-  it('should render html link with tooltip about broken reference to image', async () => {
+  it('should render html link with tooltip about broken reference to an image', async () => {
     const md = extendMarkdownIt(MarkdownIt());
 
     await cacheWorkspace();
 
-    expect(md.render('[[invalid-link.png]]').replace(getWorkspaceFolder()!, ''))
-      .toMatchInlineSnapshot(`
+    expect(md.render('[[invalid-link.png]]')).toMatchInlineSnapshot(`
       "<p><a class=\\"memo-invalid-link\\" title=\\"Link does not exist yet. Please use cmd / ctrl + click in text editor to create a new one.\\" href=\\"javascript:void(0)\\">invalid-link.png</a></p>
       "
     `);
@@ -311,7 +310,7 @@ describe('extendMarkdownIt contribution', () => {
                   </a>
                 </div>
                 <div class=\\"memo-markdown-embed-content\\">
-                  <div style=\\"text-align: center\\">Cyclic linking detected 💥.</div>
+                  <div class=\\"memo-cyclic-link-warning\\">Cyclic linking detected 💥.</div>
                 </div>
               </div></p>
       "
@@ -355,12 +354,23 @@ describe('extendMarkdownIt contribution', () => {
                   </a>
                 </div>
                 <div class=\\"memo-markdown-embed-content\\">
-                  <div style=\\"text-align: center\\">Cyclic linking detected 💥.</div>
+                  <div class=\\"memo-cyclic-link-warning\\">Cyclic linking detected 💥.</div>
                 </div>
               </div></p>
 
                 </div>
               </div></p>
+      "
+    `);
+  });
+
+  it('should render html link with tooltip about unknown extension', async () => {
+    const md = extendMarkdownIt(MarkdownIt());
+
+    await cacheWorkspace();
+
+    expect(md.render('[[link.unknown]]')).toMatchInlineSnapshot(`
+      "<p><a class=\\"memo-invalid-link\\" title=\\"Link contains unknown extension: .unknown. Please use common file extensions .md,.png,.jpg,.jpeg,.svg,.gif,.doc,.docx,.rtf,.txt,.odt,.xls,.xlsx,.ppt,.pptm,.pptx,.pdf to enable full support.\\" href=\\"javascript:void(0)\\">link.unknown</a></p>
       "
     `);
   });
