@@ -31,11 +31,11 @@ src
 
 ## Run tests
 
-Before running integration tests, please ensure that all VSCode instances are closed.
-
 ```
 yarn test
 ```
+
+*Note: Before running integration tests, please ensure that all VSCode instances are closed.*
 
 ## Releasing
 
