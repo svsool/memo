@@ -27,7 +27,7 @@ describe('createDailyQuickPick()', () => {
     expect(dailyQuickPick.items).toHaveLength(63);
   });
 
-  it('should contain an item with an indicator on note existence', async () => {
+  it('should contain an item with an indicator about note existence', async () => {
     const dateInYYYYMMDDFormat = moment().format('YYYY-MM-DD');
 
     await createFile(`${dateInYYYYMMDDFormat}.md`);

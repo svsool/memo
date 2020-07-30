@@ -254,11 +254,10 @@ export const findUriByRef = (uris: vscode.Uri[], ref: string): vscode.Uri | unde
     return containsMarkdownExt(path.basename(uri.fsPath)) && name === ref.toLowerCase();
   });
 
-// TODO: Rename to ensureDirectoryExists
-export const ensureDirectoryExistence = (filePath: string) => {
+export const ensureDirectoryExists = (filePath: string) => {
   const dirname = path.dirname(filePath);
   if (!fs.existsSync(dirname)) {
-    ensureDirectoryExistence(dirname);
+    ensureDirectoryExists(dirname);
     fs.mkdirSync(dirname);
   }
 };

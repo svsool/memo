@@ -6,7 +6,7 @@ import {
   containsImageExt,
   getWorkspaceCache,
   findUriByRef,
-  ensureDirectoryExistence,
+  ensureDirectoryExists,
   parseRef,
 } from '../utils';
 
@@ -28,7 +28,7 @@ const openDocumentByReference = async ({ reference }: { reference: string }) => 
 
       // don't override file content if it already exists
       if (!fs.existsSync(filePath)) {
-        ensureDirectoryExistence(filePath);
+        ensureDirectoryExists(filePath);
         fs.writeFileSync(filePath, '');
       }
 
