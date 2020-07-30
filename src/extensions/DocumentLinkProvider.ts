@@ -8,6 +8,7 @@ export default class DocumentLinkProvider implements vscode.DocumentLinkProvider
   public provideDocumentLinks(document: vscode.TextDocument): vscode.DocumentLink[] {
     const results: vscode.DocumentLink[] = [];
 
+    // TODO: Refactor to use ref utils
     document
       .getText()
       .split(/\r?\n/g)

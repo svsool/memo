@@ -180,6 +180,14 @@ export const findReferences = async (
 
         const refStart = currentDocument.positionAt(offset);
         const lineStart = currentDocument.lineAt(refStart);
+
+        if (
+          isInFencedCodeBlock(currentDocument, lineStart.lineNumber) ||
+          isInCodeSpan(currentDocument, lineStart.lineNumber, offset)
+        ) {
+          return;
+        }
+
         const matchText = lineStart.text.slice(
           Math.max(refStart.character - 2, 0),
           lineStart.text.length,
@@ -246,6 +254,7 @@ export const findUriByRef = (uris: vscode.Uri[], ref: string): vscode.Uri | unde
     return containsMarkdownExt(path.basename(uri.fsPath)) && name === ref.toLowerCase();
   });
 
+// TODO: Rename to ensureDirectoryExists
 export const ensureDirectoryExistence = (filePath: string) => {
   const dirname = path.dirname(filePath);
   if (!fs.existsSync(dirname)) {

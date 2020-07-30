@@ -11,7 +11,6 @@ describe('newVersionNotifier extension', () => {
 
   it('should not fail on activate', () => {
     expect(() => {
-      console.log('test', path.resolve(path.join(__dirname, '..', '..')));
       const mockContext = ({
         subscriptions: [],
         extensionPath: path.resolve(path.join(__dirname, '..', '..')),
