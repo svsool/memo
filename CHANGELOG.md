@@ -3,9 +3,19 @@
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
 ## [Unreleased]
-https://github.com/svsool/vscode-memo/compare/v0.1.11...HEAD
+https://github.com/svsool/vscode-memo/compare/v0.1.12...HEAD
 
-###Removed
+## [v0.1.12] - 2020-07-31
+### Added
+
+- Add `webp` extension support
+- Add tooltip about unknown extensions to built-in preview
+
+### Fixed
+- Links within code spans and fenced code blocks are not interpreted anymore during links rename and in the backlinks panel
+- New [known extensions](https://github.com/svsool/vscode-memo/blob/7643221ae1b8884e02af375af2696c4918fcd285/src/utils/utils.ts#L19) are now recognized on drag and drop to project explorer
+
+### Removed
 - Remove `memo.useEnhancedTriggerSuggest` setting in favor of built-in `"[markdown]": { "editor.quickSuggestions": true }`
 
 ## [v0.1.11] - 2020-07-26
