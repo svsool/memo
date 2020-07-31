@@ -12,9 +12,39 @@ export { sortPaths, createDailyQuickPick };
 
 const markdownExtRegex = /\.md$/i;
 
-const imageExtsRegex = /\.(png|jpg|jpeg|svg|gif|webp)$/i;
+const imageExts = ['png', 'jpg', 'jpeg', 'svg', 'gif', 'webp'];
 
-const otherExtsRegex = /\.(doc|docx|rtf|txt|odt|xls|xlsx|ppt|pptm|pptx|pdf|pages|mp4|mov|wmv|flv|avi|mkv|mp3|webm|wav|m4a|ogg|3gp|flac)$/i;
+const imageExtsRegex = new RegExp(`.(${imageExts.join('|')})$`, 'i');
+
+const otherExts = [
+  'doc',
+  'docx',
+  'rtf',
+  'txt',
+  'odt',
+  'xls',
+  'xlsx',
+  'ppt',
+  'pptm',
+  'pptx',
+  'pdf',
+  'pages',
+  'mp4',
+  'mov',
+  'wmv',
+  'flv',
+  'avi',
+  'mkv',
+  'mp3',
+  'webm',
+  'wav',
+  'm4a',
+  'ogg',
+  '3gp',
+  'flac',
+];
+
+const otherExtsRegex = new RegExp(`.(${otherExts.join('|')})$`, 'i');
 
 export const commonExts =
   '.md,.png,.jpg,.jpeg,.svg,.gif,.doc,.docx,.rtf,.txt,.odt,.xls,.xlsx,.ppt,.pptm,.pptx,.pdf';
@@ -73,10 +103,8 @@ export const getWorkspaceCache = (): WorkspaceCache => workspaceCache;
 
 export const cacheWorkspace = async () => {
   const markdownUris = await vscode.workspace.findFiles('**/*.md');
-  const imageUris = await vscode.workspace.findFiles('**/*.{png,jpg,jpeg,svg,gif,webp}');
-  const otherUris = await vscode.workspace.findFiles(
-    '**/*.{doc,docx,rtf,txt,odt,xls,xlsx,ppt,pptm,pptx,pdf,pages,mp4,mov,wmv,flv,avi,mkv,mp3,webm,wav,m4a,ogg,3gp,flac}',
-  );
+  const imageUris = await vscode.workspace.findFiles(`**/*.{${imageExts.join(',')}}`);
+  const otherUris = await vscode.workspace.findFiles(`**/*.{${otherExts.join(',')}}`);
 
   workspaceCache.markdownUris = sortPaths(markdownUris, { pathKey: 'path', shallowFirst: true });
   workspaceCache.imageUris = sortPaths(imageUris, { pathKey: 'path', shallowFirst: true });
