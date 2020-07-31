@@ -7,7 +7,7 @@ src
  ├── commands - contains internal / external commands, e.g. open today or random note commands
  ├── declarations.d.ts - global TS type declarations
  ├── extension.ts - plugin entrypoint
- ├── extensions - contains extensions, usually extension accepts plugin context and implements certain functionality
+ ├── features - contains features, usually feature accepts plugin context and implements certain functionality
  ├── test - contains test runner and common test utils
  ├── types.ts - common types
  └── utils - common utils
