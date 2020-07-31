@@ -12,6 +12,8 @@ import {
   replaceRefs,
   sortPaths,
   findAllUrisWithUnknownExts,
+  imageExts,
+  otherExts,
 } from '../utils';
 
 const getBasename = (pathParam: string) => path.basename(pathParam).toLowerCase();
@@ -24,7 +26,9 @@ const isFirstUriInGroup = (pathParam: string, urisGroup: Uri[] = []) =>
   urisGroup.findIndex((uriParam) => uriParam.fsPath === pathParam) === 0;
 
 export const activate = (context: ExtensionContext) => {
-  const fileWatcher = workspace.createFileSystemWatcher('**/*.{md,png,jpg,jpeg,svg,gif}');
+  const fileWatcher = workspace.createFileSystemWatcher(
+    `**/*.{md,${[...imageExts, otherExts].join(',')}}`,
+  );
 
   const createListenerDisposable = fileWatcher.onDidCreate(cacheWorkspace);
   const deleteListenerDisposable = fileWatcher.onDidDelete(cacheWorkspace);

@@ -12,11 +12,11 @@ export { sortPaths, createDailyQuickPick };
 
 const markdownExtRegex = /\.md$/i;
 
-const imageExts = ['png', 'jpg', 'jpeg', 'svg', 'gif', 'webp'];
+export const imageExts = ['png', 'jpg', 'jpeg', 'svg', 'gif', 'webp'];
 
 const imageExtsRegex = new RegExp(`.(${imageExts.join('|')})$`, 'i');
 
-const otherExts = [
+export const otherExts = [
   'doc',
   'docx',
   'rtf',
