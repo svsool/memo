@@ -12,7 +12,7 @@ export { sortPaths, createDailyQuickPick };
 
 const markdownExtRegex = /\.md$/i;
 
-const imageExtsRegex = /\.(png|jpg|jpeg|svg|gif)$/i;
+const imageExtsRegex = /\.(png|jpg|jpeg|svg|gif|webp)$/i;
 
 const otherExtsRegex = /\.(doc|docx|rtf|txt|odt|xls|xlsx|ppt|pptm|pptx|pdf|pages|mp4|mov|wmv|flv|avi|mkv|mp3|webm|wav|m4a|ogg|3gp|flac)$/i;
 
@@ -72,12 +72,14 @@ const workspaceCache: WorkspaceCache = {
 export const getWorkspaceCache = (): WorkspaceCache => workspaceCache;
 
 export const cacheWorkspace = async () => {
-  const imageUris = await vscode.workspace.findFiles('**/*.{png,jpg,jpeg,svg,gif}');
   const markdownUris = await vscode.workspace.findFiles('**/*.md');
-  const otherUris = await vscode.workspace.findFiles('**/*.{doc,docx,odt,pdf,rtf,tex,txt,wpd}');
+  const imageUris = await vscode.workspace.findFiles('**/*.{png,jpg,jpeg,svg,gif,webp}');
+  const otherUris = await vscode.workspace.findFiles(
+    '**/*.{doc,docx,rtf,txt,odt,xls,xlsx,ppt,pptm,pptx,pdf,pages,mp4,mov,wmv,flv,avi,mkv,mp3,webm,wav,m4a,ogg,3gp,flac}',
+  );
 
-  workspaceCache.imageUris = sortPaths(imageUris, { pathKey: 'path', shallowFirst: true });
   workspaceCache.markdownUris = sortPaths(markdownUris, { pathKey: 'path', shallowFirst: true });
+  workspaceCache.imageUris = sortPaths(imageUris, { pathKey: 'path', shallowFirst: true });
   workspaceCache.otherUris = sortPaths(otherUris, { pathKey: 'path', shallowFirst: true });
   workspaceCache.allUris = sortPaths([...markdownUris, ...imageUris, ...otherUris], {
     pathKey: 'path',
