@@ -314,6 +314,26 @@ describe('BacklinksTreeDataProvider()', () => {
     expect(toPlainObject(await getChildren())).toHaveLength(0);
   });
 
+  it('should not provide backlinks for link within code span 2', async () => {
+    const link = rndName();
+    const name0 = rndName();
+
+    await createFile(`${link}.md`);
+    await createFile(
+      `a-${name0}.md`,
+      `
+    Preceding text
+    \`[[${link}]]\`
+    Following text
+    `,
+    );
+
+    const doc = await openTextDocument(`${link}.md`);
+    await window.showTextDocument(doc);
+
+    expect(toPlainObject(await getChildren())).toHaveLength(0);
+  });
+
   it('should not provide backlinks for link within fenced code block', async () => {
     const link = rndName();
     const name0 = rndName();

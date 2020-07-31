@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { workspace, window, ExtensionContext } from 'vscode';
+import { workspace, window, Uri, ExtensionContext } from 'vscode';
 import groupBy from 'lodash.groupby';
 
 import {
@@ -9,52 +9,19 @@ import {
   containsMarkdownExt,
   cacheWorkspace,
   getWorkspaceCache,
-  escapeForRegExp,
+  replaceRefs,
   sortPaths,
   findAllUrisWithUnknownExts,
 } from '../utils';
 
-// TODO: Extract to utils
-const replaceRefs = ({
-  refs,
-  content,
-  onMatch,
-  onReplace,
-}: {
-  refs: { old: string; new: string }[];
-  content: string;
-  onMatch?: () => void;
-  onReplace?: () => void;
-}): string | null => {
-  const { updatedOnce, nextContent } = refs.reduce(
-    ({ updatedOnce, nextContent }, ref) => {
-      const pattern = `\\[\\[${escapeForRegExp(ref.old)}(\\|.*)?\\]\\]`;
+const getBasename = (pathParam: string) => path.basename(pathParam).toLowerCase();
 
-      if (new RegExp(pattern, 'i').exec(content)) {
-        onMatch && onMatch();
-
-        const nextContent = content.replace(new RegExp(pattern, 'gi'), ($0, $1) => {
-          onReplace && onReplace();
-
-          return `[[${ref.new}${$1 || ''}]]`;
-        });
-
-        return {
-          updatedOnce: true,
-          nextContent,
-        };
-      }
-
-      return {
-        updatedOnce: updatedOnce,
-        nextContent: nextContent,
-      };
-    },
-    { updatedOnce: false, nextContent: content },
-  );
-
-  return updatedOnce ? nextContent : null;
-};
+// Short ref allowed when non-unique filename comes first in the list of sorted uris.
+// /a.md - <-- can be referenced via short ref as [[a]], since it comes first according to paths sorting
+// /folder1/a.md - can be referenced only via long ref as [[folder1/a]]
+// /folder2/subfolder1/a.md - can be referenced only via long ref as [[folder2/subfolder1/a]]
+const isFirstUriInGroup = (pathParam: string, urisGroup: Uri[] = []) =>
+  urisGroup.findIndex((uriParam) => uriParam.fsPath === pathParam) === 0;
 
 export const activate = (context: ExtensionContext) => {
   const fileWatcher = workspace.createFileSystemWatcher('**/*.{md,png,jpg,jpeg,svg,gif}');
@@ -73,7 +40,7 @@ export const activate = (context: ExtensionContext) => {
 
     const oldFsPaths = files.map(({ oldUri }) => oldUri.fsPath);
 
-    const oldUrisByPathBasename = groupBy(
+    const oldUrisGroupedByBasename = groupBy(
       sortPaths(
         [
           ...getWorkspaceCache().allUris.filter((uri) => !oldFsPaths.includes(uri.fsPath)),
@@ -96,7 +63,7 @@ export const activate = (context: ExtensionContext) => {
         })
       : getWorkspaceCache().allUris;
 
-    const newUrisByPathBasename = groupBy(newUris, ({ fsPath }) =>
+    const newUrisGroupedByBasename = groupBy(newUris, ({ fsPath }) =>
       path.basename(fsPath).toLowerCase(),
     );
 
@@ -109,20 +76,7 @@ export const activate = (context: ExtensionContext) => {
 
     const incrementRefsCounter = () => (refsUpdated += 1);
 
-    const isShortRefAllowed = (
-      pathParam: string,
-      urisByPathBasename: typeof newUrisByPathBasename,
-    ) => {
-      // Short ref allowed when non-unique filename comes first in the list of sorted uris.
-      // Notice that note name is not required to be unique across multiple folders but only within a single folder.
-      // /a.md - <-- can be referenced via short ref as [[a]], since it comes first according to paths sorting
-      // /folder1/a.md - can be referenced only via long ref as [[folder1/a]]
-      // /folder2/subfolder1/a.md - can be referenced only via long ref as [[folder2/subfolder1/a]]
-      const urisGroup = urisByPathBasename[path.basename(pathParam).toLowerCase()] || [];
-      return urisGroup.findIndex((uriParam) => uriParam.fsPath === pathParam) === 0;
-    };
-
-    files.forEach(({ oldUri, newUri }) => {
+    for (const { oldUri, newUri } of files) {
       const preserveOldExtension = !containsMarkdownExt(oldUri.fsPath);
       const preserveNewExtension = !containsMarkdownExt(newUri.fsPath);
       const workspaceFolder = getWorkspaceFolder()!;
@@ -130,72 +84,69 @@ export const activate = (context: ExtensionContext) => {
         path: oldUri.fsPath,
         keepExt: preserveOldExtension,
       });
-      const newShortRef = fsPathToRef({
-        path: newUri.fsPath,
-        keepExt: preserveNewExtension,
-      });
       const oldLongRef = fsPathToRef({
         path: oldUri.fsPath,
         basePath: workspaceFolder,
         keepExt: preserveOldExtension,
+      });
+      const newShortRef = fsPathToRef({
+        path: newUri.fsPath,
+        keepExt: preserveNewExtension,
       });
       const newLongRef = fsPathToRef({
         path: newUri.fsPath,
         basePath: workspaceFolder,
         keepExt: preserveNewExtension,
       });
-      const oldUriIsShortRef = isShortRefAllowed(oldUri.fsPath, oldUrisByPathBasename);
-      const newUriIsShortRef = isShortRefAllowed(newUri.fsPath, newUrisByPathBasename);
+      const oldUriIsShortRef = isFirstUriInGroup(
+        oldUri.fsPath,
+        oldUrisGroupedByBasename[getBasename(oldUri.fsPath)],
+      );
+      const newUriIsShortRef = isFirstUriInGroup(
+        newUri.fsPath,
+        newUrisGroupedByBasename[getBasename(newUri.fsPath)],
+      );
 
       if (!oldShortRef || !newShortRef || !oldLongRef || !newLongRef) {
         return;
       }
 
-      newUris.forEach(({ fsPath: p }) => {
-        const fileContent = fs.readFileSync(p).toString();
-        let nextContent: string | null = null;
+      for (const { fsPath } of newUris) {
+        if (!containsMarkdownExt(fsPath)) {
+          continue;
+        }
+
+        const doc = await workspace.openTextDocument(Uri.file(fsPath));
+        let refs: { old: string; new: string }[] = [];
 
         if (!oldUriIsShortRef && !newUriIsShortRef) {
           // replace long ref with long ref
           // TODO: Consider finding previous short ref and make it pointing to the long ref
-          nextContent = replaceRefs({
-            refs: [{ old: oldLongRef, new: newLongRef }],
-            content: fileContent,
-            onMatch: () => addToPathsUpdated(p),
-            onReplace: incrementRefsCounter,
-          });
+          refs = [{ old: oldLongRef, new: newLongRef }];
         } else if (!oldUriIsShortRef && newUriIsShortRef) {
           // replace long ref with short ref
-          nextContent = replaceRefs({
-            refs: [{ old: oldLongRef, new: newShortRef }],
-            content: fileContent,
-            onMatch: () => addToPathsUpdated(p),
-            onReplace: incrementRefsCounter,
-          });
+          refs = [{ old: oldLongRef, new: newShortRef }];
         } else if (oldUriIsShortRef && !newUriIsShortRef) {
           // replace short ref with long ref
           // TODO: Consider finding new short ref and making long refs pointing to the new short ref
-          nextContent = replaceRefs({
-            refs: [{ old: oldShortRef, new: newLongRef }],
-            content: fileContent,
-            onMatch: () => addToPathsUpdated(p),
-            onReplace: incrementRefsCounter,
-          });
+          refs = [{ old: oldShortRef, new: newLongRef }];
         } else {
           // replace short ref with short ref
-          nextContent = replaceRefs({
-            refs: [{ old: oldShortRef, new: newShortRef }],
-            content: fileContent,
-            onMatch: () => addToPathsUpdated(p),
-            onReplace: incrementRefsCounter,
-          });
+          refs = [{ old: oldShortRef, new: newShortRef }];
         }
 
+        const nextContent = replaceRefs({
+          refs,
+          document: doc,
+          onMatch: () => addToPathsUpdated(fsPath),
+          onReplace: incrementRefsCounter,
+        });
+
         if (nextContent !== null) {
-          fs.writeFileSync(p, nextContent);
+          fs.writeFileSync(fsPath, nextContent);
         }
-      });
-    });
+      }
+    }
 
     if (pathsUpdated.length > 0) {
       window.showInformationMessage(

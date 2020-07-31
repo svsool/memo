@@ -95,8 +95,6 @@ export const cleanWorkspaceCache = () => {
 export const getWorkspaceFolder = () =>
   vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders[0].uri.fsPath;
 
-export const getDateInYYYYMMDDFormat = () => new Date().toISOString().slice(0, 10);
-
 export function getConfigProperty<T>(property: string, fallback: T): T {
   return vscode.workspace.getConfiguration().get(`memo.${property}`, fallback);
 }
@@ -183,7 +181,7 @@ export const findReferences = async (
 
         if (
           isInFencedCodeBlock(currentDocument, lineStart.lineNumber) ||
-          isInCodeSpan(currentDocument, lineStart.lineNumber, offset)
+          isInCodeSpan(currentDocument, lineStart.lineNumber, refStart.character)
         ) {
           return;
         }
@@ -279,4 +277,62 @@ export const parseRef = (rawRef: string): RefT => {
     ref: dividerPosition !== -1 ? rawRef.slice(0, dividerPosition) : rawRef,
     label: dividerPosition !== -1 ? rawRef.slice(dividerPosition + 1, rawRef.length) : '',
   };
+};
+
+export const replaceRefs = ({
+  refs,
+  document,
+  onMatch,
+  onReplace,
+}: {
+  refs: { old: string; new: string }[];
+  document: vscode.TextDocument;
+  onMatch?: () => void;
+  onReplace?: () => void;
+}): string | null => {
+  const content = document.getText();
+
+  const { updatedOnce, nextContent } = refs.reduce(
+    ({ updatedOnce, nextContent }, ref) => {
+      const pattern = `\\[\\[${escapeForRegExp(ref.old)}(\\|.*)?\\]\\]`;
+
+      if (new RegExp(pattern, 'i').exec(content)) {
+        let replacedOnce = false;
+
+        const nextContent = content.replace(new RegExp(pattern, 'gi'), ($0, $1, offset) => {
+          const pos = document.positionAt(offset);
+
+          if (
+            isInFencedCodeBlock(document, pos.line) ||
+            isInCodeSpan(document, pos.line, pos.character)
+          ) {
+            return $0;
+          }
+
+          if (!replacedOnce) {
+            onMatch && onMatch();
+          }
+
+          onReplace && onReplace();
+
+          replacedOnce = true;
+
+          return `[[${ref.new}${$1 || ''}]]`;
+        });
+
+        return {
+          updatedOnce: true,
+          nextContent,
+        };
+      }
+
+      return {
+        updatedOnce: updatedOnce,
+        nextContent: nextContent,
+      };
+    },
+    { updatedOnce: false, nextContent: content },
+  );
+
+  return updatedOnce ? nextContent : null;
 };

@@ -1,4 +1,4 @@
-import { window, Selection } from 'vscode';
+import { window, Selection, workspace } from 'vscode';
 import path from 'path';
 
 import {
@@ -18,6 +18,7 @@ import {
   cleanWorkspaceCache,
   getRefUriUnderCursor,
   parseRef,
+  replaceRefs,
 } from './utils';
 
 describe('containsImageExt()', () => {
@@ -251,5 +252,62 @@ describe('parseRef()', () => {
 
   it('should favour only first divider', () => {
     expect(parseRef('link|||Label')).toEqual({ ref: 'link', label: '||Label' });
+  });
+});
+
+describe('replaceRefs()', () => {
+  it('should not replace ref within code span', async () => {
+    const doc = await workspace.openTextDocument({
+      language: 'markdown',
+      content: '`[[test-ref]]`',
+    });
+
+    expect(
+      replaceRefs({
+        refs: [{ old: 'test-ref', new: 'new-test-ref' }],
+        document: doc,
+      }),
+    ).toBe('`[[test-ref]]`');
+  });
+
+  it('should not replace ref within code span 2', async () => {
+    const content = `
+    Preceding text
+    \`[[test-ref]]\`
+    Following text
+    `;
+    const doc = await workspace.openTextDocument({
+      language: 'markdown',
+      content: content,
+    });
+
+    expect(
+      replaceRefs({
+        refs: [{ old: 'test-ref', new: 'new-test-ref' }],
+        document: doc,
+      }),
+    ).toBe(content);
+  });
+
+  it('should not replace ref within fenced code block', async () => {
+    const initialContent = `
+    \`\`\`
+    Preceding text
+    [[test-ref]]
+    Following text
+    \`\`\`
+    `;
+
+    const doc = await workspace.openTextDocument({
+      language: 'markdown',
+      content: initialContent,
+    });
+
+    expect(
+      replaceRefs({
+        refs: [{ old: 'test-ref', new: 'new-test-ref' }],
+        document: doc,
+      }),
+    ).toBe(initialContent);
   });
 });
