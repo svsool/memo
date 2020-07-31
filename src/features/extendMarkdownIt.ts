@@ -12,7 +12,7 @@ import {
   findUriByRef,
   extractEmbedRefs,
   parseRef,
-  commonExts,
+  commonExtsHint,
 } from '../utils';
 
 const getInvalidRefAnchor = (text: string) =>
@@ -21,7 +21,7 @@ const getInvalidRefAnchor = (text: string) =>
 const getUnknownExtRefAnchor = (text: string, ref: string) =>
   `<a class="memo-invalid-link" title="${`Link contains unknown extension: ${
     path.parse(ref).ext
-  }. Please use common file extensions ${commonExts} to enable full support.`}" href="javascript:void(0)">${text}</a>`;
+  }. Please use common file extensions ${commonExtsHint} to enable full support.`}" href="javascript:void(0)">${text}</a>`;
 
 const getRefAnchor = (href: string, text: string) =>
   `<a title="${href}" href="${href}">${text}</a>`;

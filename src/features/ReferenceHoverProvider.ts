@@ -11,7 +11,7 @@ import {
   getReferenceAtPosition,
   isUncPath,
   findUriByRef,
-  commonExts,
+  commonExtsHint,
 } from '../utils';
 
 export default class ReferenceHoverProvider implements vscode.HoverProvider {
@@ -29,7 +29,7 @@ export default class ReferenceHoverProvider implements vscode.HoverProvider {
         return new vscode.Hover(
           `Link contains unknown extension: ${
             path.parse(ref).ext
-          }. Please use common file extensions ${commonExts} to enable full support.`,
+          }. Please use common file extensions ${commonExtsHint} to enable full support.`,
           hoverRange,
         );
       }

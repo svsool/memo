@@ -46,7 +46,8 @@ const otherExts = [
 
 const otherExtsRegex = new RegExp(`.(${otherExts.join('|')})$`, 'i');
 
-export const commonExts =
+// Remember to edit accordingly when extensions above edited
+export const commonExtsHint =
   '.md,.png,.jpg,.jpeg,.svg,.gif,.doc,.docx,.rtf,.txt,.odt,.xls,.xlsx,.ppt,.pptm,.pptx,.pdf';
 
 export const refPattern = '(\\[\\[)([^\\[\\]]+?)(\\]\\])';
