@@ -13,7 +13,7 @@ import {
   escapeForRegExp,
 } from '../test/testUtils';
 
-describe('extendMarkdownIt contribution', () => {
+describe('extendMarkdownIt feature', () => {
   beforeEach(closeEditorsAndCleanWorkspace);
 
   afterEach(closeEditorsAndCleanWorkspace);

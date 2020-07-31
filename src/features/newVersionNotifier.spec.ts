@@ -4,7 +4,7 @@ import path from 'path';
 import * as newVersionNotifier from './newVersionNotifier';
 import { closeEditorsAndCleanWorkspace } from '../test/testUtils';
 
-describe('newVersionNotifier extension', () => {
+describe('newVersionNotifier feature', () => {
   beforeEach(closeEditorsAndCleanWorkspace);
 
   afterEach(closeEditorsAndCleanWorkspace);

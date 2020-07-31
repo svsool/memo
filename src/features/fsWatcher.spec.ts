@@ -14,7 +14,7 @@ import {
   waitForExpect,
 } from '../test/testUtils';
 
-describe('fsWatcher extension', () => {
+describe('fsWatcher feature', () => {
   beforeEach(closeEditorsAndCleanWorkspace);
 
   afterEach(closeEditorsAndCleanWorkspace);

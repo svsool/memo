@@ -3,7 +3,7 @@ import { ExtensionContext } from 'vscode';
 import * as referenceContextWatcher from './referenceContextWatcher';
 import { closeEditorsAndCleanWorkspace } from '../test/testUtils';
 
-describe('referenceContextWatcher extension', () => {
+describe('referenceContextWatcher feature', () => {
   beforeEach(closeEditorsAndCleanWorkspace);
 
   afterEach(closeEditorsAndCleanWorkspace);

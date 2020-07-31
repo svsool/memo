@@ -12,7 +12,7 @@ import {
   BacklinksTreeDataProvider,
   extendMarkdownIt,
   newVersionNotifier,
-} from './extensions';
+} from './features';
 import { cacheWorkspace } from './utils';
 import commands from './commands';
 

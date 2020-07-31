@@ -28,7 +28,7 @@ const getChildren = async () => {
   return parentsWithChildren;
 };
 
-describe('BacklinksTreeDataProvider()', () => {
+describe('BacklinksTreeDataProvider', () => {
   beforeEach(closeEditorsAndCleanWorkspace);
 
   afterEach(closeEditorsAndCleanWorkspace);
