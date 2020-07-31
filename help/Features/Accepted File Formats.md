@@ -3,7 +3,7 @@
 Memo recognizes the following file formats:
 
 1. Markdown files: `md`;
-2. Image files: `png`, `jpg`, `jpeg`, `svg`, `gif`;
+2. Image files: `png`, `jpg`, `jpeg`, `svg`, `gif`, `webp`;
 3. Other formats: `doc`, `docx`, `rtf`, `txt`, `odt`, `xls`, `xlsx`, `ppt`, `pptm`, `pptx`, `pdf`. See full list of extensions [here](https://github.com/svsool/vscode-memo/blob/61491d49d4b587431612935fd65126056ceb46cc/src/utils/utils.ts#L16).
 
 Markdown files and image files can be referenced via regular links `[[image.png]]` or attached using embed links `![[image.png]]`. These file types also support on-hover and built-in previews ([[Notes and images preview.gif|see how it works]]).
