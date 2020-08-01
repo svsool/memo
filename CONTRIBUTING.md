@@ -45,7 +45,7 @@ yarn test
 
 ## Releasing
 
-*You can skip this section if your contribution comes via PR from forked repository*
+*You can skip this section if your contribution comes via PR from a forked repository.*
 
 1. Remember to update [new version notifications](https://github.com/svsool/vscode-memo/blob/2d187fd65218473c4264e992aa4a2497666614f2/src/features/newVersionNotifier.ts#L6) if needed
 1. Run `yarn release`

@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [0.1.13](https://github.com/svsool/vscode-memo/compare/v0.1.12...v0.1.13) (2020-08-01)
 
-## [0.1.12](https://github.com/svsool/vscode-memo/compare/v0.1.11...v0.1.12) (2020-07-31)
+### [0.1.12](https://github.com/svsool/vscode-memo/compare/v0.1.11...v0.1.12) (2020-07-31)
 
 ### Added
 
@@ -18,7 +18,7 @@ All notable changes to this project will be documented in this file. See [standa
 ### Removed
 - Remove `memo.useEnhancedTriggerSuggest` setting in favor of built-in `"[markdown]": { "editor.quickSuggestions": true }`
 
-## [0.1.11](https://github.com/svsool/vscode-memo/compare/v0.1.10...v0.1.11) (2020-07-26)
+### [0.1.11](https://github.com/svsool/vscode-memo/compare/v0.1.10...v0.1.11) (2020-07-26)
 
 ### Added
 - Add new "Open daily note" command
@@ -26,7 +26,7 @@ All notable changes to this project will be documented in this file. See [standa
 ### Removed
 - Remove "Open today's note" command in favor of more flexible "Open daily note" command
 
-## [0.1.10](https://github.com/svsool/vscode-memo/compare/v0.1.9...v0.1.10) (2020-07-24)
+### [0.1.10](https://github.com/svsool/vscode-memo/compare/v0.1.9...v0.1.10) (2020-07-24)
 
 ### Added
 - Add new help document "Open link in the default app"
@@ -36,7 +36,7 @@ All notable changes to this project will be documented in this file. See [standa
 - Better documentation for "Accepted File Formats" in the help
 - Added information about links rename via "Rename Symbol" command to "Automatic link synchronization" document in the help
 
-## [0.1.9](https://github.com/svsool/vscode-memo/compare/v0.1.8...v0.1.9) (2020-07-23)
+### [0.1.9](https://github.com/svsool/vscode-memo/compare/v0.1.8...v0.1.9) (2020-07-23)
 
 ### Added
 - Add "Open link in the default app" command. Opening link via context menu is also supported
@@ -45,7 +45,7 @@ All notable changes to this project will be documented in this file. See [standa
 ### Fixed
 - Fix bug when hover was not available for long references in Windows
 
-## [0.1.8](https://github.com/svsool/vscode-memo/compare/v0.1.7...v0.1.8) (2020-07-13)
+### [0.1.8](https://github.com/svsool/vscode-memo/compare/v0.1.7...v0.1.8) (2020-07-13)
 
 ### Added
 - Embedding other notes using `![[Your note]]` syntax
@@ -56,22 +56,22 @@ All notable changes to this project will be documented in this file. See [standa
 ### Fixed
 - Regular and embed links won't be interpreted anymore within code span and fenced code blocks. So you can use it for escaping links and rendering them as is.
 
-## [0.1.7](https://github.com/svsool/vscode-memo/compare/v0.1.6...v0.1.7) (2020-07-08)
+### [0.1.7](https://github.com/svsool/vscode-memo/compare/v0.1.6...v0.1.7) (2020-07-08)
 
 ### Fixed
 - Fix backlinks lookup for filenames with special characters
 
-## [0.1.6](https://github.com/svsool/vscode-memo/compare/v0.1.5...v0.1.6) (2020-07-08)
+### [0.1.6](https://github.com/svsool/vscode-memo/compare/v0.1.5...v0.1.6) (2020-07-08)
 
 ### Added
 - Creating a note from a long link even when folder does not exist
 
-## [0.1.5](https://github.com/svsool/vscode-memo/compare/v0.1.4...v0.1.5) (2020-07-07)
+### [0.1.5](https://github.com/svsool/vscode-memo/compare/v0.1.4...v0.1.5) (2020-07-07)
 
 ### Fixed
 - Fix links resolution in the built-in preview. Sometimes links were not referring to a correct file.
 
-## [0.1.4](https://github.com/svsool/vscode-memo/compare/v0.1.1...v0.1.4) (2020-07-06)
+### [0.1.4](https://github.com/svsool/vscode-memo/compare/v0.1.1...v0.1.4) (2020-07-06)
 
 ### Added
 - Publishing via CI
@@ -79,7 +79,7 @@ All notable changes to this project will be documented in this file. See [standa
 ### Fixed
 - Fix opening a note via a short link when note and image share the same name
 
-## [0.1.1](https://github.com/svsool/vscode-memo/compare/v0.1.0...v0.1.1) (2020-07-05)
+### [0.1.1](https://github.com/svsool/vscode-memo/compare/v0.1.0...v0.1.1) (2020-07-05)
 
 ### Added
 - Help docs
