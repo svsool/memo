@@ -135,10 +135,13 @@
     "compile": "webpack --mode development",
     "watch": "webpack --mode development -w",
     "pretest": "tsc -p ./ && yarn run webpack --mode development",
+    "release": "standard-version",
     "ts": "tsc --noEmit",
     "test": "node ./out/test/runTest.js"
   },
   "devDependencies": {
+    "@commitlint/cli": "^9.1.1",
+    "@commitlint/config-conventional": "^9.1.1",
     "@types/glob": "^7.1.1",
     "@types/jest": "^26.0.7",
     "@types/lodash.groupby": "^4.6.6",
@@ -162,6 +165,7 @@
     "lint-staged": "^10.2.9",
     "prettier": "^2.0.5",
     "rimraf": "^3.0.2",
+    "standard-version": "^8.0.2",
     "ts-jest": "^26.1.4",
     "ts-loader": "^8.0.1",
     "typescript": "^3.9.7",
