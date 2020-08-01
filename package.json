@@ -133,11 +133,15 @@
     "clean": "rimraf dist out",
     "lint": "eslint src --ext ts",
     "compile": "webpack --mode development",
+    "compile:tests": "tsc -p ./ && yarn run webpack --mode development",
     "watch": "webpack --mode development -w",
-    "pretest": "tsc -p ./ && yarn run webpack --mode development",
+    "pretest": "yarn compile:tests",
+    "pretest:ci": "yarn compile:tests",
+    "pretest:watch": "yarn compile:tests",
     "release": "standard-version",
     "ts": "tsc --noEmit",
     "test": "node ./out/test/runTest.js",
+    "test:ci": "cross-env JEST_COLLECT_COVERAGE=true node ./out/test/runTest.js",
     "test:watch": "cross-env JEST_WATCH=true node ./out/test/runTest.js"
   },
   "devDependencies": {

@@ -42,6 +42,7 @@ export function run(): Promise<void> {
             },
           }),
           watch: process.env.JEST_WATCH === 'true',
+          collectCoverage: process.env.JEST_COLLECT_COVERAGE === 'true',
         },
         [rootDir],
       );

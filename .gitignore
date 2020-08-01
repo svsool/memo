@@ -5,3 +5,4 @@ node_modules
 *.vsix
 yarn-error.log
 VERSION
+coverage/

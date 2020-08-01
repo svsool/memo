@@ -19,3 +19,4 @@ yarn-error.log
 **/*.ts
 node_modules
 VERSION
+coverage/
