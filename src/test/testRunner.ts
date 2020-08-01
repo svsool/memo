@@ -34,7 +34,7 @@ export function run(): Promise<void> {
           transform: JSON.stringify({ '^.+\\.ts$': 'ts-jest' }),
           runInBand: true,
           testRegex: process.env.JEST_TEST_REGEX || '\\.(test|spec)\\.ts$',
-          testEnvironment: 'vscode',
+          testEnvironment: '<rootDir>/src/test/env/ExtendedVscodeEnvironment.js',
           setupFilesAfterEnv: ['<rootDir>/src/test/config/jestSetupAfterEnv.ts'],
           globals: JSON.stringify({
             'ts-jest': {

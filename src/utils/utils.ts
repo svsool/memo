@@ -3,7 +3,6 @@ import path from 'path';
 import { sort as sortPaths } from 'cross-path-sort';
 import fs from 'fs';
 
-import getWordRangeAtPosition from './getWordRangeAtPosition';
 import { WorkspaceCache, RefT, FoundRefT } from '../types';
 import { isInCodeSpan, isInFencedCodeBlock } from './externalUtils';
 import { default as createDailyQuickPick } from './createDailyQuickPick';
@@ -151,11 +150,7 @@ export const getReferenceAtPosition = (
     return null;
   }
 
-  const range = getWordRangeAtPosition(
-    document.lineAt(position.line).text,
-    position,
-    new RegExp(refPattern),
-  );
+  const range = document.getWordRangeAtPosition(position, new RegExp(refPattern));
 
   if (!range) {
     return null;
