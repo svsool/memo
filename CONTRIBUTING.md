@@ -38,7 +38,8 @@ Guidelines enforced via commit hooks, so commits MUST be prefixed with a type.
 ## Run tests
 
 ```
-yarn test
+yarn test # runs all tests
+yarn test:watch # runs only changed tests, consider also using JEST_TEST_REGEX env var for running specific tests
 ```
 
 *Note: Before running integration tests, please ensure that all VSCode instances are closed.*

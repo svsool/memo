@@ -137,7 +137,8 @@
     "pretest": "tsc -p ./ && yarn run webpack --mode development",
     "release": "standard-version",
     "ts": "tsc --noEmit",
-    "test": "node ./out/test/runTest.js"
+    "test": "node ./out/test/runTest.js",
+    "test:watch": "cross-env JEST_WATCH=true node ./out/test/runTest.js"
   },
   "devDependencies": {
     "@commitlint/cli": "^9.1.1",
@@ -154,6 +155,7 @@
     "@types/vscode": "^1.47.0",
     "@typescript-eslint/eslint-plugin": "^3.7.1",
     "@typescript-eslint/parser": "^3.7.1",
+    "cross-env": "^7.0.2",
     "eslint": "^7.5.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.22.0",

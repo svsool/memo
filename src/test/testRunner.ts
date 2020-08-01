@@ -41,6 +41,7 @@ export function run(): Promise<void> {
               tsConfig: path.resolve(rootDir, './tsconfig.json'),
             },
           }),
+          watch: process.env.JEST_WATCH === 'true',
         },
         [rootDir],
       );
