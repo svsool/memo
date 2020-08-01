@@ -57,19 +57,19 @@ export const containsMarkdownExt = (path: string): boolean => !!markdownExtRegex
 
 export const containsOtherKnownExts = (path: string): boolean => !!otherExtsRegex.exec(path);
 
-export const containsUnknownExt = (path: string): boolean =>
-  path.includes('.') &&
-  !containsMarkdownExt(path) &&
-  !containsImageExt(path) &&
-  !containsOtherKnownExts(path);
+export const containsUnknownExt = (pathParam: string): boolean =>
+  path.parse(pathParam).ext !== '' &&
+  !containsMarkdownExt(pathParam) &&
+  !containsImageExt(pathParam) &&
+  !containsOtherKnownExts(pathParam);
 
 export const trimLeadingSlash = (value: string) => value.replace(/^\/+|^\\+/g, '');
-export const trimTrailingSlash = (value: string) => value.replace(/\/+|^\\+$/g, '');
+export const trimTrailingSlash = (value: string) => value.replace(/\/+$|\\+$/g, '');
 export const trimSlashes = (value: string) => trimLeadingSlash(trimTrailingSlash(value));
 
 export const isLongRef = (path: string) => path.split('/').length > 1;
 
-const normalizeSlashes = (value: string) => value.replace(/\\/gi, '/');
+export const normalizeSlashes = (value: string) => value.replace(/\\/gi, '/');
 
 export const fsPathToRef = ({
   path: fsPath,
@@ -122,7 +122,7 @@ export const cleanWorkspaceCache = () => {
   workspaceCache.allUris = [];
 };
 
-export const getWorkspaceFolder = () =>
+export const getWorkspaceFolder = (): string | undefined =>
   vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders[0].uri.fsPath;
 
 export function getConfigProperty<T>(property: string, fallback: T): T {
@@ -130,12 +130,15 @@ export function getConfigProperty<T>(property: string, fallback: T): T {
 }
 
 export const matchAll = (pattern: RegExp, text: string): Array<RegExpMatchArray> => {
-  const out: RegExpMatchArray[] = [];
-  pattern.lastIndex = 0;
   let match: RegExpMatchArray | null;
+  const out: RegExpMatchArray[] = [];
+
+  pattern.lastIndex = 0;
+
   while ((match = pattern.exec(text))) {
     out.push(match);
   }
+
   return out;
 };
 
@@ -170,7 +173,7 @@ export const getReferenceAtPosition = (
 export const escapeForRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 export const extractEmbedRefs = (content: string) => {
-  const matches = matchAll(new RegExp(`\\[\\[(([^\\[\\]]+?)(\\|.*)?)\\]\\]`, 'gi'), content);
+  const matches = matchAll(new RegExp(`!\\[\\[(([^\\[\\]]+?)(\\|.*)?)\\]\\]`, 'gi'), content);
 
   return matches.map((match) => {
     const [, $1] = match;
@@ -233,7 +236,7 @@ export const findReferences = async (
 };
 
 export const getFileUrlForMarkdownPreview = (filePath: string): string =>
-  vscode.Uri.file(filePath).toString().replace('file:', '');
+  vscode.Uri.file(filePath).toString().replace('file://', '');
 
 export const getImgUrlForMarkdownPreview = (imagePath: string): string =>
   `vscode-resource://${vscode.Uri.file(imagePath).toString().replace('file:', 'file')}`;
@@ -242,7 +245,7 @@ const uncPathRegex = /^[\\\/]{2,}[^\\\/]+[\\\/]+[^\\\/]+/;
 
 export const isUncPath = (path: string): boolean => uncPathRegex.test(path);
 
-export const findFilesByExts = async (exts: string[]) =>
+export const findFilesByExts = async (exts: string[]): Promise<vscode.Uri[]> =>
   await workspace.findFiles(`**/*.{${exts.join(',')}}`);
 
 export const findAllUrisWithUnknownExts = async (uris: vscode.Uri[]) => {

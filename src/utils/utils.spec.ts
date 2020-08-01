@@ -1,4 +1,5 @@
-import { window, Selection, workspace } from 'vscode';
+import { window, Selection, workspace, Position, Uri } from 'vscode';
+import fs from 'fs';
 import path from 'path';
 
 import {
@@ -7,18 +8,40 @@ import {
   cleanWorkspace,
   closeEditorsAndCleanWorkspace,
   openTextDocument,
+  toPlainObject,
 } from '../test/testUtils';
 import {
   containsImageExt,
   containsMarkdownExt,
+  containsOtherKnownExts,
+  containsUnknownExt,
   fsPathToRef,
   trimLeadingSlash,
+  trimTrailingSlash,
+  trimSlashes,
+  isLongRef,
+  normalizeSlashes,
+  getWorkspaceFolder,
   getWorkspaceCache,
+  getConfigProperty,
+  matchAll,
   cacheWorkspace,
   cleanWorkspaceCache,
   getRefUriUnderCursor,
+  getReferenceAtPosition,
+  escapeForRegExp,
+  extractEmbedRefs,
   parseRef,
   replaceRefs,
+  findReferences,
+  getFileUrlForMarkdownPreview,
+  getImgUrlForMarkdownPreview,
+  isUncPath,
+  findFilesByExts,
+  findAllUrisWithUnknownExts,
+  extractExt,
+  findUriByRef,
+  ensureDirectoryExists,
 } from './utils';
 
 describe('containsImageExt()', () => {
@@ -44,6 +67,26 @@ describe('containsMarkdownExt()', () => {
   });
 });
 
+describe('containsOtherKnownExts()', () => {
+  it('should return true when input contains one of the other known extensions', () => {
+    expect(containsOtherKnownExts('/Users/memo/Diary/Notes/note.txt')).toBe(true);
+  });
+
+  it('should return false when input does not contain one of the other known extensions', () => {
+    expect(containsOtherKnownExts('/Users/memo/Diary/Attachments/image.psd')).toBe(false);
+  });
+});
+
+describe('containsUnknownExt()', () => {
+  it('should return true when input contains unknown extension', () => {
+    expect(containsUnknownExt('/Users/memo/Diary/Notes/note.unknown')).toBe(true);
+  });
+
+  it('should return false when input does not contain unknown extension', () => {
+    expect(containsUnknownExt('/Users/memo/Diary/Attachments/image.md')).toBe(false);
+  });
+});
+
 describe('trimLeadingSlash()', () => {
   it('should trim leading slash', () => {
     expect(trimLeadingSlash('/usr/local/bin')).toBe('usr/local/bin');
@@ -51,6 +94,26 @@ describe('trimLeadingSlash()', () => {
 
   it('should trim leading backslash', () => {
     expect(trimLeadingSlash('\\Windows\\System32')).toBe('Windows\\System32');
+  });
+});
+
+describe('trimTrailingSlash()', () => {
+  it('should trim trailing slash', () => {
+    expect(trimTrailingSlash('/usr/local/bin/')).toBe('/usr/local/bin');
+  });
+
+  it('should trim trailing backslash', () => {
+    expect(trimTrailingSlash('\\Windows\\System32\\')).toBe('\\Windows\\System32');
+  });
+});
+
+describe('trimSlashes()', () => {
+  it('should trim leading & trailing slashes', () => {
+    expect(trimSlashes('/usr/local/bin/')).toBe('usr/local/bin');
+  });
+
+  it('should trim leading & trailing backslashes', () => {
+    expect(trimSlashes('\\Windows\\System32\\')).toBe('Windows\\System32');
   });
 });
 
@@ -128,8 +191,8 @@ describe('cacheWorkspace()', () => {
     const noteFilename = `${rndName()}.md`;
     const imageFilename = `${rndName()}.png`;
 
-    await createFile(noteFilename);
-    await createFile(imageFilename);
+    await createFile(noteFilename, '', false);
+    await createFile(imageFilename, '', false);
 
     await cacheWorkspace();
 
@@ -256,6 +319,150 @@ describe('parseRef()', () => {
 });
 
 describe('replaceRefs()', () => {
+  it('should return null if nothing to replace', async () => {
+    expect(
+      replaceRefs({
+        refs: [{ old: 'test-ref', new: 'new-test-ref' }],
+        document: await workspace.openTextDocument({
+          language: 'markdown',
+          content: '[[some-ref]]',
+        }),
+      }),
+    ).toBe(null);
+  });
+
+  it('should replace short ref with short ref', async () => {
+    expect(
+      replaceRefs({
+        refs: [{ old: 'test-ref', new: 'new-test-ref' }],
+        document: await workspace.openTextDocument({
+          language: 'markdown',
+          content: '[[test-ref]]',
+        }),
+      }),
+    ).toBe('[[new-test-ref]]');
+  });
+
+  it('should replace short ref with label with short ref with label', async () => {
+    expect(
+      replaceRefs({
+        refs: [{ old: 'test-ref', new: 'new-test-ref' }],
+        document: await workspace.openTextDocument({
+          language: 'markdown',
+          content: '[[test-ref|Test Label]]',
+        }),
+      }),
+    ).toBe('[[new-test-ref|Test Label]]');
+  });
+
+  it('should replace long ref with long ref', async () => {
+    expect(
+      replaceRefs({
+        refs: [{ old: 'folder1/test-ref', new: 'folder1/new-test-ref' }],
+        document: await workspace.openTextDocument({
+          language: 'markdown',
+          content: '[[folder1/test-ref]]',
+        }),
+      }),
+    ).toBe('[[folder1/new-test-ref]]');
+  });
+
+  it('should replace long ref with long ref', async () => {
+    expect(
+      replaceRefs({
+        refs: [{ old: 'folder1/test-ref', new: 'folder1/new-test-ref' }],
+        document: await workspace.openTextDocument({
+          language: 'markdown',
+          content: '[[folder1/test-ref]]',
+        }),
+      }),
+    ).toBe('[[folder1/new-test-ref]]');
+  });
+
+  it('should replace long ref + label with long ref + label', async () => {
+    expect(
+      replaceRefs({
+        refs: [{ old: 'folder1/test-ref', new: 'folder1/new-test-ref' }],
+        document: await workspace.openTextDocument({
+          language: 'markdown',
+          content: '[[folder1/test-ref|Test Label]]',
+        }),
+      }),
+    ).toBe('[[folder1/new-test-ref|Test Label]]');
+  });
+
+  it('should replace long ref + label with short ref + label', async () => {
+    expect(
+      replaceRefs({
+        refs: [{ old: 'folder1/test-ref', new: 'new-test-ref' }],
+        document: await workspace.openTextDocument({
+          language: 'markdown',
+          content: '[[folder1/test-ref|Test Label]]',
+        }),
+      }),
+    ).toBe('[[new-test-ref|Test Label]]');
+  });
+
+  it('should replace short ref + label with long ref + label', async () => {
+    expect(
+      replaceRefs({
+        refs: [{ old: 'test-ref', new: 'folder1/new-test-ref' }],
+        document: await workspace.openTextDocument({
+          language: 'markdown',
+          content: '[[test-ref|Test Label]]',
+        }),
+      }),
+    ).toBe('[[folder1/new-test-ref|Test Label]]');
+  });
+
+  it('should replace short ref with short ref with unknown extension', async () => {
+    expect(
+      replaceRefs({
+        refs: [{ old: 'test-ref', new: 'new-test-ref.unknown' }],
+        document: await workspace.openTextDocument({
+          language: 'markdown',
+          content: '[[test-ref]]',
+        }),
+      }),
+    ).toBe('[[new-test-ref.unknown]]');
+  });
+
+  it('should replace short ref with unknown extension with short ref ', async () => {
+    expect(
+      replaceRefs({
+        refs: [{ old: 'test-ref.unknown', new: 'new-test-ref' }],
+        document: await workspace.openTextDocument({
+          language: 'markdown',
+          content: '[[test-ref.unknown]]',
+        }),
+      }),
+    ).toBe('[[new-test-ref]]');
+  });
+
+  it('should replace long ref with short ref with unknown extension', async () => {
+    expect(
+      replaceRefs({
+        refs: [{ old: 'folder1/test-ref', new: 'new-test-ref.unknown' }],
+        document: await workspace.openTextDocument({
+          language: 'markdown',
+          content: '[[folder1/test-ref]]',
+        }),
+      }),
+    ).toBe('[[new-test-ref.unknown]]');
+  });
+
+  it('should replace long ref with unknown extension with short ref ', async () => {
+    expect(
+      replaceRefs({
+        refs: [{ old: 'folder1/test-ref.unknown', new: 'new-test-ref' }],
+        document: await workspace.openTextDocument({
+          language: 'markdown',
+          content: '[[folder1/test-ref.unknown]]',
+        }),
+      }),
+    ).toBe('[[new-test-ref]]');
+  });
+
   it('should not replace ref within code span', async () => {
     const doc = await workspace.openTextDocument({
       language: 'markdown',
@@ -309,5 +516,579 @@ describe('replaceRefs()', () => {
         document: doc,
       }),
     ).toBe(initialContent);
+  });
+});
+
+describe('isLongRef()', () => {
+  it('should return false if ref is short', () => {
+    expect(isLongRef('short-ref')).toBe(false);
+  });
+  it('should return true if ref is long', () => {
+    expect(isLongRef('/long/ref')).toBe(true);
+  });
+});
+
+describe('normalizeSlashes()', () => {
+  it('should replace backslashes with forward slashes', () => {
+    expect(normalizeSlashes('\\Windows\\System32')).toBe('/Windows/System32');
+  });
+});
+
+describe('fsPathToRef()', () => {
+  it('should transform path to short ref', () => {
+    expect(fsPathToRef({ path: path.join('Desktop', 'Diary', 'Note') })).toBe('Note');
+  });
+
+  it('should transform path to long ref', () => {
+    expect(
+      fsPathToRef({ path: path.join('Desktop', 'Diary', 'Note'), basePath: path.join('Desktop') }),
+    ).toBe('Diary/Note');
+  });
+
+  it('should transform path to long ref', () => {
+    expect(
+      fsPathToRef({ path: path.join('Desktop', 'Diary', 'Note'), basePath: path.join('Desktop') }),
+    ).toBe('Diary/Note');
+  });
+
+  it('should preserve extension in short ref', () => {
+    expect(
+      fsPathToRef({
+        path: path.join('Desktop', 'Diary', 'Attachments', 'image.png'),
+        keepExt: true,
+      }),
+    ).toBe('image.png');
+  });
+
+  it('should preserve extension in long ref', () => {
+    expect(
+      fsPathToRef({
+        path: path.join('Desktop', 'Diary', 'Attachments', 'image.png'),
+        basePath: path.join('Desktop'),
+        keepExt: true,
+      }),
+    ).toBe('Diary/Attachments/image.png');
+  });
+});
+
+describe('getWorkspaceFolder()', () => {
+  it('should return workspace folder', () => {
+    expect(getWorkspaceFolder()).not.toBeUndefined();
+  });
+});
+
+describe('getConfigProperty()', () => {
+  it('should return config property', () => {
+    expect(getConfigProperty('imagePreviewMaxHeight', null)).toBe('200');
+  });
+
+  it('should return default property on getting unknown config property', () => {
+    expect(getConfigProperty('unknownProperty', 'default')).toBe('default');
+  });
+});
+
+describe('matchAll()', () => {
+  it('should find all matches', () => {
+    expect(
+      matchAll(
+        new RegExp(`\\[\\[(([^\\[\\]]+?)(\\|.*)?)\\]\\]`, 'gi'),
+        `
+    [[ref|Test Label]]
+    [[ref 2|Test Label 2]]
+    `,
+      ),
+    ).toMatchInlineSnapshot(`
+      Array [
+        Array [
+          "[[ref|Test Label]]",
+          "ref|Test Label",
+          "ref",
+          "|Test Label",
+        ],
+        Array [
+          "[[ref 2|Test Label 2]]",
+          "ref 2|Test Label 2",
+          "ref 2",
+          "|Test Label 2",
+        ],
+      ]
+    `);
+  });
+});
+
+describe('getReferenceAtPosition()', () => {
+  it('should get reference at position for short link', async () => {
+    expect(
+      getReferenceAtPosition(
+        await workspace.openTextDocument({ language: 'markdown', content: '[[test]]' }),
+        new Position(0, 4),
+      ),
+    ).toMatchInlineSnapshot(`
+      Object {
+        "label": "",
+        "range": Array [
+          Object {
+            "character": 0,
+            "line": 0,
+          },
+          Object {
+            "character": 8,
+            "line": 0,
+          },
+        ],
+        "ref": "test",
+      }
+    `);
+  });
+
+  it('should get reference at position for long link', async () => {
+    expect(
+      getReferenceAtPosition(
+        await workspace.openTextDocument({ language: 'markdown', content: '[[folder/test]]' }),
+        new Position(0, 4),
+      ),
+    ).toMatchInlineSnapshot(`
+      Object {
+        "label": "",
+        "range": Array [
+          Object {
+            "character": 0,
+            "line": 0,
+          },
+          Object {
+            "character": 15,
+            "line": 0,
+          },
+        ],
+        "ref": "folder/test",
+      }
+    `);
+  });
+
+  it('should get reference at position for short resource link', async () => {
+    expect(
+      getReferenceAtPosition(
+        await workspace.openTextDocument({ language: 'markdown', content: '![[test]]' }),
+        new Position(0, 4),
+      ),
+    ).toMatchInlineSnapshot(`
+      Object {
+        "label": "",
+        "range": Array [
+          Object {
+            "character": 1,
+            "line": 0,
+          },
+          Object {
+            "character": 9,
+            "line": 0,
+          },
+        ],
+        "ref": "test",
+      }
+    `);
+  });
+
+  it('should get reference at position for long resource link', async () => {
+    expect(
+      getReferenceAtPosition(
+        await workspace.openTextDocument({ language: 'markdown', content: '![[folder/test]]' }),
+        new Position(0, 4),
+      ),
+    ).toMatchInlineSnapshot(`
+      Object {
+        "label": "",
+        "range": Array [
+          Object {
+            "character": 1,
+            "line": 0,
+          },
+          Object {
+            "character": 16,
+            "line": 0,
+          },
+        ],
+        "ref": "folder/test",
+      }
+    `);
+  });
+});
+
+describe('escapeForRegExp()', () => {
+  it.each`
+    actual  | expected
+    ${'.'}  | ${'\\.'}
+    ${'|'}  | ${'\\|'}
+    ${'*'}  | ${'\\*'}
+    ${'+'}  | ${'\\+'}
+    ${'?'}  | ${'\\?'}
+    ${'^'}  | ${'\\^'}
+    ${'$'}  | ${'\\$'}
+    ${'{'}  | ${'\\{'}
+    ${'}'}  | ${'\\}'}
+    ${'('}  | ${'\\('}
+    ${')'}  | ${'\\)'}
+    ${'['}  | ${'\\['}
+    ${']'}  | ${'\\]'}
+    ${'\\'} | ${'\\\\'}
+  `('should escape $actual symbol for regexp', ({ actual, expected }) => {
+    expect(escapeForRegExp(actual)).toBe(expected);
+  });
+});
+
+describe('extractEmbedRefs()', () => {
+  it('should not extract embed refs', () => {
+    expect(
+      extractEmbedRefs(`
+    [[image.png]]
+    [[note]]
+    [note]
+    `),
+    ).toHaveLength(0);
+  });
+
+  it('should extract embed refs', () => {
+    expect(
+      extractEmbedRefs(`
+    ![[image.png]]
+    ![[note]]
+    `),
+    ).toMatchInlineSnapshot(`
+      Array [
+        "image.png",
+        "note",
+      ]
+    `);
+  });
+});
+
+describe('findReferences()', () => {
+  beforeEach(closeEditorsAndCleanWorkspace);
+
+  afterEach(closeEditorsAndCleanWorkspace);
+
+  it('should find references', async () => {
+    const name0 = rndName();
+    const name1 = rndName();
+
+    await createFile(
+      `${name0}.md`,
+      `[[test]]
+    ![[test]]`,
+    );
+    await createFile(`${name1}.md`, '[[test1]]');
+
+    const refs = await findReferences('test');
+
+    expect(refs).toHaveLength(2);
+
+    expect(toPlainObject(refs)).toMatchObject([
+      {
+        location: {
+          uri: {
+            $mid: 1,
+            path: expect.stringContaining(`${name0}.md`),
+            scheme: 'file',
+          },
+          range: [
+            { line: 0, character: 2 },
+            { line: 0, character: 6 },
+          ],
+        },
+        matchText: '[[test]]',
+      },
+      {
+        location: {
+          uri: {
+            $mid: 1,
+            path: expect.stringContaining(`${name0}.md`),
+            scheme: 'file',
+          },
+          range: [
+            { line: 1, character: 7 },
+            { line: 1, character: 11 },
+          ],
+        },
+        matchText: '[[test]]',
+      },
+    ]);
+  });
+});
+
+describe('getFileUrlForMarkdownPreview()', () => {
+  it('should get file url for markdown preview', () => {
+    expect(getFileUrlForMarkdownPreview('/Users/Memo/Diary/Note.md')).toBe(
+      '/Users/Memo/Diary/Note.md',
+    );
+  });
+});
+
+describe('getImgUrlForMarkdownPreview()', () => {
+  it('should get img url for markdown preview', () => {
+    expect(getImgUrlForMarkdownPreview('/Users/Memo/Diary/image.png')).toBe(
+      'vscode-resource://file///Users/Memo/Diary/image.png',
+    );
+  });
+});
+
+describe('isUncPath()', () => {
+  it('should return true for UNC path', () => {
+    expect(isUncPath('\\\\servername\\path')).toBe(true);
+  });
+
+  it('should return false for non-UNC path', () => {
+    expect(isUncPath('/servername/path')).toBe(false);
+  });
+});
+
+describe('findFilesByExts()', () => {
+  beforeEach(closeEditorsAndCleanWorkspace);
+
+  afterEach(closeEditorsAndCleanWorkspace);
+
+  it('should not find anything with empty exts param', async () => {
+    expect(await findFilesByExts([])).toHaveLength(0);
+  });
+
+  it('should find files by exts', async () => {
+    const name0 = rndName();
+    const name1 = rndName();
+    const name2 = rndName();
+
+    await createFile(`a-${name0}.md`);
+    await createFile(`b-${name1}.png`);
+    await createFile(`${name2}.psd`);
+
+    expect(
+      toPlainObject(
+        (await findFilesByExts(['md', 'png'])).sort((a, b) => a.fsPath.localeCompare(b.fsPath)),
+      ),
+    ).toMatchObject([
+      {
+        $mid: 1,
+        path: expect.stringContaining(`a-${name0}.md`),
+        scheme: 'file',
+      },
+      {
+        $mid: 1,
+        path: expect.stringContaining(`b-${name1}.png`),
+        scheme: 'file',
+      },
+    ]);
+  });
+});
+
+describe('findAllUrisWithUnknownExts()', () => {
+  beforeEach(closeEditorsAndCleanWorkspace);
+
+  afterEach(closeEditorsAndCleanWorkspace);
+
+  it('should find no uris when none provided', async () => {
+    const name0 = rndName();
+
+    await createFile(`${name0}.txt`);
+    await createFile(`${name0}.md`);
+    await createFile(`${name0}.png`);
+    await createFile(`${name0}.psd`);
+    await createFile(`${name0}.html`);
+
+    expect(await findAllUrisWithUnknownExts([])).toHaveLength(0);
+  });
+
+  it('should find all uris with unknown exts', async () => {
+    const name0 = rndName();
+
+    await createFile(`${name0}.txt`);
+    await createFile(`${name0}.md`);
+    await createFile(`${name0}.png`);
+    await createFile(`${name0}.psd`);
+    await createFile(`${name0}.html`);
+
+    expect(
+      toPlainObject(
+        (
+          await findAllUrisWithUnknownExts([
+            Uri.file(path.join(getWorkspaceFolder()!, `${name0}.txt`)),
+            Uri.file(path.join(getWorkspaceFolder()!, `${name0}.md`)),
+            Uri.file(path.join(getWorkspaceFolder()!, `${name0}.png`)),
+            Uri.file(path.join(getWorkspaceFolder()!, `${name0}.psd`)),
+            Uri.file(path.join(getWorkspaceFolder()!, `${name0}.html`)),
+          ])
+        ).sort((a, b) => a.fsPath.localeCompare(b.fsPath)),
+      ),
+    ).toMatchObject([
+      {
+        $mid: 1,
+        path: expect.stringContaining(`${name0}.html`),
+        scheme: 'file',
+      },
+      {
+        $mid: 1,
+        path: expect.stringContaining(`${name0}.psd`),
+        scheme: 'file',
+      },
+    ]);
+  });
+});
+
+describe('extractExt()', () => {
+  it('should not extract ext for dot file', () => {
+    expect(extractExt('/Users/Memo/Diary/.vscode')).toBe('');
+  });
+
+  it('should extract ext', () => {
+    expect(extractExt('/Users/Memo/Diary/Note.md')).toBe('md');
+  });
+
+  it('should extract ext 2', () => {
+    expect(extractExt('C:\\Users\\Memo\\Desktop\\Diary\\image.png')).toBe('png');
+  });
+});
+
+describe('findUriByRef()', () => {
+  it('should find markdown uri by short ref', async () => {
+    expect(
+      toPlainObject(
+        await findUriByRef(
+          [
+            Uri.file('/Users/Memo/Diary/File.txt'),
+            Uri.file('/Users/Memo/Diary/File.md'),
+            Uri.file('/Users/Memo/Diary/File.png'),
+          ],
+          'File',
+        ),
+      ),
+    ).toEqual(
+      expect.objectContaining({
+        $mid: 1,
+        fsPath: expect.stringContaining('File.md'),
+        path: expect.stringContaining('File.md'),
+        scheme: 'file',
+      }),
+    );
+  });
+
+  it('should find image uri by short ref', async () => {
+    expect(
+      toPlainObject(
+        await findUriByRef(
+          [
+            Uri.file('/Users/Memo/Diary/File.txt'),
+            Uri.file('/Users/Memo/Diary/File.md'),
+            Uri.file('/Users/Memo/Diary/File.png'),
+          ],
+          'File.png',
+        ),
+      ),
+    ).toEqual(
+      expect.objectContaining({
+        $mid: 1,
+        fsPath: expect.stringContaining('File.png'),
+        path: expect.stringContaining('File.png'),
+        scheme: 'file',
+      }),
+    );
+  });
+
+  it('should find uri by long ref', async () => {
+    expect(
+      toPlainObject(
+        await findUriByRef(
+          [
+            Uri.file('/Users/Memo/Diary/File.txt'),
+            Uri.file('/Users/Memo/Diary/File.md'),
+            Uri.file('/Users/Memo/Diary/File.png'),
+          ],
+          'Memo/Diary/File',
+        ),
+      ),
+    ).toEqual(
+      expect.objectContaining({
+        $mid: 1,
+        fsPath: expect.stringContaining('File.md'),
+        path: expect.stringContaining('File.md'),
+        scheme: 'file',
+      }),
+    );
+  });
+
+  it('should find uri by long image ref', async () => {
+    expect(
+      toPlainObject(
+        await findUriByRef(
+          [
+            Uri.file('/Users/Memo/Diary/File.txt'),
+            Uri.file('/Users/Memo/Diary/File.md'),
+            Uri.file('/Users/Memo/Diary/File.png'),
+          ],
+          'Memo/Diary/File.png',
+        ),
+      ),
+    ).toEqual(
+      expect.objectContaining({
+        $mid: 1,
+        fsPath: expect.stringContaining('File.png'),
+        path: expect.stringContaining('File.png'),
+        scheme: 'file',
+      }),
+    );
+  });
+
+  it('should find uri by ref regardless of the case', async () => {
+    expect(
+      toPlainObject(
+        await findUriByRef(
+          [
+            Uri.file('/Users/Memo/Diary/File.txt'),
+            Uri.file('/Users/Memo/Diary/File.md'),
+            Uri.file('/Users/Memo/Diary/File.png'),
+          ],
+          'memo/diary/file',
+        ),
+      ),
+    ).toEqual(
+      expect.objectContaining({
+        $mid: 1,
+        fsPath: expect.stringContaining('File.md'),
+        path: expect.stringContaining('File.md'),
+        scheme: 'file',
+      }),
+    );
+  });
+
+  it('should find uri by ref even if contains unknown ext', async () => {
+    expect(
+      toPlainObject(
+        await findUriByRef(
+          [
+            Uri.file('/Users/Memo/Diary/File.txt'),
+            Uri.file('/Users/Memo/Diary/File.md'),
+            Uri.file('/Users/Memo/Diary/File.png'),
+            Uri.file('/Users/Memo/Diary/File.unknown'),
+          ],
+          'memo/diary/file.unknown',
+        ),
+      ),
+    ).toEqual(
+      expect.objectContaining({
+        $mid: 1,
+        fsPath: expect.stringContaining('File.unknown'),
+        path: expect.stringContaining('File.unknown'),
+        scheme: 'file',
+      }),
+    );
+  });
+});
+
+describe('ensureDirectoryExists()', () => {
+  beforeEach(closeEditorsAndCleanWorkspace);
+
+  afterEach(closeEditorsAndCleanWorkspace);
+
+  it('should create all necessary directories', () => {
+    const dirPath = path.join(getWorkspaceFolder()!, 'folder1', 'folder2');
+    expect(fs.existsSync(dirPath)).toBe(false);
+    ensureDirectoryExists(path.join(dirPath, 'file.md'));
+    expect(fs.existsSync(dirPath)).toBe(true);
   });
 });
