@@ -13,11 +13,17 @@ src
  └── utils - common utils
 ```
 
+## Committing changes
+
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines and [Why Use Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#why-use-conventional-commits).
+
+Guidelines enforced via commit hooks, so commits MUST be prefixed with a type.
+
 ## Contributing
 
 1. Fork this repository
 2. Create your feature branch: `git checkout -b my-new-feature`
-3. Commit your changes: `git commit -am 'Add some feature'`
+3. Commit your changes: `git commit -am 'feat: Add some feature'`
 4. Push to the branch: `git push origin my-new-feature`
 5. Submit a pull request
 
@@ -39,12 +45,15 @@ yarn test
 
 ## Releasing
 
-1. Bump version using [semver](https://semver.org/) and yarn built-in commands either `yarn version --patch`, `yarn version --minor` or `yarn version --major`
-    - Patch update for bug fixes, dependency updates and small changes
-    - Minor update for features and bigger changes in a backwards compatible manner
-    - Major update for features with incompatible API changes
-1. Push to origin with `git push && git push --tags`
-1. CI will automatically create new release with changes since the last release, it will also attach release artifacts and publish extension to the marketplace
+*You can skip this section if your contribution comes via PR from forked repository*
+
+1. Remember to update [new version notifications](https://github.com/svsool/vscode-memo/blob/2d187fd65218473c4264e992aa4a2497666614f2/src/features/newVersionNotifier.ts#L6) if needed
+1. Run `yarn release`
+1. Push to origin with `git push --follow-tags origin master`
+1. After push CI will automatically:
+    - create new release
+    - attach release artifacts
+    - publish extension to the marketplace
 
 ## Conventions
 
