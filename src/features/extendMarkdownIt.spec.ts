@@ -374,4 +374,131 @@ describe('extendMarkdownIt feature', () => {
       "
     `);
   });
+
+  it('should not render a link within code span', async () => {
+    const name = rndName();
+
+    await createFile(`${name}.md`, '# Hello world');
+
+    const md = extendMarkdownIt(MarkdownIt());
+
+    const html = md.render(`\`[[${name}]]\``);
+
+    expect(html.replace(name, 'note')).toMatchInlineSnapshot(`
+      "<p><code>[[note]]</code></p>
+      "
+    `);
+  });
+
+  it('should not render a link within fenced code block', async () => {
+    const name = rndName();
+
+    await createFile(`${name}.md`, '# Hello world');
+
+    const md = extendMarkdownIt(MarkdownIt());
+
+    const html = md.render(`
+    \`\`\`
+    Preceding text
+    [[${name}]]
+    Following text
+    \`\`\`
+    `);
+
+    expect(html.replace(name, 'note')).toMatchInlineSnapshot(`
+      "<pre><code>\`\`\`
+      Preceding text
+      [[note]]
+      Following text
+      \`\`\`
+      </code></pre>
+      "
+    `);
+  });
+
+  it('should not render embedded note within code span', async () => {
+    const name = rndName();
+
+    await createFile(`${name}.md`, '# Hello world');
+
+    const md = extendMarkdownIt(MarkdownIt());
+
+    const html = md.render(`\`![[${name}]]\``);
+
+    expect(html.replace(name, 'note')).toMatchInlineSnapshot(`
+      "<p><code>![[note]]</code></p>
+      "
+    `);
+  });
+
+  it('should not render an image within code span', async () => {
+    const name = rndName();
+
+    await createFile(`${name}.png`);
+
+    const md = extendMarkdownIt(MarkdownIt());
+
+    const html = md.render(`\`![[${name}]]\``);
+
+    expect(html.replace(name, 'image')).toMatchInlineSnapshot(`
+      "<p><code>![[image]]</code></p>
+      "
+    `);
+  });
+
+  it('should not render embedded note within fenced code block', async () => {
+    const name = rndName();
+
+    await createFile(`${name}.md`, '# Hello world');
+
+    const md = extendMarkdownIt(MarkdownIt());
+
+    const html = md.render(`
+    \`\`\`
+    Preceding text
+    ![[${name}]]
+    Following text
+    \`\`\`
+    `);
+
+    expect(html.replace(name, 'note')).toMatchInlineSnapshot(`
+      "<pre><code>\`\`\`
+      Preceding text
+      ![[note]]
+      Following text
+      \`\`\`
+      </code></pre>
+      "
+    `);
+  });
+
+  it('should not render an image within fenced code block', async () => {
+    const name = rndName();
+
+    await createFile(`${name}.png`);
+
+    const md = extendMarkdownIt(MarkdownIt());
+
+    const html = md.render(`
+      "<pre><code>\`\`\`
+      Preceding text
+      ![[image.png]]
+      Following text
+      \`\`\`
+      </code></pre>
+      "
+    `);
+
+    expect(html.replace(name, 'image')).toMatchInlineSnapshot(`
+      "<pre><code>  &quot;&lt;pre&gt;&lt;code&gt;\`\`\`
+        Preceding text
+        ![[image.png]]
+        Following text
+        \`\`\`
+        &lt;/code&gt;&lt;/pre&gt;
+        &quot;
+      </code></pre>
+      "
+    `);
+  });
 });
