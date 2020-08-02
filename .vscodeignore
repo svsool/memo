@@ -20,3 +20,4 @@ yarn-error.log
 node_modules
 VERSION
 coverage/
+jest.results.json

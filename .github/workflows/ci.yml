@@ -9,28 +9,6 @@ on:
   pull_request:
 
 jobs:
-  check-types:
-    name: Check Types
-    runs-on: ubuntu-18.04
-    steps:
-      - uses: actions/checkout@v1
-      - name: Setup Node
-        uses: actions/setup-node@v1
-      - name: Install Dependencies
-        run: yarn
-      - name: Check Types
-        run: npm run ts
-  lint:
-    name: Run Linter
-    runs-on: ubuntu-18.04
-    steps:
-      - uses: actions/checkout@v1
-      - name: Setup Node
-        uses: actions/setup-node@v1
-      - name: Install Dependencies
-        run: yarn
-      - name: Check Types
-        run: npm run lint
   tests:
     name: Run Tests
     strategy:
@@ -50,42 +28,17 @@ jobs:
         with:
           run: yarn test:ci
       - name: Upload coverage to Codecov
+        if: success() && github.ref == 'ref/head/master'
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           directory: ./coverage/
           env_vars: OS
           fail_ci_if_error: true
-  create_release:
-    name: Create Release
-    if: success() && startsWith(github.ref, 'refs/tags/v')
-    runs-on: ubuntu-18.04
-    needs: [check-types, lint, tests]
-    steps:
-      - uses: actions/checkout@v1
-      - name: Setup Node
-        uses: actions/setup-node@v1
-      - name: Install Dependencies
-        run: yarn
-      - name: Package
-        run: yarn package
-      - uses: "marvinpinto/action-automatic-releases@v1.0.0"
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          prerelease: false
-          files: |
-            markdown-memo-*.vsix
-  publish:
-    name: Publish Release
-    runs-on: ubuntu-18.04
-    needs: [create_release]
-    steps:
-      - uses: actions/checkout@v1
-      - name: Setup Node
-        uses: actions/setup-node@v1
-      - name: Install Dependencies
-        run: yarn
-      - name: Publish
+      - name: Annotations & Coverage in Comments
+        if: startsWith(matrix.os, 'ubuntu')
+        uses: mattallty/jest-github-action@v1
         env:
-          VSCE_PAT: ${{ secrets.VSCE_PAT }}
-        run: yarn deploy
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          test-command: "cat /dev/null"

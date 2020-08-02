@@ -43,6 +43,9 @@ export function run(): Promise<void> {
           }),
           watch: process.env.JEST_WATCH === 'true',
           collectCoverage: process.env.JEST_COLLECT_COVERAGE === 'true',
+          testLocationInResults: process.env.JEST_TEST_LOCATION_IN_RESULTS === 'true',
+          json: process.env.JEST_JSON === 'true',
+          outputFile: process.env.JEST_JSON === 'true' ? 'jest.results.json' : undefined,
         },
         [rootDir],
       );

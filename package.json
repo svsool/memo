@@ -141,7 +141,7 @@
     "release": "standard-version",
     "ts": "tsc --noEmit",
     "test": "node ./out/test/runTest.js",
-    "test:ci": "cross-env JEST_COLLECT_COVERAGE=true node ./out/test/runTest.js",
+    "test:ci": "cross-env JEST_COLLECT_COVERAGE=true JEST_TEST_LOCATION_IN_RESULTS=true JEST_JSON=true node ./out/test/runTest.js",
     "test:watch": "cross-env JEST_WATCH=true node ./out/test/runTest.js"
   },
   "devDependencies": {
