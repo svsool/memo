@@ -41,6 +41,7 @@ export function run(): Promise<void> {
               tsConfig: path.resolve(rootDir, './tsconfig.json'),
             },
           }),
+          testTimeout: 30000,
           watch: process.env.JEST_WATCH === 'true',
           collectCoverage: process.env.JEST_COLLECT_COVERAGE === 'true',
         },
