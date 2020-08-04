@@ -375,7 +375,7 @@ describe('addCachedRefs', () => {
   });
 });
 
-describe.only('removeCachedRefs()', () => {
+describe('removeCachedRefs()', () => {
   beforeEach(closeEditorsAndCleanWorkspace);
 
   afterEach(closeEditorsAndCleanWorkspace);
