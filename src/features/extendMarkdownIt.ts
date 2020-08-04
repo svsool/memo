@@ -52,7 +52,7 @@ const extendMarkdownIt = (md: MarkdownIt) => {
 
         const fsPath = findUriByRef(getWorkspaceCache().markdownUris, ref)?.fsPath;
 
-        if (!fsPath) {
+        if (!fsPath || !fs.existsSync(fsPath)) {
           return getInvalidRefAnchor(label || ref);
         }
 

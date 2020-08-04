@@ -79,6 +79,21 @@ export const provideCompletionItems = (document: TextDocument, position: Positio
     completionItems.push(item);
   });
 
+  const danglingRefs = getWorkspaceCache().danglingRefs;
+
+  const completionItemsLength = completionItems.length;
+
+  danglingRefs.forEach((ref, index) => {
+    const item = new CompletionItem(ref, CompletionItemKind.File);
+
+    item.insertText = ref;
+
+    // prepend index with 0, so a lexicographic sort doesn't mess things up
+    item.sortText = padWithZero(completionItemsLength + index);
+
+    completionItems.push(item);
+  });
+
   return completionItems;
 };
 

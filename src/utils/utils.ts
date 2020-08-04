@@ -92,16 +92,76 @@ export const fsPathToRef = ({
   return trimLeadingSlash(ref.includes('.') ? ref.slice(0, ref.lastIndexOf('.')) : ref);
 };
 
+export const extractDanglingRefs = async (document: vscode.TextDocument) => {
+  const matches = matchAll(new RegExp(refPattern, 'gi'), document.getText());
+
+  if (matches.length) {
+    const refs = matches.reduce<string[]>((refs, match) => {
+      const [, , $2] = match;
+      const offset = (match.index || 0) + 2;
+
+      const refStart = document.positionAt(offset);
+      const lineStart = document.lineAt(refStart);
+
+      if (
+        isInFencedCodeBlock(document, lineStart.lineNumber) ||
+        isInCodeSpan(document, lineStart.lineNumber, refStart.character)
+      ) {
+        return refs;
+      }
+
+      const { ref } = parseRef($2);
+
+      if (!findUriByRef(getWorkspaceCache().allUris, ref)) {
+        refs.push(ref);
+      }
+
+      return refs;
+    }, []);
+
+    return Array.from(new Set(refs));
+  }
+
+  return [];
+};
+
+export const findDanglingRefsByFsPath = async (uris: vscode.Uri[]) => {
+  const refsByFsPath: { [key: string]: string[] } = {};
+
+  for (const { fsPath } of uris) {
+    const fsPathExists = fs.existsSync(fsPath);
+    if (
+      !fsPathExists ||
+      !containsMarkdownExt(fsPath) ||
+      (fsPathExists && fs.lstatSync(fsPath).isDirectory())
+    ) {
+      continue;
+    }
+
+    const refs = await extractDanglingRefs(
+      await vscode.workspace.openTextDocument(vscode.Uri.file(fsPath)),
+    );
+
+    if (refs.length) {
+      refsByFsPath[fsPath] = refs;
+    }
+  }
+
+  return refsByFsPath;
+};
+
 const workspaceCache: WorkspaceCache = {
   imageUris: [],
   markdownUris: [],
   otherUris: [],
   allUris: [],
+  danglingRefsByFsPath: {},
+  danglingRefs: [],
 };
 
 export const getWorkspaceCache = (): WorkspaceCache => workspaceCache;
 
-export const cacheWorkspace = async () => {
+export const cacheUris = async () => {
   const markdownUris = await vscode.workspace.findFiles('**/*.md');
   const imageUris = await vscode.workspace.findFiles(`**/*.{${imageExts.join(',')}}`);
   const otherUris = await vscode.workspace.findFiles(`**/*.{${otherExts.join(',')}}`);
@@ -115,11 +175,60 @@ export const cacheWorkspace = async () => {
   });
 };
 
+export const cacheRefs = async () => {
+  workspaceCache.danglingRefsByFsPath = await findDanglingRefsByFsPath(workspaceCache.markdownUris);
+  workspaceCache.danglingRefs = sortPaths(
+    Array.from(new Set(Object.values(workspaceCache.danglingRefsByFsPath).flatMap((refs) => refs))),
+    { shallowFirst: true },
+  );
+};
+
+export const addCachedRefs = async (uris: vscode.Uri[]) => {
+  const danglingRefsByFsPath = await findDanglingRefsByFsPath(uris);
+
+  workspaceCache.danglingRefsByFsPath = {
+    ...workspaceCache.danglingRefsByFsPath,
+    ...danglingRefsByFsPath,
+  };
+
+  workspaceCache.danglingRefs = sortPaths(
+    Array.from(new Set(Object.values(workspaceCache.danglingRefsByFsPath).flatMap((refs) => refs))),
+    { shallowFirst: true },
+  );
+};
+
+export const removeCachedRefs = async (uris: vscode.Uri[]) => {
+  const fsPaths = uris.map(({ fsPath }) => fsPath);
+
+  workspaceCache.danglingRefsByFsPath = Object.entries(workspaceCache.danglingRefsByFsPath).reduce<{
+    [key: string]: string[];
+  }>((refsByFsPath, [fsPath, refs]) => {
+    if (fsPaths.some((p) => fsPath.startsWith(p))) {
+      return refsByFsPath;
+    }
+
+    refsByFsPath[fsPath] = refs;
+
+    return refsByFsPath;
+  }, {});
+  workspaceCache.danglingRefs = sortPaths(
+    Array.from(new Set(Object.values(workspaceCache.danglingRefsByFsPath).flatMap((refs) => refs))),
+    { shallowFirst: true },
+  );
+};
+
+export const cacheWorkspace = async () => {
+  await cacheUris();
+  await cacheRefs();
+};
+
 export const cleanWorkspaceCache = () => {
   workspaceCache.imageUris = [];
   workspaceCache.markdownUris = [];
   workspaceCache.otherUris = [];
   workspaceCache.allUris = [];
+  workspaceCache.danglingRefsByFsPath = {};
+  workspaceCache.danglingRefs = [];
 };
 
 export const getWorkspaceFolder = (): string | undefined =>
@@ -189,7 +298,7 @@ export const findReferences = async (
   const refs: FoundRefT[] = [];
 
   for (const { fsPath } of workspaceCache.markdownUris) {
-    if (excludePaths.includes(fsPath)) {
+    if (excludePaths.includes(fsPath) || !fs.existsSync(fsPath)) {
       continue;
     }
 

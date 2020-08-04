@@ -21,7 +21,9 @@ const mdLangSelector = { language: 'markdown', scheme: '*' };
 export const activate = async (context: vscode.ExtensionContext) => {
   newVersionNotifier.activate(context);
   syntaxDecorations.activate(context);
-  fsWatcher.activate(context);
+  if (process.env.DISABLE_FS_WATCHER !== 'true') {
+    fsWatcher.activate(context);
+  }
   completionProvider.activate(context);
   referenceContextWatcher.activate(context);
 

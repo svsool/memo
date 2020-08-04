@@ -1,19 +1,20 @@
 import fs from 'fs';
 import path from 'path';
-import { workspace, window, Uri, ExtensionContext } from 'vscode';
+import { workspace, window, Uri, ExtensionContext, TextDocumentChangeEvent } from 'vscode';
+import debounce from 'lodash.debounce';
 import groupBy from 'lodash.groupby';
 
 import {
   fsPathToRef,
   getWorkspaceFolder,
   containsMarkdownExt,
-  cacheWorkspace,
   getWorkspaceCache,
   replaceRefs,
   sortPaths,
   findAllUrisWithUnknownExts,
-  imageExts,
-  otherExts,
+  cacheUris,
+  addCachedRefs,
+  removeCachedRefs,
 } from '../utils';
 
 const getBasename = (pathParam: string) => path.basename(pathParam).toLowerCase();
@@ -25,16 +26,37 @@ const getBasename = (pathParam: string) => path.basename(pathParam).toLowerCase(
 const isFirstUriInGroup = (pathParam: string, urisGroup: Uri[] = []) =>
   urisGroup.findIndex((uriParam) => uriParam.fsPath === pathParam) === 0;
 
+const cacheUrisDebounced = debounce(cacheUris, 1000);
+
+const textDocumentChangeListener = async (event: TextDocumentChangeEvent) => {
+  const { uri } = event.document;
+
+  if (containsMarkdownExt(uri.fsPath)) {
+    await addCachedRefs([uri]);
+  }
+};
+
+const textDocumentChangeListenerDebounced = debounce(textDocumentChangeListener, 100);
+
 export const activate = (context: ExtensionContext) => {
-  const fileWatcher = workspace.createFileSystemWatcher(
-    `**/*.{md,${[...imageExts, otherExts].join(',')}}`,
+  const fileWatcher = workspace.createFileSystemWatcher(`**/*`);
+
+  const createListenerDisposable = fileWatcher.onDidCreate(async (newUri) => {
+    await cacheUrisDebounced();
+    await addCachedRefs([newUri]);
+  });
+
+  const deleteListenerDisposable = fileWatcher.onDidDelete(async (removedUri) => {
+    await cacheUrisDebounced();
+    await removeCachedRefs([removedUri]);
+  });
+
+  const changeTextDocumentDisposable = workspace.onDidChangeTextDocument(
+    textDocumentChangeListenerDebounced,
   );
 
-  const createListenerDisposable = fileWatcher.onDidCreate(cacheWorkspace);
-  const deleteListenerDisposable = fileWatcher.onDidDelete(cacheWorkspace);
-
   const renameFilesDisposable = workspace.onDidRenameFiles(async ({ files }) => {
-    await cacheWorkspace();
+    await cacheUrisDebounced();
 
     if (files.some(({ newUri }) => fs.lstatSync(newUri.fsPath).isDirectory())) {
       window.showWarningMessage(
@@ -58,14 +80,22 @@ export const activate = (context: ExtensionContext) => {
       ({ fsPath }) => path.basename(fsPath).toLowerCase(),
     );
 
+    const newFsPaths = files.map(({ newUri }) => newUri.fsPath);
+
+    const allUris = [
+      ...getWorkspaceCache().allUris.filter((uri) => !newFsPaths.includes(uri.fsPath)),
+      ...files.map(({ newUri }) => newUri),
+    ];
+
     const urisWithUnknownExts = await findAllUrisWithUnknownExts(files.map(({ newUri }) => newUri));
 
-    const newUris = urisWithUnknownExts.length
-      ? sortPaths([...getWorkspaceCache().allUris, ...urisWithUnknownExts], {
-          pathKey: 'path',
-          shallowFirst: true,
-        })
-      : getWorkspaceCache().allUris;
+    const newUris = sortPaths(
+      [...allUris, ...(urisWithUnknownExts.length ? urisWithUnknownExts : [])],
+      {
+        pathKey: 'path',
+        shallowFirst: true,
+      },
+    );
 
     const newUrisGroupedByBasename = groupBy(newUris, ({ fsPath }) =>
       path.basename(fsPath).toLowerCase(),
@@ -165,5 +195,6 @@ export const activate = (context: ExtensionContext) => {
     createListenerDisposable,
     deleteListenerDisposable,
     renameFilesDisposable,
+    changeTextDocumentDisposable,
   );
 };

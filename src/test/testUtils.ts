@@ -1,4 +1,5 @@
 import rimraf from 'rimraf';
+import fs from 'fs';
 import path from 'path';
 import { workspace, Uri, commands, ConfigurationTarget } from 'vscode';
 export { default as waitForExpect } from 'wait-for-expect';
@@ -51,10 +52,16 @@ export const createFile = async (
     return;
   }
 
-  await workspace.fs.writeFile(
-    Uri.file(path.join(workspaceFolder, ...filename.split('/'))),
-    Buffer.from(content),
-  );
+  const filepath = path.join(workspaceFolder, ...filename.split('/'));
+  const dirname = path.dirname(filepath);
+
+  utils.ensureDirectoryExists(filepath);
+
+  if (!fs.existsSync(dirname)) {
+    throw new Error(`Directory ${dirname} does not exist`);
+  }
+
+  fs.writeFileSync(filepath, content);
 
   if (syncCache) {
     await cacheWorkspace();
@@ -63,10 +70,8 @@ export const createFile = async (
   return Uri.file(path.join(workspaceFolder, ...filename.split('/')));
 };
 
-export const removeFile = async (filename: string) =>
-  await workspace.fs.delete(
-    Uri.file(path.join(utils.getWorkspaceFolder()!, ...filename.split('/'))),
-  );
+export const removeFile = (filename: string) =>
+  fs.unlinkSync(path.join(utils.getWorkspaceFolder()!, ...filename.split('/')));
 
 export const rndName = (): string => {
   const name = Math.random()
@@ -77,8 +82,15 @@ export const rndName = (): string => {
   return name.length !== 5 ? rndName() : name;
 };
 
-export const openTextDocument = async (filename: string) =>
-  await workspace.openTextDocument(path.join(utils.getWorkspaceFolder()!, filename));
+export const openTextDocument = async (filename: string) => {
+  const filePath = path.join(utils.getWorkspaceFolder()!, filename);
+
+  if (!fs.existsSync(filePath)) {
+    throw new Error(`File ${filePath} does not exist`);
+  }
+
+  return await workspace.openTextDocument(filePath);
+};
 
 export const getOpenedFilenames = () =>
   workspace.textDocuments.map(({ uri: { fsPath } }) => path.basename(fsPath));

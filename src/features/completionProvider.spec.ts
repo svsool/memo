@@ -155,4 +155,62 @@ describe('provideCompletionItems()', () => {
       }),
     ]);
   });
+
+  it('should provide dangling references', async () => {
+    const name0 = `a-${rndName()}`;
+    const name1 = `b-${rndName()}`;
+
+    await createFile(
+      `${name0}.md`,
+      `
+    [[dangling-ref]]
+    [[dangling-ref]]
+    [[dangling-ref2|Test Label]]
+    [[folder1/long-dangling-ref]]
+    ![[dangling-ref3]]
+    \`[[dangling-ref-within-code-span]]\`
+    \`\`\`
+    Preceding text
+    [[dangling-ref-within-fenced-code-block]]
+    Following text
+    \`\`\`
+    `,
+    );
+    await createFile(`${name1}.md`);
+
+    const doc = await openTextDocument(`${name1}.md`);
+
+    const editor = await window.showTextDocument(doc);
+
+    await editor.edit((edit) => edit.insert(new Position(0, 0), '![['));
+
+    const completionItems = provideCompletionItems(doc, new Position(0, 3));
+
+    expect(completionItems).toEqual([
+      expect.objectContaining({
+        insertText: name0,
+        label: name0,
+      }),
+      expect.objectContaining({
+        insertText: name1,
+        label: name1,
+      }),
+      expect.objectContaining({
+        insertText: 'dangling-ref',
+        label: 'dangling-ref',
+      }),
+      expect.objectContaining({
+        insertText: 'dangling-ref2',
+        label: 'dangling-ref2',
+      }),
+      expect.objectContaining({
+        insertText: 'dangling-ref3',
+        label: 'dangling-ref3',
+      }),
+      expect.objectContaining({
+        insertText: 'folder1/long-dangling-ref',
+        label: 'folder1/long-dangling-ref',
+      }),
+    ]);
+  });
 });

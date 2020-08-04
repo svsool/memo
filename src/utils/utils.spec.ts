@@ -26,6 +26,10 @@ import {
   getConfigProperty,
   matchAll,
   cacheWorkspace,
+  cacheUris,
+  cacheRefs,
+  addCachedRefs,
+  removeCachedRefs,
   cleanWorkspaceCache,
   getRefUriUnderCursor,
   getReferenceAtPosition,
@@ -42,6 +46,8 @@ import {
   extractExt,
   findUriByRef,
   ensureDirectoryExists,
+  extractDanglingRefs,
+  findDanglingRefsByFsPath,
 } from './utils';
 
 describe('containsImageExt()', () => {
@@ -190,17 +196,212 @@ describe('cacheWorkspace()', () => {
   it('should cache workspace', async () => {
     const noteFilename = `${rndName()}.md`;
     const imageFilename = `${rndName()}.png`;
+    const otherFilename = `${rndName()}.txt`;
 
-    await createFile(noteFilename, '', false);
+    await createFile(
+      noteFilename,
+      `
+    [[dangling-ref]]
+    [[dangling-ref]]
+    [[dangling-ref2|Test Label]]
+    [[folder1/long-dangling-ref]]
+    ![[dangling-ref3]]
+    \`[[dangling-ref-within-code-span]]\`
+    \`\`\`
+    Preceding text
+    [[dangling-ref-within-fenced-code-block]]
+    Following text
+    \`\`\`
+    [[${imageFilename}]]
+    `,
+      false,
+    );
     await createFile(imageFilename, '', false);
+    await createFile(otherFilename, '', false);
 
     await cacheWorkspace();
 
     expect(
-      [...getWorkspaceCache().markdownUris, ...getWorkspaceCache().imageUris].map(({ fsPath }) =>
-        path.basename(fsPath),
-      ),
-    ).toEqual([noteFilename, imageFilename]);
+      [
+        ...getWorkspaceCache().markdownUris,
+        ...getWorkspaceCache().imageUris,
+        ...getWorkspaceCache().otherUris,
+      ].map(({ fsPath }) => path.basename(fsPath)),
+    ).toEqual([noteFilename, imageFilename, otherFilename]);
+
+    expect(Object.values(getWorkspaceCache().danglingRefsByFsPath)).toEqual([
+      ['dangling-ref', 'dangling-ref2', 'folder1/long-dangling-ref', 'dangling-ref3'],
+    ]);
+    expect(getWorkspaceCache().danglingRefs).toEqual([
+      'dangling-ref',
+      'dangling-ref2',
+      'dangling-ref3',
+      'folder1/long-dangling-ref',
+    ]);
+  });
+});
+
+describe('cacheUris()', () => {
+  beforeEach(closeEditorsAndCleanWorkspace);
+
+  afterEach(closeEditorsAndCleanWorkspace);
+
+  it('should work with empty workspace', async () => {
+    await cacheUris();
+
+    expect([...getWorkspaceCache().markdownUris, ...getWorkspaceCache().imageUris]).toHaveLength(0);
+  });
+
+  it('should cache uris', async () => {
+    const noteFilename = `${rndName()}.md`;
+    const imageFilename = `${rndName()}.png`;
+    const otherFilename = `${rndName()}.txt`;
+
+    await createFile(noteFilename, ``, false);
+    await createFile(imageFilename, '', false);
+    await createFile(otherFilename, '', false);
+
+    await cacheUris();
+
+    expect(
+      [
+        ...getWorkspaceCache().markdownUris,
+        ...getWorkspaceCache().imageUris,
+        ...getWorkspaceCache().otherUris,
+      ].map(({ fsPath }) => path.basename(fsPath)),
+    ).toEqual([noteFilename, imageFilename, otherFilename]);
+  });
+});
+
+describe('cacheRefs()', () => {
+  beforeEach(closeEditorsAndCleanWorkspace);
+
+  afterEach(closeEditorsAndCleanWorkspace);
+
+  it('should work with empty workspace', async () => {
+    await cacheRefs();
+
+    expect(getWorkspaceCache().danglingRefsByFsPath).toEqual({});
+    expect(getWorkspaceCache().danglingRefs).toEqual([]);
+  });
+
+  it('should cache refs', async () => {
+    const noteFilename = `${rndName()}.md`;
+    const imageFilename = `${rndName()}.png`;
+
+    await createFile(
+      noteFilename,
+      `
+    [[dangling-ref]]
+    [[dangling-ref]]
+    [[dangling-ref2|Test Label]]
+    [[folder1/long-dangling-ref]]
+    ![[dangling-ref3]]
+    \`[[dangling-ref-within-code-span]]\`
+    \`\`\`
+    Preceding text
+    [[dangling-ref-within-fenced-code-block]]
+    Following text
+    \`\`\`
+    [[${imageFilename}]]
+    `,
+    );
+    await createFile(imageFilename);
+
+    await cacheRefs();
+
+    expect(Object.values(getWorkspaceCache().danglingRefsByFsPath)).toEqual([
+      ['dangling-ref', 'dangling-ref2', 'folder1/long-dangling-ref', 'dangling-ref3'],
+    ]);
+    expect(getWorkspaceCache().danglingRefs).toEqual([
+      'dangling-ref',
+      'dangling-ref2',
+      'dangling-ref3',
+      'folder1/long-dangling-ref',
+    ]);
+
+    cleanWorkspaceCache();
+
+    expect(getWorkspaceCache().danglingRefsByFsPath).toEqual({});
+    expect(getWorkspaceCache().danglingRefs).toEqual([]);
+  });
+});
+
+describe('addCachedRefs', () => {
+  beforeEach(closeEditorsAndCleanWorkspace);
+
+  afterEach(closeEditorsAndCleanWorkspace);
+
+  it('should not fail without parameters', async () => {
+    expect(addCachedRefs([])).resolves.toBeUndefined();
+  });
+
+  it('should not fail with non-existing uri', async () => {
+    expect(addCachedRefs([Uri.file('/unknown')])).resolves.toBeUndefined();
+  });
+
+  it('should add cached refs', async () => {
+    const name = rndName();
+
+    expect(getWorkspaceCache().danglingRefsByFsPath).toEqual({});
+    expect(getWorkspaceCache().danglingRefs).toEqual([]);
+
+    await createFile(`${name}.md`, '[[dangling-ref]]');
+
+    await addCachedRefs([Uri.file(path.join(getWorkspaceFolder()!, `${name}.md`))]);
+
+    expect(Object.values(getWorkspaceCache().danglingRefsByFsPath)).toEqual([['dangling-ref']]);
+    expect(getWorkspaceCache().danglingRefs).toEqual(['dangling-ref']);
+  });
+
+  it.skip('should add cached refs on top of existing (Does not work at the moment because openTextDocument caches stuff)', async () => {
+    const name = rndName();
+
+    await createFile(`${name}.md`, '[[dangling-ref]]');
+
+    await addCachedRefs([Uri.file(path.join(getWorkspaceFolder()!, `${name}.md`))]);
+
+    expect(Object.values(getWorkspaceCache().danglingRefsByFsPath)).toEqual([['dangling-ref']]);
+    expect(getWorkspaceCache().danglingRefs).toEqual(['dangling-ref']);
+
+    await createFile(`${name}.md`, '[[dangling-ref]] [[dangling-ref2]]');
+
+    await addCachedRefs([Uri.file(path.join(getWorkspaceFolder()!, `${name}.md`))]);
+
+    expect(Object.values(getWorkspaceCache().danglingRefsByFsPath)).toEqual([
+      ['dangling-ref', 'dangling-ref2'],
+    ]);
+    expect(getWorkspaceCache().danglingRefs).toEqual(['dangling-ref', 'dangling-ref2']);
+  });
+});
+
+describe.only('removeCachedRefs()', () => {
+  beforeEach(closeEditorsAndCleanWorkspace);
+
+  afterEach(closeEditorsAndCleanWorkspace);
+
+  it('should not fail with non-existing uri', () => {
+    expect(() => removeCachedRefs([])).not.toThrow();
+  });
+
+  it('should not fail if there is nothing to remove', () => {
+    expect(() => removeCachedRefs([Uri.file('/unknown')])).not.toThrow();
+  });
+
+  it('should remove cached refs', async () => {
+    const name = rndName();
+
+    await createFile(`${name}.md`, '[[dangling-ref]]');
+
+    await addCachedRefs([Uri.file(path.join(getWorkspaceFolder()!, `${name}.md`))]);
+
+    expect(Object.values(getWorkspaceCache().danglingRefsByFsPath)).toEqual([['dangling-ref']]);
+    expect(getWorkspaceCache().danglingRefs).toEqual(['dangling-ref']);
+
+    removeCachedRefs([Uri.file(path.join(getWorkspaceFolder()!, `${name}.md`))]);
+
+    expect(getWorkspaceCache().danglingRefsByFsPath).toEqual({});
+    expect(getWorkspaceCache().danglingRefs).toEqual([]);
   });
 });
 
@@ -212,27 +413,67 @@ describe('cleanWorkspaceCache()', () => {
   it('should work with empty workspace', async () => {
     await cleanWorkspaceCache();
 
-    expect([...getWorkspaceCache().markdownUris, ...getWorkspaceCache().imageUris]).toHaveLength(0);
+    expect([
+      ...getWorkspaceCache().markdownUris,
+      ...getWorkspaceCache().imageUris,
+      ...getWorkspaceCache().otherUris,
+    ]).toHaveLength(0);
   });
 
   it('should clean workspace cache', async () => {
     const noteFilename = `${rndName()}.md`;
     const imageFilename = `${rndName()}.png`;
+    const otherFilename = `${rndName()}.txt`;
 
-    await createFile(noteFilename);
+    await createFile(
+      noteFilename,
+      `
+    [[dangling-ref]]
+    [[dangling-ref]]
+    [[dangling-ref2|Test Label]]
+    [[folder1/long-dangling-ref]]
+    ![[dangling-ref3]]
+    \`[[dangling-ref-within-code-span]]\`
+    \`\`\`
+    Preceding text
+    [[dangling-ref-within-fenced-code-block]]
+    Following text
+    \`\`\`
+    [[${imageFilename}]]
+    `,
+    );
     await createFile(imageFilename);
+    await createFile(otherFilename);
 
     await cacheWorkspace();
 
     expect(
-      [...getWorkspaceCache().markdownUris, ...getWorkspaceCache().imageUris].map(({ fsPath }) =>
-        path.basename(fsPath),
-      ),
-    ).toEqual([noteFilename, imageFilename]);
+      [
+        ...getWorkspaceCache().markdownUris,
+        ...getWorkspaceCache().imageUris,
+        ...getWorkspaceCache().otherUris,
+      ].map(({ fsPath }) => path.basename(fsPath)),
+    ).toEqual([noteFilename, imageFilename, otherFilename]);
+
+    expect(Object.values(getWorkspaceCache().danglingRefsByFsPath)).toEqual([
+      ['dangling-ref', 'dangling-ref2', 'folder1/long-dangling-ref', 'dangling-ref3'],
+    ]);
+    expect(getWorkspaceCache().danglingRefs).toEqual([
+      'dangling-ref',
+      'dangling-ref2',
+      'dangling-ref3',
+      'folder1/long-dangling-ref',
+    ]);
 
     cleanWorkspaceCache();
 
-    expect([...getWorkspaceCache().markdownUris, ...getWorkspaceCache().imageUris]).toHaveLength(0);
+    expect([
+      ...getWorkspaceCache().markdownUris,
+      ...getWorkspaceCache().imageUris,
+      ...getWorkspaceCache().otherUris,
+    ]).toHaveLength(0);
+    expect(getWorkspaceCache().danglingRefsByFsPath).toEqual({});
+    expect(getWorkspaceCache().danglingRefs).toEqual([]);
   });
 });
 
@@ -1090,5 +1331,79 @@ describe('ensureDirectoryExists()', () => {
     expect(fs.existsSync(dirPath)).toBe(false);
     ensureDirectoryExists(path.join(dirPath, 'file.md'));
     expect(fs.existsSync(dirPath)).toBe(true);
+  });
+});
+
+describe('extractDanglingRefs()', () => {
+  beforeEach(closeEditorsAndCleanWorkspace);
+
+  afterEach(closeEditorsAndCleanWorkspace);
+
+  it('should extract dangling refs', async () => {
+    const name0 = rndName();
+
+    await createFile(`${name0}.md`);
+
+    expect(
+      await extractDanglingRefs(
+        await workspace.openTextDocument({
+          language: 'markdown',
+          content: `
+    [[dangling-ref]]
+    [[dangling-ref]]
+    [[dangling-ref2|Test Label]]
+    [[folder1/long-dangling-ref]]
+    ![[dangling-ref3]]
+    \`[[dangling-ref-within-code-span]]\`
+    \`\`\`
+    Preceding text
+    [[dangling-ref-within-fenced-code-block]]
+    Following text
+    \`\`\`
+    [[${name0}]]
+    `,
+        }),
+      ),
+    ).toEqual(['dangling-ref', 'dangling-ref2', 'folder1/long-dangling-ref', 'dangling-ref3']);
+  });
+});
+
+describe('findDanglingRefsByFsPath()', () => {
+  beforeEach(closeEditorsAndCleanWorkspace);
+
+  afterEach(closeEditorsAndCleanWorkspace);
+
+  it('should find dangling refs by fs path', async () => {
+    const name0 = rndName();
+    const name1 = rndName();
+
+    await createFile(
+      `${name0}.md`,
+      `
+    [[dangling-ref]]
+    [[dangling-ref]]
+    [[dangling-ref2|Test Label]]
+    [[folder1/long-dangling-ref]]
+    ![[dangling-ref3]]
+    \`[[dangling-ref-within-code-span]]\`
+    \`\`\`
+    Preceding text
+    [[dangling-ref-within-fenced-code-block]]
+    Following text
+    \`\`\`
+    [[${name1}]]
+    `,
+    );
+    await createFile(`${name1}.md`);
+
+    const refsByFsPath = await findDanglingRefsByFsPath(getWorkspaceCache().markdownUris);
+
+    expect(Object.keys(refsByFsPath)).toHaveLength(1);
+    expect(Object.values(refsByFsPath)[0]).toEqual([
+      'dangling-ref',
+      'dangling-ref2',
+      'folder1/long-dangling-ref',
+      'dangling-ref3',
+    ]);
   });
 });

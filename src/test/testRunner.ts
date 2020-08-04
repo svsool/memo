@@ -23,6 +23,9 @@ export function run(): Promise<void> {
     return true;
   };
 
+  process.env.NODE_ENV = 'test';
+  process.env.DISABLE_FS_WATCHER = 'true';
+
   return new Promise(async (resolve, reject) => {
     try {
       const { results } = await (runCLI as any)(
@@ -35,12 +38,13 @@ export function run(): Promise<void> {
           runInBand: true,
           testRegex: process.env.JEST_TEST_REGEX || '\\.(test|spec)\\.ts$',
           testEnvironment: '<rootDir>/src/test/env/ExtendedVscodeEnvironment.js',
-          setupFilesAfterEnv: ['<rootDir>/src/test/config/jestSetupAfterEnv.ts'],
+          setupFiles: ['<rootDir>/src/test/config/jestSetup.ts'],
           globals: JSON.stringify({
             'ts-jest': {
               tsConfig: path.resolve(rootDir, './tsconfig.json'),
             },
           }),
+          ci: process.env.JEST_CI === 'true',
           testTimeout: 30000,
           watch: process.env.JEST_WATCH === 'true',
           collectCoverage: process.env.JEST_COLLECT_COVERAGE === 'true',

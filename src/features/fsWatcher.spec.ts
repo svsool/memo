@@ -1,6 +1,8 @@
-import { WorkspaceEdit, Uri, workspace } from 'vscode';
+import { WorkspaceEdit, Uri, workspace, ExtensionContext } from 'vscode';
 import path from 'path';
 
+import * as fsWatcher from './fsWatcher';
+import * as utils from '../utils';
 import {
   createFile,
   removeFile,
@@ -10,7 +12,6 @@ import {
   closeEditorsAndCleanWorkspace,
   cacheWorkspace,
   getWorkspaceCache,
-  delay,
   waitForExpect,
 } from '../test/testUtils';
 
@@ -18,6 +19,20 @@ describe('fsWatcher feature', () => {
   beforeEach(closeEditorsAndCleanWorkspace);
 
   afterEach(closeEditorsAndCleanWorkspace);
+
+  let mockContext: ExtensionContext;
+
+  beforeAll(() => {
+    mockContext = ({
+      subscriptions: [],
+    } as unknown) as ExtensionContext;
+
+    fsWatcher.activate(mockContext);
+  });
+
+  afterAll(() => {
+    mockContext.subscriptions.forEach((sub) => sub.dispose());
+  });
 
   describe('automatic refs update on file rename', () => {
     it('should update short ref with short ref on file rename', async () => {
@@ -175,7 +190,7 @@ describe('fsWatcher feature', () => {
     });
   });
 
-  it.skip('should sync workspace cache on file create', async () => {
+  it('should sync workspace cache on file create', async () => {
     const noteName = rndName();
     const imageName = rndName();
 
@@ -186,25 +201,24 @@ describe('fsWatcher feature', () => {
     await createFile(`${noteName}.md`, '', false);
     await createFile(`${imageName}.md`, '', false);
 
-    // onDidCreate handler is not fired immediately
-    await delay(100);
+    await waitForExpect(async () => {
+      const workspaceCache = await utils.getWorkspaceCache();
 
-    const workspaceCache = await getWorkspaceCache();
-
-    expect([...workspaceCache.markdownUris, ...workspaceCache.imageUris]).toHaveLength(2);
-    expect(
-      [...workspaceCache.markdownUris, ...workspaceCache.imageUris].map(({ fsPath }) =>
-        path.basename(fsPath),
-      ),
-    ).toEqual(expect.arrayContaining([`${noteName}.md`, `${imageName}.md`]));
+      expect([...workspaceCache.markdownUris, ...workspaceCache.imageUris]).toHaveLength(2);
+      expect(
+        [...workspaceCache.markdownUris, ...workspaceCache.imageUris].map(({ fsPath }) =>
+          path.basename(fsPath),
+        ),
+      ).toEqual(expect.arrayContaining([`${noteName}.md`, `${imageName}.md`]));
+    });
   });
 
-  it.skip('should sync workspace cache on file remove', async () => {
+  it.skip('should sync workspace cache on file remove (For some reason onDidDelete is not called timely in test env)', async () => {
     const noteName = rndName();
 
-    await createFile(`${noteName}.md`, '');
+    await createFile(`${noteName}.md`);
 
-    const workspaceCache0 = await getWorkspaceCache();
+    const workspaceCache0 = await utils.getWorkspaceCache();
 
     expect([...workspaceCache0.markdownUris, ...workspaceCache0.imageUris]).toHaveLength(1);
     expect(
@@ -213,18 +227,21 @@ describe('fsWatcher feature', () => {
       ),
     ).toContain(`${noteName}.md`);
 
-    await removeFile(`${noteName}.md`);
+    removeFile(`${noteName}.md`);
 
-    // onDidDelete handler is not fired immediately
-    await delay(100);
+    if (require('fs').existsSync(path.join(getWorkspaceFolder()!, `${noteName}.md`))) {
+      throw new Error('boom');
+    }
 
-    const workspaceCache = await getWorkspaceCache();
+    await waitForExpect(async () => {
+      const workspaceCache = await utils.getWorkspaceCache();
 
-    expect([...workspaceCache.markdownUris, ...workspaceCache.imageUris]).toHaveLength(0);
-    expect(
-      [...workspaceCache0.markdownUris, ...workspaceCache0.imageUris].map(({ fsPath }) =>
-        path.basename(fsPath),
-      ),
-    ).not.toContain(`${noteName}.md`);
+      expect([...workspaceCache.markdownUris, ...workspaceCache.imageUris]).toHaveLength(0);
+      expect(
+        [...workspaceCache.markdownUris, ...workspaceCache.imageUris].map(({ fsPath }) =>
+          path.basename(fsPath),
+        ),
+      ).not.toContain(`${noteName}.md`);
+    });
   });
 });

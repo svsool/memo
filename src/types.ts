@@ -5,6 +5,8 @@ export type WorkspaceCache = {
   markdownUris: Uri[];
   otherUris: Uri[];
   allUris: Uri[];
+  danglingRefs: string[];
+  danglingRefsByFsPath: { [key: string]: string[] };
 };
 
 export type RefT = {
