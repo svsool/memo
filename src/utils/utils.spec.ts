@@ -49,6 +49,7 @@ import {
   extractDanglingRefs,
   findDanglingRefsByFsPath,
 } from './utils';
+import * as utils from './utils';
 
 describe('containsImageExt()', () => {
   test.each(['png', 'jpg', 'jpeg', 'gif'])(
@@ -354,7 +355,7 @@ describe('addCachedRefs', () => {
     expect(getWorkspaceCache().danglingRefs).toEqual(['dangling-ref']);
   });
 
-  it.skip('should add cached refs on top of existing (Does not work at the moment because openTextDocument caches stuff)', async () => {
+  it('should add cached refs on top of existing', async () => {
     const name = rndName();
 
     await createFile(`${name}.md`, '[[dangling-ref]]');
@@ -1318,6 +1319,17 @@ describe('findUriByRef()', () => {
         scheme: 'file',
       }),
     );
+  });
+
+  it('should match long refs against workspace root', async () => {
+    const getWorkspaceFolderMock = jest.spyOn(utils, 'getWorkspaceFolder');
+    getWorkspaceFolderMock.mockReturnValue('/Users/Memo/Test');
+
+    expect(
+      await findUriByRef([Uri.file('/Users/Memo/Test/hello.md')], 'Test/hello'),
+    ).toBeUndefined();
+
+    getWorkspaceFolderMock.mockRestore();
   });
 });
 

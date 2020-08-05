@@ -26,19 +26,27 @@ const getBasename = (pathParam: string) => path.basename(pathParam).toLowerCase(
 const isFirstUriInGroup = (pathParam: string, urisGroup: Uri[] = []) =>
   urisGroup.findIndex((uriParam) => uriParam.fsPath === pathParam) === 0;
 
-const cacheUrisDebounced = debounce(cacheUris, 1000);
+export const activate = (
+  context: ExtensionContext,
+  options: { uriCachingDelay?: number; documentChangeDelay?: number } = {},
+) => {
+  const { uriCachingDelay = 1000, documentChangeDelay = 500 } = options;
 
-const textDocumentChangeListener = async (event: TextDocumentChangeEvent) => {
-  const { uri } = event.document;
+  const cacheUrisDebounced = debounce(cacheUris, uriCachingDelay);
 
-  if (containsMarkdownExt(uri.fsPath)) {
-    await addCachedRefs([uri]);
-  }
-};
+  const textDocumentChangeListener = async (event: TextDocumentChangeEvent) => {
+    const { uri } = event.document;
 
-const textDocumentChangeListenerDebounced = debounce(textDocumentChangeListener, 500);
+    if (containsMarkdownExt(uri.fsPath)) {
+      await addCachedRefs([uri]);
+    }
+  };
 
-export const activate = (context: ExtensionContext) => {
+  const textDocumentChangeListenerDebounced = debounce(
+    textDocumentChangeListener,
+    documentChangeDelay,
+  );
+
   const fileWatcher = workspace.createFileSystemWatcher(`**/*`);
 
   const createListenerDisposable = fileWatcher.onDidCreate(async (newUri) => {
@@ -56,7 +64,7 @@ export const activate = (context: ExtensionContext) => {
   );
 
   const renameFilesDisposable = workspace.onDidRenameFiles(async ({ files }) => {
-    await cacheUrisDebounced();
+    await cacheUris();
 
     if (files.some(({ newUri }) => fs.lstatSync(newUri.fsPath).isDirectory())) {
       window.showWarningMessage(
@@ -197,4 +205,9 @@ export const activate = (context: ExtensionContext) => {
     renameFilesDisposable,
     changeTextDocumentDisposable,
   );
+
+  return () => {
+    cacheUrisDebounced.cancel();
+    textDocumentChangeListenerDebounced.cancel();
+  };
 };

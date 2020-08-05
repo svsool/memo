@@ -48,7 +48,7 @@ describe('openDocumentByReference command', () => {
     expect(getOpenedFilenames()).toContain(`${name}.md`);
   });
 
-  it.skip('should not open a reference on inexact filename match (Not going to work until findDanglingRefsByFsPath uses openTextDocument)', async () => {
+  it('should not open a reference on inexact filename match', async () => {
     const name = rndName();
     const filename = `${name}-test.md`;
 

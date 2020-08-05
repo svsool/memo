@@ -22,15 +22,22 @@ describe('fsWatcher feature', () => {
 
   let mockContext: ExtensionContext;
 
-  beforeAll(() => {
+  let deactivateFsWatcher: Function;
+
+  beforeEach(() => {
     mockContext = ({
       subscriptions: [],
     } as unknown) as ExtensionContext;
 
-    fsWatcher.activate(mockContext);
+    deactivateFsWatcher = fsWatcher.activate(mockContext, {
+      uriCachingDelay: 50,
+      documentChangeDelay: 50,
+    });
   });
 
-  afterAll(() => {
+  afterEach(() => {
+    deactivateFsWatcher && deactivateFsWatcher();
+
     mockContext.subscriptions.forEach((sub) => sub.dispose());
   });
 
