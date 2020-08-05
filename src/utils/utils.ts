@@ -358,24 +358,28 @@ export const findAllUrisWithUnknownExts = async (uris: vscode.Uri[]) => {
 
 export const extractExt = (value: string) => path.parse(value).ext.replace(/^\./, '');
 
-export const findUriByRef = (uris: vscode.Uri[], ref: string): vscode.Uri | undefined =>
-  uris.find((uri) => {
+export const findUriByRef = (uris: vscode.Uri[], ref: string): vscode.Uri | undefined => {
+  return uris.find((uri) => {
+    const relativeFsPath =
+      path.sep + path.relative(getWorkspaceFolder()!.toLowerCase(), uri.fsPath.toLowerCase());
+
     if (containsImageExt(ref) || containsOtherKnownExts(ref) || containsUnknownExt(ref)) {
       if (isLongRef(ref)) {
-        return normalizeSlashes(uri.fsPath.toLowerCase()).endsWith(ref.toLowerCase());
+        return normalizeSlashes(relativeFsPath).endsWith(ref.toLowerCase());
       }
 
       return path.basename(uri.fsPath).toLowerCase() === ref.toLowerCase();
     }
 
     if (isLongRef(ref)) {
-      return normalizeSlashes(uri.fsPath.toLowerCase()).endsWith(`${ref.toLowerCase()}.md`);
+      return normalizeSlashes(relativeFsPath).endsWith(`${ref.toLowerCase()}.md`);
     }
 
     const name = path.parse(uri.fsPath).name.toLowerCase();
 
     return containsMarkdownExt(path.basename(uri.fsPath)) && name === ref.toLowerCase();
   });
+};
 
 export const ensureDirectoryExists = (filePath: string) => {
   const dirname = path.dirname(filePath);

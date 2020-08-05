@@ -3,11 +3,11 @@ import fs from 'fs';
 import path from 'path';
 
 import {
-  containsImageExt,
   getWorkspaceCache,
   findUriByRef,
   ensureDirectoryExists,
   parseRef,
+  getWorkspaceFolder,
 } from '../utils';
 
 const openDocumentByReference = async ({ reference }: { reference: string }) => {
@@ -17,14 +17,12 @@ const openDocumentByReference = async ({ reference }: { reference: string }) => 
 
   if (uri) {
     await vscode.commands.executeCommand('vscode.open', uri);
-  } else if (!containsImageExt(reference)) {
-    // TODO: Open document regardless of extension
-    const workspaceFolder =
-      vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders[0];
+  } else {
+    const workspaceFolder = getWorkspaceFolder()!;
     if (workspaceFolder) {
       const paths = ref.split('/');
       const pathsWithExt = [...paths.slice(0, -1), `${paths.slice(-1)}.md`];
-      const filePath = path.join(workspaceFolder.uri.fsPath, ...pathsWithExt);
+      const filePath = path.join(workspaceFolder, ...pathsWithExt);
 
       // don't override file content if it already exists
       if (!fs.existsSync(filePath)) {
