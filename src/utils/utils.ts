@@ -296,42 +296,36 @@ export const findReferences = async (
     }
 
     const fileContent = fs.readFileSync(fsPath).toString();
-    const matches = matchAll(
-      new RegExp(`\\[\\[(${escapeForRegExp(ref)}(\\|.*)?)\\]\\]`, 'gi'),
-      fileContent,
-    );
+    const refRegexp = new RegExp(`\\[\\[(${escapeForRegExp(ref)}(\\|.*)?)\\]\\]`, 'gi');
 
-    if (matches.length) {
-      const currentDocument = await vscode.workspace.openTextDocument(vscode.Uri.file(fsPath));
-      matches.forEach((match) => {
-        const [, $1] = match;
+    const fileContentLines = fileContent.split(/\r?\n/g);
+
+    fileContentLines.forEach((lineText, lineNum) => {
+      for (const match of matchAll(refRegexp, lineText)) {
+        const [, reference] = match;
         const offset = (match.index || 0) + 2;
 
-        const refStart = currentDocument.positionAt(offset);
-        const lineStart = currentDocument.lineAt(refStart);
-
         if (
-          isInFencedCodeBlock(currentDocument, lineStart.lineNumber) ||
-          isInCodeSpan(currentDocument, lineStart.lineNumber, refStart.character)
+          isInFencedCodeBlock(fileContent, lineNum) ||
+          isInCodeSpan(fileContent, lineNum, offset)
         ) {
           return;
         }
 
-        const matchText = lineStart.text.slice(
-          Math.max(refStart.character - 2, 0),
-          lineStart.text.length,
-        );
-        const refEnd = currentDocument.positionAt(offset + $1.length);
+        const matchText = lineText.slice(Math.max(offset - 2, 0), lineText.length);
 
         refs.push({
           location: new vscode.Location(
             vscode.Uri.file(fsPath),
-            new vscode.Range(refStart, refEnd),
+            new vscode.Range(
+              new vscode.Position(lineNum, offset),
+              new vscode.Position(lineNum, offset + reference.length),
+            ),
           ),
           matchText: matchText,
         });
-      });
-    }
+      }
+    });
   }
 
   return refs;
