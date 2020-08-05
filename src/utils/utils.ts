@@ -92,37 +92,31 @@ export const fsPathToRef = ({
   return trimLeadingSlash(ref.includes('.') ? ref.slice(0, ref.lastIndexOf('.')) : ref);
 };
 
-export const extractDanglingRefs = async (document: vscode.TextDocument) => {
-  const matches = matchAll(new RegExp(refPattern, 'gi'), document.getText());
+const refRegexp = new RegExp(refPattern, 'gi');
 
-  if (matches.length) {
-    const refs = matches.reduce<string[]>((refs, match) => {
-      const [, , $2] = match;
-      const offset = (match.index || 0) + 2;
+export const extractDanglingRefs = (content: string) => {
+  const refs: string[] = [];
 
-      const refStart = document.positionAt(offset);
-      const lineStart = document.lineAt(refStart);
+  content.split(/\r?\n/g).forEach((lineText, lineNum) => {
+    for (const match of matchAll(refRegexp, lineText)) {
+      const [, , reference] = match;
+      if (reference) {
+        const offset = (match.index || 0) + 2;
 
-      if (
-        isInFencedCodeBlock(document, lineStart.lineNumber) ||
-        isInCodeSpan(document, lineStart.lineNumber, refStart.character)
-      ) {
-        return refs;
+        if (isInFencedCodeBlock(content, lineNum) || isInCodeSpan(content, lineNum, offset)) {
+          continue;
+        }
+
+        const { ref } = parseRef(reference);
+
+        if (!findUriByRef(getWorkspaceCache().allUris, ref)) {
+          refs.push(ref);
+        }
       }
+    }
+  });
 
-      const { ref } = parseRef($2);
-
-      if (!findUriByRef(getWorkspaceCache().allUris, ref)) {
-        refs.push(ref);
-      }
-
-      return refs;
-    }, []);
-
-    return Array.from(new Set(refs));
-  }
-
-  return [];
+  return Array.from(new Set(refs));
 };
 
 export const findDanglingRefsByFsPath = async (uris: vscode.Uri[]) => {
@@ -138,9 +132,8 @@ export const findDanglingRefsByFsPath = async (uris: vscode.Uri[]) => {
       continue;
     }
 
-    const refs = await extractDanglingRefs(
-      await vscode.workspace.openTextDocument(vscode.Uri.file(fsPath)),
-    );
+    const doc = workspace.textDocuments.find((doc) => doc.uri.fsPath === fsPath);
+    const refs = extractDanglingRefs(doc ? doc.getText() : fs.readFileSync(fsPath).toString());
 
     if (refs.length) {
       refsByFsPath[fsPath] = refs;

@@ -36,7 +36,7 @@ const textDocumentChangeListener = async (event: TextDocumentChangeEvent) => {
   }
 };
 
-const textDocumentChangeListenerDebounced = debounce(textDocumentChangeListener, 100);
+const textDocumentChangeListenerDebounced = debounce(textDocumentChangeListener, 500);
 
 export const activate = (context: ExtensionContext) => {
   const fileWatcher = workspace.createFileSystemWatcher(`**/*`);

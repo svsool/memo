@@ -1,4 +1,4 @@
-import { window, Selection, workspace, Position, Uri } from 'vscode';
+import { window, Selection, workspace, Range, Position, Uri } from 'vscode';
 import fs from 'fs';
 import path from 'path';
 
@@ -1345,10 +1345,8 @@ describe('extractDanglingRefs()', () => {
     await createFile(`${name0}.md`);
 
     expect(
-      await extractDanglingRefs(
-        await workspace.openTextDocument({
-          language: 'markdown',
-          content: `
+      extractDanglingRefs(
+        `
     [[dangling-ref]]
     [[dangling-ref]]
     [[dangling-ref2|Test Label]]
@@ -1362,7 +1360,6 @@ describe('extractDanglingRefs()', () => {
     \`\`\`
     [[${name0}]]
     `,
-        }),
       ),
     ).toEqual(['dangling-ref', 'dangling-ref2', 'folder1/long-dangling-ref', 'dangling-ref3']);
   });
@@ -1405,5 +1402,31 @@ describe('findDanglingRefsByFsPath()', () => {
       'folder1/long-dangling-ref',
       'dangling-ref3',
     ]);
+  });
+
+  it('should find dangling refs from the just edited document', async () => {
+    const name0 = rndName();
+
+    await createFile(`${name0}.md`, '[[dangling-ref]]');
+
+    const doc = await openTextDocument(`${name0}.md`);
+
+    const editor = await window.showTextDocument(doc);
+
+    const refsByFsPath = await findDanglingRefsByFsPath(getWorkspaceCache().markdownUris);
+
+    expect(Object.keys(refsByFsPath)).toHaveLength(1);
+    expect(Object.values(refsByFsPath)[0]).toEqual(['dangling-ref']);
+
+    await editor.edit((edit) => edit.insert(new Position(1, 0), '[[dangling-ref2]]'));
+
+    const refsByFsPath2 = await findDanglingRefsByFsPath(getWorkspaceCache().markdownUris);
+
+    expect(Object.keys(refsByFsPath2)).toHaveLength(1);
+    expect(Object.values(refsByFsPath2)[0]).toEqual(['dangling-ref', 'dangling-ref2']);
+
+    await editor.edit((edit) => edit.delete(new Range(new Position(0, 0), new Position(2, 0))));
+
+    expect(await findDanglingRefsByFsPath(getWorkspaceCache().markdownUris)).toEqual({});
   });
 });
