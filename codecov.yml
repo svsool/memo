@@ -1,0 +1,13 @@
+coverage:
+  range: 70..90
+  round: down
+  precision: 2
+  status:
+    project:
+      default:
+        threshold: 10%
+    patch:
+      default:
+        threshold: 20%
+        only_pulls: true
+
