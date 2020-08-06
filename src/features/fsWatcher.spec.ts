@@ -220,6 +220,42 @@ describe('fsWatcher feature', () => {
     });
   });
 
+  it('should add new dangling refs to cache on file create', async () => {
+    const noteName = rndName();
+
+    expect(utils.getWorkspaceCache().danglingRefs).toEqual([]);
+    expect(utils.getWorkspaceCache().danglingRefsByFsPath).toEqual({});
+
+    await createFile(`${noteName}.md`, '[[dangling-ref]] [[dangling-ref2]]', false);
+
+    await waitForExpect(() => {
+      expect(utils.getWorkspaceCache().danglingRefs).toEqual(['dangling-ref', 'dangling-ref2']);
+      expect(Object.values(utils.getWorkspaceCache().danglingRefsByFsPath)).toEqual([
+        ['dangling-ref', 'dangling-ref2'],
+      ]);
+    });
+  });
+
+  it('should remove dangling refs from cache on file remove', async () => {
+    const noteName = rndName();
+
+    await createFile(`${noteName}.md`, '[[dangling-ref]] [[dangling-ref2]]', false);
+
+    await waitForExpect(() => {
+      expect(utils.getWorkspaceCache().danglingRefs).toEqual(['dangling-ref', 'dangling-ref2']);
+      expect(Object.values(utils.getWorkspaceCache().danglingRefsByFsPath)).toEqual([
+        ['dangling-ref', 'dangling-ref2'],
+      ]);
+    });
+
+    await removeFile(`${noteName}.md`);
+
+    await waitForExpect(() => {
+      expect(utils.getWorkspaceCache().danglingRefs).toEqual([]);
+      expect(utils.getWorkspaceCache().danglingRefsByFsPath).toEqual({});
+    });
+  });
+
   it.skip('should sync workspace cache on file remove (For some reason onDidDelete is not called timely in test env)', async () => {
     const noteName = rndName();
 
