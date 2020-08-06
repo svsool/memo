@@ -5,6 +5,7 @@ import {
   rndName,
   getOpenedFilenames,
   closeEditorsAndCleanWorkspace,
+  waitForExpect,
 } from '../test/testUtils';
 
 describe('openRandomNote command', () => {
@@ -31,7 +32,9 @@ describe('openRandomNote command', () => {
     await commands.executeCommand('memo.openRandomNote');
     await commands.executeCommand('memo.openRandomNote');
 
-    expect(getOpenedFilenames()).toEqual(expect.arrayContaining(filenames));
+    await waitForExpect(() => {
+      expect(getOpenedFilenames()).toEqual(expect.arrayContaining(filenames));
+    });
   });
 
   it('should open existing note only once on executing command multiple times', async () => {
