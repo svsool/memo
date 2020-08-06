@@ -1,4 +1,4 @@
-import { WorkspaceEdit, Uri, workspace, ExtensionContext } from 'vscode';
+import { WorkspaceEdit, Uri, workspace, ExtensionContext, window, Range, Position } from 'vscode';
 import path from 'path';
 
 import * as fsWatcher from './fsWatcher';
@@ -253,6 +253,44 @@ describe('fsWatcher feature', () => {
     await waitForExpect(() => {
       expect(utils.getWorkspaceCache().danglingRefs).toEqual([]);
       expect(utils.getWorkspaceCache().danglingRefsByFsPath).toEqual({});
+    });
+  });
+
+  it('should add and remove dangling refs on file edit', async () => {
+    const noteName = rndName();
+
+    await createFile(`${noteName}.md`, '[[dangling-ref]]', false);
+
+    await waitForExpect(() => {
+      expect(utils.getWorkspaceCache().danglingRefs).toEqual(['dangling-ref']);
+      expect(Object.values(utils.getWorkspaceCache().danglingRefsByFsPath)).toEqual([
+        ['dangling-ref'],
+      ]);
+    });
+
+    const doc = await openTextDocument(`${noteName}.md`);
+
+    const editor = await window.showTextDocument(doc);
+
+    await editor.edit((edit) => edit.insert(new Position(1, 0), '\n[[he]]'));
+
+    await waitForExpect(() => {
+      expect(utils.getWorkspaceCache().danglingRefs).toEqual(['dangling-ref', 'he']);
+      expect(Object.values(utils.getWorkspaceCache().danglingRefsByFsPath)).toEqual([
+        ['dangling-ref', 'he'],
+      ]);
+    });
+
+    await editor.edit((edit) => {
+      edit.delete(new Range(new Position(1, 0), new Position(2, 0)));
+      edit.insert(new Position(1, 0), '[[hello]]');
+    });
+
+    await waitForExpect(() => {
+      expect(utils.getWorkspaceCache().danglingRefs).toEqual(['dangling-ref', 'hello']);
+      expect(Object.values(utils.getWorkspaceCache().danglingRefsByFsPath)).toEqual([
+        ['dangling-ref', 'hello'],
+      ]);
     });
   });
 
