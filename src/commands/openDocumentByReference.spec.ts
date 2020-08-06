@@ -1,6 +1,7 @@
-import { commands } from 'vscode';
 import path from 'path';
+import { commands } from 'vscode';
 
+import openDocumentByReference from './openDocumentByReference';
 import {
   createFile,
   rndName,
@@ -8,6 +9,7 @@ import {
   getOpenedFilenames,
   getOpenedPaths,
   closeEditorsAndCleanWorkspace,
+  toPlainObject,
 } from '../test/testUtils';
 
 describe('openDocumentByReference command', () => {
@@ -21,9 +23,9 @@ describe('openDocumentByReference command', () => {
 
     await createFile(filename);
 
-    await commands.executeCommand('_memo.openDocumentByReference', { reference: name });
+    await openDocumentByReference({ reference: name });
 
-    expect(getOpenedFilenames()).toContain(filename);
+    expect(getOpenedPaths()).toContain(`${path.join(getWorkspaceFolder()!, filename)}`);
   });
 
   it('should create a new text document if does not exist yet', async () => {
@@ -31,9 +33,9 @@ describe('openDocumentByReference command', () => {
 
     expect(getOpenedFilenames()).not.toContain(`${name}.md`);
 
-    await commands.executeCommand('_memo.openDocumentByReference', { reference: name });
+    await openDocumentByReference({ reference: name });
 
-    expect(getOpenedFilenames()).toContain(`${name}.md`);
+    expect(getOpenedPaths()).toContain(`${path.join(getWorkspaceFolder()!, `${name}.md`)}`);
   });
 
   it('should open a text document from a reference with label', async () => {
@@ -41,11 +43,11 @@ describe('openDocumentByReference command', () => {
 
     expect(getOpenedFilenames()).not.toContain(`${name}.md`);
 
-    await commands.executeCommand('_memo.openDocumentByReference', {
+    await openDocumentByReference({
       reference: `${name}|Test Label`,
     });
 
-    expect(getOpenedFilenames()).toContain(`${name}.md`);
+    expect(getOpenedPaths()).toContain(`${path.join(getWorkspaceFolder()!, `${name}.md`)}`);
   });
 
   it('should not open a reference on inexact filename match', async () => {
@@ -54,7 +56,7 @@ describe('openDocumentByReference command', () => {
 
     await createFile(filename);
 
-    await commands.executeCommand('_memo.openDocumentByReference', { reference: 'test' });
+    await openDocumentByReference({ reference: 'test' });
 
     expect(getOpenedFilenames()).not.toContain(filename);
   });
@@ -65,11 +67,11 @@ describe('openDocumentByReference command', () => {
 
     await createFile(filename);
 
-    await commands.executeCommand('_memo.openDocumentByReference', {
+    await openDocumentByReference({
       reference: name.toUpperCase(),
     });
 
-    expect(getOpenedFilenames()).toContain(filename);
+    expect(getOpenedPaths()).toContain(`${path.join(getWorkspaceFolder()!, filename)}`);
   });
 
   it('should open document by a long ref', async () => {
@@ -79,7 +81,7 @@ describe('openDocumentByReference command', () => {
     await createFile(filename);
     await createFile(`/folder1/${filename}`);
 
-    await commands.executeCommand('_memo.openDocumentByReference', {
+    await openDocumentByReference({
       reference: `/folder1/${name}`,
     });
 
@@ -92,7 +94,7 @@ describe('openDocumentByReference command', () => {
     await createFile(`/a/${name}.png`);
     await createFile(`/b/${name}.md`);
 
-    await commands.executeCommand('_memo.openDocumentByReference', {
+    await openDocumentByReference({
       reference: name,
     });
 
@@ -102,7 +104,7 @@ describe('openDocumentByReference command', () => {
   it('should create note automatically including folder if does not exist yet', async () => {
     const name = rndName();
 
-    await commands.executeCommand('_memo.openDocumentByReference', {
+    await openDocumentByReference({
       reference: `folder1/folder2/${name}`,
     });
 
@@ -114,12 +116,62 @@ describe('openDocumentByReference command', () => {
   it('should create note automatically even with leading slash in the reference', async () => {
     const name = rndName();
 
-    await commands.executeCommand('_memo.openDocumentByReference', {
+    await openDocumentByReference({
       reference: `/folder1/${name}`,
     });
 
     expect(getOpenedPaths()).toContain(
       `${path.join(getWorkspaceFolder()!, 'folder1', `${name}.md`)}`,
     );
+  });
+
+  it('should open png ref with .png extension', async () => {
+    const name = rndName();
+
+    const executeCommandSpy = jest.spyOn(commands, 'executeCommand');
+
+    await openDocumentByReference({
+      reference: `${name}.png`,
+    });
+
+    expect(
+      toPlainObject(executeCommandSpy.mock.calls.filter(([command]) => command === 'vscode.open')),
+    ).toMatchObject([
+      [
+        'vscode.open',
+        expect.objectContaining({
+          $mid: 1,
+          path: path.join(getWorkspaceFolder()!, `${name}.png`),
+          scheme: 'file',
+        }),
+      ],
+    ]);
+
+    executeCommandSpy.mockRestore();
+  });
+
+  it('should open ref with explicit md extension', async () => {
+    const name = rndName();
+
+    const executeCommandSpy = jest.spyOn(commands, 'executeCommand');
+
+    await openDocumentByReference({
+      reference: `${name}.md`,
+    });
+
+    expect(
+      toPlainObject(executeCommandSpy.mock.calls.filter(([command]) => command === 'vscode.open')),
+    ).toMatchObject([
+      [
+        'vscode.open',
+        expect.objectContaining({
+          $mid: 1,
+          path: path.join(getWorkspaceFolder()!, `${name}.md.md`),
+          scheme: 'file',
+        }),
+      ],
+    ]);
+
+    executeCommandSpy.mockRestore();
   });
 });

@@ -21,7 +21,11 @@ const openDocumentByReference = async ({ reference }: { reference: string }) => 
     const workspaceFolder = getWorkspaceFolder()!;
     if (workspaceFolder) {
       const paths = ref.split('/');
-      const pathsWithExt = [...paths.slice(0, -1), `${paths.slice(-1)}.md`];
+      const refExt = path.parse(ref).ext;
+      const pathsWithExt = [
+        ...paths.slice(0, -1),
+        `${paths.slice(-1)}${refExt !== '.md' && refExt !== '' ? '' : '.md'}`,
+      ];
       const filePath = path.join(workspaceFolder, ...pathsWithExt);
 
       // don't override file content if it already exists
