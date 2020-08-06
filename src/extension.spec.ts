@@ -21,19 +21,10 @@ describe('extension', () => {
     ).toBe(false);
   });
 
-  it.skip('should have extension inactive on load', () => {
+  it('should have extension active on load', () => {
     const memoExtension = vscode.extensions.all.find(
       (extension) => extension.id === MEMO_EXTENSION_ID,
     );
-    expect(memoExtension!.isActive).toBe(false);
-  });
-
-  it.skip('should activate extension on calling activate', async () => {
-    const memoExtension = vscode.extensions.all.find(
-      (extension) => extension.id === MEMO_EXTENSION_ID,
-    );
-    expect(memoExtension!.isActive).toBe(false);
-    await memoExtension!.activate();
     expect(memoExtension!.isActive).toBe(true);
   });
 });
