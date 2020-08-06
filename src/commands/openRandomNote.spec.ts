@@ -1,5 +1,4 @@
-import { commands } from 'vscode';
-
+import openRandomNote from './openRandomNote';
 import {
   createFile,
   rndName,
@@ -18,7 +17,7 @@ describe('openRandomNote command', () => {
 
     await Promise.all(filenames.map((filename) => createFile(filename)));
 
-    await commands.executeCommand('memo.openRandomNote');
+    await openRandomNote();
 
     expect(getOpenedFilenames().some((filename) => filenames.includes(filename))).toBe(true);
   });
@@ -28,9 +27,9 @@ describe('openRandomNote command', () => {
 
     await Promise.all(filenames.map((filename) => createFile(filename)));
 
-    await commands.executeCommand('memo.openRandomNote');
-    await commands.executeCommand('memo.openRandomNote');
-    await commands.executeCommand('memo.openRandomNote');
+    await openRandomNote();
+    await openRandomNote();
+    await openRandomNote();
 
     await waitForExpect(() => {
       expect(getOpenedFilenames()).toEqual(expect.arrayContaining(filenames));
@@ -42,9 +41,9 @@ describe('openRandomNote command', () => {
 
     await createFile(filename);
 
-    await commands.executeCommand('memo.openRandomNote');
-    await commands.executeCommand('memo.openRandomNote');
-    await commands.executeCommand('memo.openRandomNote');
+    await openRandomNote();
+    await openRandomNote();
+    await openRandomNote();
 
     expect(getOpenedFilenames()).toContain(filename);
   });
