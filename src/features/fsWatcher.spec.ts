@@ -261,9 +261,9 @@ describe('fsWatcher feature', () => {
 
     await createFile(`${noteName}.md`, '', false);
 
-    const workspaceCache0 = await utils.getWorkspaceCache();
-
     await waitForExpect(async () => {
+      const workspaceCache0 = await utils.getWorkspaceCache();
+
       expect([...workspaceCache0.markdownUris, ...workspaceCache0.imageUris]).toHaveLength(1);
       expect(
         [...workspaceCache0.markdownUris, ...workspaceCache0.imageUris].map(({ fsPath }) =>
@@ -273,10 +273,6 @@ describe('fsWatcher feature', () => {
     });
 
     removeFile(`${noteName}.md`);
-
-    if (require('fs').existsSync(path.join(getWorkspaceFolder()!, `${noteName}.md`))) {
-      throw new Error('boom');
-    }
 
     await waitForExpect(async () => {
       const workspaceCache = await utils.getWorkspaceCache();
