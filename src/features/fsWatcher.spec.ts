@@ -256,19 +256,21 @@ describe('fsWatcher feature', () => {
     });
   });
 
-  it.skip('should sync workspace cache on file remove (For some reason onDidDelete is not called timely in test env)', async () => {
+  it('should sync workspace cache on file remove', async () => {
     const noteName = rndName();
 
-    await createFile(`${noteName}.md`);
+    await createFile(`${noteName}.md`, '', false);
 
     const workspaceCache0 = await utils.getWorkspaceCache();
 
-    expect([...workspaceCache0.markdownUris, ...workspaceCache0.imageUris]).toHaveLength(1);
-    expect(
-      [...workspaceCache0.markdownUris, ...workspaceCache0.imageUris].map(({ fsPath }) =>
-        path.basename(fsPath),
-      ),
-    ).toContain(`${noteName}.md`);
+    await waitForExpect(async () => {
+      expect([...workspaceCache0.markdownUris, ...workspaceCache0.imageUris]).toHaveLength(1);
+      expect(
+        [...workspaceCache0.markdownUris, ...workspaceCache0.imageUris].map(({ fsPath }) =>
+          path.basename(fsPath),
+        ),
+      ).toContain(`${noteName}.md`);
+    });
 
     removeFile(`${noteName}.md`);
 
