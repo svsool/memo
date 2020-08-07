@@ -6,7 +6,7 @@ Inspired by [Obsidian.md](https://obsidian.md/) and [RoamResearch](https://roamr
 
 [![](https://vsmarketplacebadge.apphb.com/version-short/svsool.markdown-memo.svg)](https://marketplace.visualstudio.com/items?itemName=svsool.markdown-memo)
 [![](https://vsmarketplacebadge.apphb.com/installs/svsool.markdown-memo.svg)](https://marketplace.visualstudio.com/items?itemName=svsool.markdown-memo)
-[![](https://vsmarketplacebadge.apphb.com/rating-short/svsool.markdown-memo.svg)](https://marketplace.visualstudio.com/items?itemName=svsool.markdown-memo)
+[![](https://vsmarketplacebadge.apphb.com/rating-short/svsool.markdown-memo.svg)](https://marketplace.visualstudio.com/items?itemName=svsool.markdown-memo&ssr=false#review-details)
 [![](https://github.com/svsool/vscode-memo/workflows/CI/badge.svg?branch=master)](https://github.com/svsool/vscode-memo/actions?query=workflow%3ACI+branch%3Amaster)
 [![codecov](https://codecov.io/gh/svsool/vscode-memo/branch/master/graph/badge.svg)](https://codecov.io/gh/svsool/vscode-memo)
 
@@ -93,7 +93,7 @@ If you want to try out Memo just install it via marketplace using [this link](ht
 ## Contributing
 
 - File bugs, feature requests in [GitHub Issues](https://github.com/svsool/vscode-memo/issues).
-- Leave a review on [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=svsool.markdown-memo).
+- Leave a review on [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=svsool.markdown-memo&ssr=false#review-details).
 - Read [CONTRIBUTING.md](CONTRIBUTING.md) for contributing to the code base.
 
 ## Changelog
