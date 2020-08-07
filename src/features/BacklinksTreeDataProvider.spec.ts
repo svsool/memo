@@ -33,7 +33,7 @@ describe('BacklinksTreeDataProvider', () => {
 
   afterEach(closeEditorsAndCleanWorkspace);
 
-  it('should provide backlins', async () => {
+  it('should provide backlinks', async () => {
     const link = rndName();
     const name0 = rndName();
     const name1 = rndName();

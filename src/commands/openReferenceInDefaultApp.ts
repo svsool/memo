@@ -16,7 +16,7 @@ const openReferenceInDefaultApp = async () => {
       const uri = findUriByRef(getWorkspaceCache().allUris, refAtPos.ref);
 
       if (uri) {
-        open(uri.fsPath);
+        await open(uri.fsPath);
       } else {
         vscode.window.showWarningMessage(
           'Linked file does not exist yet. Try to create a new one by clicking on the link.',

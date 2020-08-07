@@ -333,11 +333,11 @@ describe('addCachedRefs', () => {
 
   afterEach(closeEditorsAndCleanWorkspace);
 
-  it('should not fail without parameters', async () => {
+  it('should not fail without parameters', () => {
     expect(addCachedRefs([])).resolves.toBeUndefined();
   });
 
-  it('should not fail with non-existing uri', async () => {
+  it('should not fail with non-existing uri', () => {
     expect(addCachedRefs([Uri.file('/unknown')])).resolves.toBeUndefined();
   });
 
@@ -399,7 +399,7 @@ describe('removeCachedRefs()', () => {
     expect(Object.values(getWorkspaceCache().danglingRefsByFsPath)).toEqual([['dangling-ref']]);
     expect(getWorkspaceCache().danglingRefs).toEqual(['dangling-ref']);
 
-    removeCachedRefs([Uri.file(path.join(getWorkspaceFolder()!, `${name}.md`))]);
+    await removeCachedRefs([Uri.file(path.join(getWorkspaceFolder()!, `${name}.md`))]);
 
     expect(getWorkspaceCache().danglingRefsByFsPath).toEqual({});
     expect(getWorkspaceCache().danglingRefs).toEqual([]);

@@ -82,14 +82,14 @@ export const rndName = (): string => {
   return name.length !== 5 ? rndName() : name;
 };
 
-export const openTextDocument = async (filename: string) => {
+export const openTextDocument = (filename: string) => {
   const filePath = path.join(utils.getWorkspaceFolder()!, filename);
 
   if (!fs.existsSync(filePath)) {
     throw new Error(`File ${filePath} does not exist`);
   }
 
-  return await workspace.openTextDocument(filePath);
+  return workspace.openTextDocument(filePath);
 };
 
 export const getOpenedFilenames = () =>

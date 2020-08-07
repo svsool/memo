@@ -19,9 +19,9 @@ const getInvalidRefAnchor = (text: string) =>
   `<a class="memo-invalid-link" title="Link does not exist yet. Please use cmd / ctrl + click in text editor to create a new one." href="javascript:void(0)">${text}</a>`;
 
 const getUnknownExtRefAnchor = (text: string, ref: string) =>
-  `<a class="memo-invalid-link" title="${`Link contains unknown extension: ${
+  `<a class="memo-invalid-link" title="Link contains unknown extension: ${
     path.parse(ref).ext
-  }. Please use common file extensions ${commonExtsHint} to enable full support.`}" href="javascript:void(0)">${text}</a>`;
+  }. Please use common file extensions ${commonExtsHint} to enable full support." href="javascript:void(0)">${text}</a>`;
 
 const getRefAnchor = (href: string, text: string) =>
   `<a title="${href}" href="${href}">${text}</a>`;

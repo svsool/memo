@@ -97,7 +97,7 @@ export const provideCompletionItems = (document: TextDocument, position: Positio
   return completionItems;
 };
 
-export const activate = async (context: ExtensionContext) =>
+export const activate = (context: ExtensionContext) =>
   context.subscriptions.push(
     languages.registerCompletionItemProvider(
       'markdown',
