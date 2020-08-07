@@ -88,7 +88,7 @@ If you want to try out Memo just install it via marketplace using [this link](ht
 - [Memo vs Obsidian](https://github.com/svsool/vscode-memo/issues/1#issuecomment-655004112)
 - How to follow link on `cmd+enter` or `ctrl+enter` like in Obsidian?
   - Bind built-in `editor.action.openLink` command to `cmd+enter` ([see example](https://github.com/svsool/vscode-memo/issues/2#issuecomment-654981827)) or use `cmd+click` on the link
-- Missing something in Memo? Please consider exploring other Markdown plugins from VS Marketplace. There are [plenty of them](https://marketplace.visualstudio.com/search?term=markdown&target=VSCode&category=All%20categories&sortBy=Relevance)
+- Memo missing some feature? Please consider exploring other Markdown plugins from VS Marketplace first. There are [plenty of them](https://marketplace.visualstudio.com/search?term=markdown&target=VSCode&category=All%20categories&sortBy=Relevance)
 
 ## Contributing
 
