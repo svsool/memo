@@ -141,7 +141,7 @@ describe('openDocumentByReference command', () => {
         'vscode.open',
         expect.objectContaining({
           $mid: 1,
-          path: path.join(getWorkspaceFolder()!, `${name}.png`),
+          path: expect.toEndWith(`${name}.png`),
           scheme: 'file',
         }),
       ],
@@ -166,7 +166,7 @@ describe('openDocumentByReference command', () => {
         'vscode.open',
         expect.objectContaining({
           $mid: 1,
-          path: path.join(getWorkspaceFolder()!, `${name}.md.md`),
+          path: expect.toEndWith(`${name}.md.md`),
           scheme: 'file',
         }),
       ],
