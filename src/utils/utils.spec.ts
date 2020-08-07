@@ -1029,7 +1029,7 @@ describe('findReferences()', () => {
         location: {
           uri: {
             $mid: 1,
-            path: expect.stringContaining(`${name0}.md`),
+            path: expect.toEndWith(`${name0}.md`),
             scheme: 'file',
           },
           range: [
@@ -1043,12 +1043,41 @@ describe('findReferences()', () => {
         location: {
           uri: {
             $mid: 1,
-            path: expect.stringContaining(`${name0}.md`),
+            path: expect.toEndWith(`${name0}.md`),
             scheme: 'file',
           },
           range: [
             { line: 1, character: 7 },
             { line: 1, character: 11 },
+          ],
+        },
+        matchText: '[[test]]',
+      },
+    ]);
+  });
+
+  it('should find references bypassing excluded paths', async () => {
+    const name0 = rndName();
+    const name1 = rndName();
+
+    await createFile(`${name0}.md`, '[[test]]');
+    await createFile(`${name1}.md`, '[[test1]]');
+
+    const refs = await findReferences('test', [path.join(getWorkspaceFolder()!, `${name1}.md`)]);
+
+    expect(refs).toHaveLength(1);
+
+    expect(toPlainObject(refs)).toMatchObject([
+      {
+        location: {
+          uri: {
+            $mid: 1,
+            path: expect.toEndWith(`${name0}.md`),
+            scheme: 'file',
+          },
+          range: [
+            { line: 0, character: 2 },
+            { line: 0, character: 6 },
           ],
         },
         matchText: '[[test]]',
@@ -1108,12 +1137,12 @@ describe('findFilesByExts()', () => {
     ).toMatchObject([
       {
         $mid: 1,
-        path: expect.stringContaining(`a-${name0}.md`),
+        path: expect.toEndWith(`a-${name0}.md`),
         scheme: 'file',
       },
       {
         $mid: 1,
-        path: expect.stringContaining(`b-${name1}.png`),
+        path: expect.toEndWith(`b-${name1}.png`),
         scheme: 'file',
       },
     ]);
@@ -1161,12 +1190,12 @@ describe('findAllUrisWithUnknownExts()', () => {
     ).toMatchObject([
       {
         $mid: 1,
-        path: expect.stringContaining(`${name0}.html`),
+        path: expect.toEndWith(`${name0}.html`),
         scheme: 'file',
       },
       {
         $mid: 1,
-        path: expect.stringContaining(`${name0}.psd`),
+        path: expect.toEndWith(`${name0}.psd`),
         scheme: 'file',
       },
     ]);
@@ -1203,8 +1232,8 @@ describe('findUriByRef()', () => {
     ).toEqual(
       expect.objectContaining({
         $mid: 1,
-        fsPath: expect.stringContaining('File.md'),
-        path: expect.stringContaining('File.md'),
+        fsPath: expect.toEndWith('File.md'),
+        path: expect.toEndWith('File.md'),
         scheme: 'file',
       }),
     );
@@ -1225,8 +1254,8 @@ describe('findUriByRef()', () => {
     ).toEqual(
       expect.objectContaining({
         $mid: 1,
-        fsPath: expect.stringContaining('File.png'),
-        path: expect.stringContaining('File.png'),
+        fsPath: expect.toEndWith('File.png'),
+        path: expect.toEndWith('File.png'),
         scheme: 'file',
       }),
     );
@@ -1247,8 +1276,8 @@ describe('findUriByRef()', () => {
     ).toEqual(
       expect.objectContaining({
         $mid: 1,
-        fsPath: expect.stringContaining('File.md'),
-        path: expect.stringContaining('File.md'),
+        fsPath: expect.toEndWith('File.md'),
+        path: expect.toEndWith('File.md'),
         scheme: 'file',
       }),
     );
@@ -1269,8 +1298,8 @@ describe('findUriByRef()', () => {
     ).toEqual(
       expect.objectContaining({
         $mid: 1,
-        fsPath: expect.stringContaining('File.png'),
-        path: expect.stringContaining('File.png'),
+        fsPath: expect.toEndWith('File.png'),
+        path: expect.toEndWith('File.png'),
         scheme: 'file',
       }),
     );
@@ -1291,8 +1320,8 @@ describe('findUriByRef()', () => {
     ).toEqual(
       expect.objectContaining({
         $mid: 1,
-        fsPath: expect.stringContaining('File.md'),
-        path: expect.stringContaining('File.md'),
+        fsPath: expect.toEndWith('File.md'),
+        path: expect.toEndWith('File.md'),
         scheme: 'file',
       }),
     );
@@ -1314,8 +1343,8 @@ describe('findUriByRef()', () => {
     ).toEqual(
       expect.objectContaining({
         $mid: 1,
-        fsPath: expect.stringContaining('File.unknown'),
-        path: expect.stringContaining('File.unknown'),
+        fsPath: expect.toEndWith('File.unknown'),
+        path: expect.toEndWith('File.unknown'),
         scheme: 'file',
       }),
     );
