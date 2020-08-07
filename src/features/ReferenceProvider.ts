@@ -6,8 +6,6 @@ export default class ReferenceProvider implements vscode.ReferenceProvider {
   public async provideReferences(document: vscode.TextDocument, position: vscode.Position) {
     const refAtPos = getReferenceAtPosition(document, position);
 
-    return refAtPos
-      ? (await findReferences(refAtPos.ref, [document.uri.fsPath])).map(({ location }) => location)
-      : [];
+    return refAtPos ? (await findReferences(refAtPos.ref)).map(({ location }) => location) : [];
   }
 }
