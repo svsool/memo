@@ -12,7 +12,7 @@ const openRandomNote = async () => {
   const randomUri = markdownUris[randomUriIndex];
 
   if (randomUri && fs.existsSync(randomUri.fsPath)) {
-    await commands.executeCommand('vscode.open', randomUri);
+    await commands.executeCommand('vscode.open', randomUri, { preview: false });
   }
 };
 
