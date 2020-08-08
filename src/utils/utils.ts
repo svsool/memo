@@ -299,7 +299,7 @@ export const findReferences = async (
     }
 
     const fileContent = fs.readFileSync(fsPath).toString();
-    const refRegexp = new RegExp(`\\[\\[(${escapeForRegExp(ref)}(\\|.*)?)\\]\\]`, 'gi');
+    const refRegexp = new RegExp(`\\[\\[(${escapeForRegExp(ref)}(\\|[^\\[\\]]+?)?)\\]\\]`, 'gi');
 
     const fileContentLines = fileContent.split(/\r?\n/g);
 

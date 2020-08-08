@@ -1084,6 +1084,37 @@ describe('findReferences()', () => {
       },
     ]);
   });
+
+  it('should detect position properly for the first reference', async () => {
+    const name = rndName();
+
+    await createFile(
+      `${name}.md`,
+      '[[README|Start here]] or refer to any other [[Note]]. Use (cmd or ctrl) + click on the [[Note]] to create a new note to the disk on the fly.',
+    );
+
+    const refs = await findReferences('README');
+
+    expect(refs).toHaveLength(1);
+
+    expect(toPlainObject(refs)).toMatchObject([
+      {
+        location: {
+          uri: {
+            $mid: 1,
+            path: expect.stringContaining(`${name}.md`),
+            scheme: 'file',
+          },
+          range: [
+            { line: 0, character: 2 },
+            { line: 0, character: 19 },
+          ],
+        },
+        matchText:
+          '[[README|Start here]] or refer to any other [[Note]]. Use (cmd or ctrl) + click on the [[Note]] to create a new note to the disk on the fly.',
+      },
+    ]);
+  });
 });
 
 describe('getFileUrlForMarkdownPreview()', () => {
