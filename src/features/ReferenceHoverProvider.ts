@@ -25,7 +25,10 @@ export default class ReferenceHoverProvider implements vscode.HoverProvider {
         new vscode.Position(range.end.line, range.end.character - 2),
       );
 
-      if (containsUnknownExt(ref)) {
+      const uris = getWorkspaceCache().allUris;
+      const foundUri = findUriByRef(uris, ref);
+
+      if (!foundUri && containsUnknownExt(ref)) {
         return new vscode.Hover(
           `Link contains unknown extension: ${
             path.parse(ref).ext
@@ -34,12 +37,8 @@ export default class ReferenceHoverProvider implements vscode.HoverProvider {
         );
       }
 
-      const uris = getWorkspaceCache().allUris;
-      const imagePreviewMaxHeight = Math.max(getConfigProperty('imagePreviewMaxHeight', 200), 10);
-
-      const foundUri = findUriByRef(uris, ref);
-
       if (foundUri && fs.existsSync(foundUri.fsPath)) {
+        const imagePreviewMaxHeight = Math.max(getConfigProperty('imagePreviewMaxHeight', 200), 10);
         const getContent = () => {
           if (containsImageExt(foundUri.fsPath)) {
             return `![${

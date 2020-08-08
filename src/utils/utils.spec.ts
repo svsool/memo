@@ -1360,6 +1360,38 @@ describe('findUriByRef()', () => {
 
     getWorkspaceFolderMock.mockRestore();
   });
+
+  it('should find uri by ref with explicit markdown extension in ref', async () => {
+    expect(
+      toPlainObject(await findUriByRef([Uri.file('/Users/Memo/Diary/File.md.md')], 'File.md')),
+    ).toEqual(
+      expect.objectContaining({
+        $mid: 1,
+        fsPath: expect.toEndWith('File.md.md'),
+        path: expect.toEndWith('File.md.md'),
+        scheme: 'file',
+      }),
+    );
+  });
+
+  it('should find uri from a ref with unknown extension', async () => {
+    expect(
+      toPlainObject(await findUriByRef([Uri.file('/Users/Memo/Diary/File.any.md')], 'File.any')),
+    ).toEqual(
+      expect.objectContaining({
+        $mid: 1,
+        fsPath: expect.toEndWith('File.any.md'),
+        path: expect.toEndWith('File.any.md'),
+        scheme: 'file',
+      }),
+    );
+  });
+
+  it('should not find a dot file', async () => {
+    expect(
+      toPlainObject(await findUriByRef([Uri.file('/Users/Memo/Diary/.md')], '.md')),
+    ).toBeUndefined();
+  });
 });
 
 describe('ensureDirectoryExists()', () => {

@@ -1,4 +1,4 @@
-import rimraf from 'rimraf';
+import del from 'del';
 import fs from 'fs';
 import path from 'path';
 import { workspace, Uri, commands, ConfigurationTarget } from 'vscode';
@@ -27,7 +27,9 @@ export const cleanWorkspace = () => {
   const workspaceFolder = utils.getWorkspaceFolder();
 
   if (workspaceFolder) {
-    rimraf.sync(path.join(workspaceFolder, '*'));
+    del.sync([path.join(workspaceFolder, '{*,.*}'), `!${path.join(workspaceFolder, '.vscode')}`], {
+      force: true,
+    });
   }
 };
 
@@ -37,7 +39,7 @@ export const cacheWorkspace = async () => {
 };
 
 export const cleanWorkspaceCache = async () => {
-  await utils.cleanWorkspaceCache();
+  utils.cleanWorkspaceCache();
   await commands.executeCommand('_memo.cleanWorkspaceCache');
 };
 
@@ -139,4 +141,5 @@ export const closeEditorsAndCleanWorkspace = async () => {
 export const getWorkspaceCache = async (): Promise<WorkspaceCache> =>
   (await commands.executeCommand('_memo.getWorkspaceCache')) as WorkspaceCache;
 
-export const toPlainObject = <R>(value: unknown): R => JSON.parse(JSON.stringify(value));
+export const toPlainObject = <R>(value: unknown): R =>
+  value !== undefined ? JSON.parse(JSON.stringify(value)) : value;

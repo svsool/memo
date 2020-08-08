@@ -51,11 +51,14 @@ export const commonExtsHint =
 
 export const refPattern = '(\\[\\[)([^\\[\\]]+?)(\\]\\])';
 
-export const containsImageExt = (path: string): boolean => !!imageExtsRegex.exec(path);
+export const containsImageExt = (pathParam: string): boolean =>
+  !!imageExtsRegex.exec(path.parse(pathParam).ext);
 
-export const containsMarkdownExt = (path: string): boolean => !!markdownExtRegex.exec(path);
+export const containsMarkdownExt = (pathParam: string): boolean =>
+  !!markdownExtRegex.exec(path.parse(pathParam).ext);
 
-export const containsOtherKnownExts = (path: string): boolean => !!otherExtsRegex.exec(path);
+export const containsOtherKnownExts = (pathParam: string): boolean =>
+  !!otherExtsRegex.exec(path.parse(pathParam).ext);
 
 export const containsUnknownExt = (pathParam: string): boolean =>
   path.parse(pathParam).ext !== '' &&
@@ -368,7 +371,11 @@ export const findUriByRef = (uris: vscode.Uri[], ref: string): vscode.Uri | unde
         return normalizeSlashes(relativeFsPath).endsWith(ref.toLowerCase());
       }
 
-      return path.basename(uri.fsPath).toLowerCase() === ref.toLowerCase();
+      const basenameLowerCased = path.basename(uri.fsPath).toLowerCase();
+
+      return (
+        basenameLowerCased === ref.toLowerCase() || basenameLowerCased === `${ref.toLowerCase()}.md`
+      );
     }
 
     if (isLongRef(ref)) {

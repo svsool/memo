@@ -10,9 +10,7 @@ describe('openDailyNote command', () => {
   afterEach(closeEditorsAndCleanWorkspace);
 
   it('should not fail on direct call', async () => {
-    expect(() => {
-      openDailyNote();
-    }).not.toThrow();
+    expect(() => openDailyNote()).not.toThrow();
 
     await commands.executeCommand('workbench.action.acceptSelectedQuickOpenItem');
   });

@@ -61,7 +61,7 @@ describe('ReferenceHoverProvider', () => {
 
     const referenceHoverProvider = new ReferenceHoverProvider();
 
-    const imagePath = `${path.join(getWorkspaceFolder()!, name1)}.png`;
+    const imagePath = path.join(getWorkspaceFolder()!, `${name1}.png`);
 
     expect(
       toPlainObject(referenceHoverProvider.provideHover(doc, new vscode.Position(0, 4))),
@@ -192,5 +192,49 @@ describe('ReferenceHoverProvider', () => {
     const referenceHoverProvider = new ReferenceHoverProvider();
 
     expect(referenceHoverProvider.provideHover(doc, new vscode.Position(0, 4))).toBeNull();
+  });
+
+  it('should provide hover for a link to dot file note', async () => {
+    const name0 = rndName();
+    const name1 = rndName();
+
+    await createFile(`${name0}.md`, `[[.${name1}]]`);
+    await createFile(`.${name1}.md`, '# Hello world');
+
+    const doc = await openTextDocument(`${name0}.md`);
+
+    const referenceHoverProvider = new ReferenceHoverProvider();
+
+    expect(
+      toPlainObject(referenceHoverProvider.provideHover(doc, new vscode.Position(0, 4))),
+    ).toEqual({
+      contents: ['# Hello world'],
+      range: [
+        { character: expect.any(Number), line: 0 },
+        { character: expect.any(Number), line: 0 },
+      ],
+    });
+  });
+
+  it('should provide hover for a link with explicit markdown extension in the ref', async () => {
+    const name0 = rndName();
+    const name1 = rndName();
+
+    await createFile(`${name0}.md`, `[[${name1}.md]]`);
+    await createFile(`${name1}.md.md`, '# Hello world');
+
+    const doc = await openTextDocument(`${name0}.md`);
+
+    const referenceHoverProvider = new ReferenceHoverProvider();
+
+    expect(
+      toPlainObject(referenceHoverProvider.provideHover(doc, new vscode.Position(0, 4))),
+    ).toEqual({
+      contents: ['# Hello world'],
+      range: [
+        { character: expect.any(Number), line: 0 },
+        { character: expect.any(Number), line: 0 },
+      ],
+    });
   });
 });

@@ -300,11 +300,11 @@ describe('fsWatcher feature', () => {
     await createFile(`${noteName}.md`, '', false);
 
     await waitForExpect(async () => {
-      const workspaceCache0 = await utils.getWorkspaceCache();
+      const workspaceCache = await utils.getWorkspaceCache();
 
-      expect([...workspaceCache0.markdownUris, ...workspaceCache0.imageUris]).toHaveLength(1);
+      expect([...workspaceCache.markdownUris, ...workspaceCache.imageUris]).toHaveLength(1);
       expect(
-        [...workspaceCache0.markdownUris, ...workspaceCache0.imageUris].map(({ fsPath }) =>
+        [...workspaceCache.markdownUris, ...workspaceCache.imageUris].map(({ fsPath }) =>
           path.basename(fsPath),
         ),
       ).toContain(`${noteName}.md`);

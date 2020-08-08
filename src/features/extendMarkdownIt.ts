@@ -46,11 +46,11 @@ const extendMarkdownIt = (md: MarkdownIt) => {
           }
         }
 
-        if (containsUnknownExt(ref)) {
+        const fsPath = findUriByRef(getWorkspaceCache().markdownUris, ref)?.fsPath;
+
+        if (!fsPath && containsUnknownExt(ref)) {
           return getUnknownExtRefAnchor(label || ref, ref);
         }
-
-        const fsPath = findUriByRef(getWorkspaceCache().markdownUris, ref)?.fsPath;
 
         if (!fsPath || !fs.existsSync(fsPath)) {
           return getInvalidRefAnchor(label || ref);
@@ -98,11 +98,11 @@ const extendMarkdownIt = (md: MarkdownIt) => {
       replace: (rawRef: string) => {
         const { ref, label } = parseRef(rawRef);
 
-        if (containsUnknownExt(ref)) {
+        const fsPath = findUriByRef(getWorkspaceCache().allUris, ref)?.fsPath;
+
+        if (!fsPath && containsUnknownExt(ref)) {
           return getUnknownExtRefAnchor(label || ref, ref);
         }
-
-        const fsPath = findUriByRef(getWorkspaceCache().allUris, ref)?.fsPath;
 
         if (!fsPath) {
           return getInvalidRefAnchor(label || ref);

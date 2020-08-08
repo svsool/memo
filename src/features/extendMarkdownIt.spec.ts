@@ -6,7 +6,6 @@ import {
   createFile,
   rndName,
   getWorkspaceFolder,
-  cacheWorkspace,
   closeEditorsAndCleanWorkspace,
   getImgUrlForMarkdownPreview,
   getFileUrlForMarkdownPreview,
@@ -27,8 +26,6 @@ describe('extendMarkdownIt feature', () => {
   it('should render html link with tooltip about broken reference to note', async () => {
     const md = extendMarkdownIt(MarkdownIt());
 
-    await cacheWorkspace();
-
     expect(md.render('[[invalid-link]]')).toMatchInlineSnapshot(`
       "<p><a class=\\"memo-invalid-link\\" title=\\"Link does not exist yet. Please use cmd / ctrl + click in text editor to create a new one.\\" href=\\"javascript:void(0)\\">invalid-link</a></p>
       "
@@ -41,8 +38,6 @@ describe('extendMarkdownIt feature', () => {
     await createFile(`${name}.md`);
 
     const md = extendMarkdownIt(MarkdownIt());
-
-    await cacheWorkspace();
 
     const notePath = `${path.join(getWorkspaceFolder()!, name)}.md`;
 
@@ -58,8 +53,6 @@ describe('extendMarkdownIt feature', () => {
 
     const md = extendMarkdownIt(MarkdownIt());
 
-    await cacheWorkspace();
-
     const notePath = `${path.join(getWorkspaceFolder()!, `${name}.md`)}`;
 
     const url = getFileUrlForMarkdownPreview(notePath);
@@ -69,14 +62,57 @@ describe('extendMarkdownIt feature', () => {
     );
   });
 
+  it('should render html link to the existing note with preceding dot', async () => {
+    const name = rndName();
+
+    await createFile(`${name}.any.md`);
+
+    const md = extendMarkdownIt(MarkdownIt());
+
+    const notePath = `${path.join(getWorkspaceFolder()!, `${name}.any.md`)}`;
+
+    const url = getFileUrlForMarkdownPreview(notePath);
+
+    expect(md.render(`[[${name}.any|Test Label]]`)).toBe(
+      `<p><a title="${url}" href="${url}">Test Label</a></p>\n`,
+    );
+  });
+
+  it('should render html link to the existing dot note', async () => {
+    const name = rndName();
+
+    await createFile(`.${name}.md`);
+
+    const md = extendMarkdownIt(MarkdownIt());
+
+    const notePath = `${path.join(getWorkspaceFolder()!, `.${name}.md`)}`;
+
+    const url = getFileUrlForMarkdownPreview(notePath);
+
+    expect(md.render(`[[.${name}|Test Label]]`)).toBe(
+      `<p><a title="${url}" href="${url}">Test Label</a></p>\n`,
+    );
+  });
+
+  it('should not render html link to dot file', async () => {
+    const name = rndName();
+
+    await createFile(`.${name}`);
+
+    const md = extendMarkdownIt(MarkdownIt());
+
+    expect(md.render(`[[.${name}|Test Label]]`)).toMatchInlineSnapshot(`
+      "<p><a class=\\"memo-invalid-link\\" title=\\"Link does not exist yet. Please use cmd / ctrl + click in text editor to create a new one.\\" href=\\"javascript:void(0)\\">Test Label</a></p>
+      "
+    `);
+  });
+
   it('should render html link to the existing image without a label', async () => {
     const name = rndName();
 
     await createFile(`${name}.png`);
 
     const md = extendMarkdownIt(MarkdownIt());
-
-    await cacheWorkspace();
 
     const imagePath = `${path.join(getWorkspaceFolder()!, name)}.png`;
 
@@ -87,6 +123,22 @@ describe('extendMarkdownIt feature', () => {
     );
   });
 
+  it('should render html link to the existing dot image', async () => {
+    const name = rndName();
+
+    await createFile(`.${name}.png`);
+
+    const md = extendMarkdownIt(MarkdownIt());
+
+    const imagePath = path.join(getWorkspaceFolder()!, `.${name}.png`);
+
+    const url = getFileUrlForMarkdownPreview(imagePath);
+
+    expect(md.render(`[[.${name}.png]]`)).toBe(
+      `<p><a title="${url}" href="${url}">.${name}.png</a></p>\n`,
+    );
+  });
+
   it('should render html link to the existing image with a label', async () => {
     const name = rndName();
 
@@ -94,9 +146,7 @@ describe('extendMarkdownIt feature', () => {
 
     const md = extendMarkdownIt(MarkdownIt());
 
-    await cacheWorkspace();
-
-    const imagePath = `${path.join(getWorkspaceFolder()!, name)}.png`;
+    const imagePath = path.join(getWorkspaceFolder()!, `${name}.png`);
 
     const url = getFileUrlForMarkdownPreview(imagePath);
 
@@ -107,8 +157,6 @@ describe('extendMarkdownIt feature', () => {
 
   it('should render html link with tooltip about broken reference to an image', async () => {
     const md = extendMarkdownIt(MarkdownIt());
-
-    await cacheWorkspace();
 
     expect(md.render('[[invalid-link.png]]')).toMatchInlineSnapshot(`
       "<p><a class=\\"memo-invalid-link\\" title=\\"Link does not exist yet. Please use cmd / ctrl + click in text editor to create a new one.\\" href=\\"javascript:void(0)\\">invalid-link.png</a></p>
@@ -123,8 +171,6 @@ describe('extendMarkdownIt feature', () => {
 
     const md = extendMarkdownIt(MarkdownIt());
 
-    await cacheWorkspace();
-
     expect(md.render(`![[${name}.png]]`)).toBe(
       `<p><div><img src="${getImgUrlForMarkdownPreview(
         path.join(getWorkspaceFolder()!, `${name}.png`),
@@ -135,8 +181,6 @@ describe('extendMarkdownIt feature', () => {
   it('should not identify broken link', async () => {
     const md = extendMarkdownIt(MarkdownIt());
 
-    await cacheWorkspace();
-
     expect(md.render('[[]]')).toBe('<p>[[]]</p>\n');
   });
 
@@ -146,8 +190,6 @@ describe('extendMarkdownIt feature', () => {
     await createFile(`${name}.md`);
 
     const md = extendMarkdownIt(MarkdownIt());
-
-    await cacheWorkspace();
 
     const notePath = `${path.join(getWorkspaceFolder()!, name)}.md`;
 
@@ -165,8 +207,6 @@ describe('extendMarkdownIt feature', () => {
 
     const md = extendMarkdownIt(MarkdownIt());
 
-    await cacheWorkspace();
-
     expect(md.render(`[[![[${name}.png]]]]]]`)).toBe(
       `<p>[[<div><img src="${getImgUrlForMarkdownPreview(
         path.join(getWorkspaceFolder()!, `${name}.png`),
@@ -181,8 +221,6 @@ describe('extendMarkdownIt feature', () => {
     await createFile(`/b/${name}.md`);
 
     const md = extendMarkdownIt(MarkdownIt());
-
-    await cacheWorkspace();
 
     const notePath = `${path.join(getWorkspaceFolder()!, 'b', name)}.md`;
 
@@ -200,8 +238,6 @@ describe('extendMarkdownIt feature', () => {
     await createFile(`${name}.md`);
 
     const md = extendMarkdownIt(MarkdownIt());
-
-    await cacheWorkspace();
 
     const notePath = `${path.join(getWorkspaceFolder()!, name)}.md`;
 
@@ -366,8 +402,6 @@ describe('extendMarkdownIt feature', () => {
 
   it('should render html link with tooltip about unknown extension', async () => {
     const md = extendMarkdownIt(MarkdownIt());
-
-    await cacheWorkspace();
 
     expect(md.render('[[link.unknown]]')).toMatchInlineSnapshot(`
       "<p><a class=\\"memo-invalid-link\\" title=\\"Link contains unknown extension: .unknown. Please use common file extensions .md,.png,.jpg,.jpeg,.svg,.gif,.doc,.docx,.rtf,.txt,.odt,.xls,.xlsx,.ppt,.pptm,.pptx,.pdf to enable full support.\\" href=\\"javascript:void(0)\\">link.unknown</a></p>
