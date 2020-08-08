@@ -27,8 +27,9 @@ export const cleanWorkspace = () => {
   const workspaceFolder = utils.getWorkspaceFolder();
 
   if (workspaceFolder) {
-    del.sync([path.join(workspaceFolder, '{*,.*}'), `!${path.join(workspaceFolder, '.vscode')}`], {
+    del.sync(['**/!(.vscode)'], {
       force: true,
+      cwd: workspaceFolder,
     });
   }
 };
