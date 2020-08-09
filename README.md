@@ -9,10 +9,11 @@ Inspired by [Obsidian.md](https://obsidian.md/) and [RoamResearch](https://roamr
 [![](https://vsmarketplacebadge.apphb.com/rating-short/svsool.markdown-memo.svg)](https://marketplace.visualstudio.com/items?itemName=svsool.markdown-memo&ssr=false#review-details)
 [![](https://github.com/svsool/vscode-memo/workflows/CI/badge.svg?branch=master)](https://github.com/svsool/vscode-memo/actions?query=workflow%3ACI+branch%3Amaster)
 [![codecov](https://codecov.io/gh/svsool/vscode-memo/branch/master/graph/badge.svg)](https://codecov.io/gh/svsool/vscode-memo)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/svsool/vscode-memo/blob/master/CONTRIBUTING.md)
 
 ## Why?
 
-Because your knowledge base deserves to be powered by open source.
+Because your knowledge base deserves to be powered by open source. Read more [here](https://github.com/svsool/vscode-memo/issues/9#issuecomment-658893538).
 
 ## Getting started
 
