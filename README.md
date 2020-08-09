@@ -54,6 +54,10 @@ If you want to try out Memo just install it via marketplace using [this link](ht
 
     - ![Links labeling](./help/Attachments/Opening%20links%20in%20the%20default%20app.gif)
 
+  - Find all references
+
+    - ![Find all references](./help/Attachments/Find%20all%20references.png)
+
 - 🖼️ **Notes and images preview (built-in & on hover)**
 
 ![Notes and images preview](./help/Attachments/Notes%20and%20images%20preview.gif)
