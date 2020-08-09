@@ -69,7 +69,7 @@ jobs:
         run: yarn
       - name: Package
         run: yarn package
-      - uses: "marvinpinto/action-automatic-releases@v1.0.0"
+      - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           prerelease: false
