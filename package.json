@@ -153,7 +153,7 @@
     "@types/lodash.debounce": "^4.0.6",
     "@types/lodash.groupby": "^4.6.6",
     "@types/lodash.range": "^3.2.6",
-    "@types/markdown-it": "^10.0.1",
+    "@types/markdown-it": "^10.0.2",
     "@types/moment": "^2.13.0",
     "@types/node": "^14.0.27",
     "@types/open": "^6.2.1",
