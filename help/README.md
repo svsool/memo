@@ -18,4 +18,4 @@ As you probably noticed, I use `yyyy-mm-dd ` format for naming my daily notes, w
 
 Markdown is a well-known language for its flexibility, especially when it comes to writing and making notes, so you are free to choose your own and unique style of managing a personal knowledge base.
 
-This is pretty much it to start using Memo, and if you want to read more on what Memo can do for you, feel free to continue to [[Features]].
+This is pretty much it to start using Memo, and if you want to read more on what Memo can do for you, feel free to continue to [[Features]] and [[How to]].
