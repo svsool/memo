@@ -145,7 +145,7 @@
     "test:watch": "cross-env JEST_WATCH=true node ./out/test/runTest.js"
   },
   "devDependencies": {
-    "@commitlint/cli": "^9.1.1",
+    "@commitlint/cli": "^9.1.2",
     "@commitlint/config-conventional": "^9.1.1",
     "@types/del": "^4.0.0",
     "@types/glob": "^7.1.1",
