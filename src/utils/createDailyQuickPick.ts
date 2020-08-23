@@ -19,7 +19,7 @@ const toOffsetLabel = (dayOffset: number) => {
 
 const yyyymmddRegExp = /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/;
 
-const createQuickPick = () => {
+const createDailyQuickPick = () => {
   const now = moment().startOf('day');
   const allDailyDates = getWorkspaceCache()
     .markdownUris.map((uri) => path.parse(uri.fsPath).name)
@@ -65,4 +65,4 @@ const createQuickPick = () => {
   return quickPick;
 };
 
-export default createQuickPick;
+export default createDailyQuickPick;
