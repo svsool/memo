@@ -173,7 +173,7 @@
     "jest-environment-vscode": "^1.0.0",
     "jest-extended": "^0.11.5",
     "lint-staged": "^10.2.13",
-    "prettier": "^2.1.0",
+    "prettier": "^2.1.1",
     "standard-version": "^9.0.0",
     "ts-jest": "^26.2.0",
     "ts-loader": "^8.0.3",
