@@ -34,7 +34,7 @@ export const activate = async (context: vscode.ExtensionContext) => {
 
   context.subscriptions.push(
     ...commands,
-    vscode.window.createTreeView('memoBacklinksExplorer', {
+    vscode.window.createTreeView('memo.backlinksPanel', {
       treeDataProvider: backlinksTreeDataProvider,
       showCollapseAll: true,
     }),

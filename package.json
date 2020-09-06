@@ -39,7 +39,7 @@
     "onCommand:_memo.cacheWorkspace",
     "onCommand:_memo.cleanWorkspaceCache",
     "onCommand:_memo.getWorkspaceCache",
-    "onView:memoBacklinksExplorer"
+    "onView:memo.backlinksPanel"
   ],
   "main": "./dist/extension",
   "contributes": {
@@ -105,14 +105,14 @@
     "views": {
       "explorer": [
         {
-          "id": "memoBacklinksExplorer",
+          "id": "memo.backlinksPanel",
           "name": "Backlinks"
         }
       ]
     },
     "viewsWelcome": [
       {
-        "view": "memoBacklinksExplorer",
+        "view": "memo.backlinksPanel",
         "contents": "No information to show"
       }
     ],
