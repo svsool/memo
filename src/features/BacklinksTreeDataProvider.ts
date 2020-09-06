@@ -58,7 +58,7 @@ export default class BacklinksTreeDataProvider implements vscode.TreeDataProvide
         return [];
       }
 
-      const collapsibleState = getConfigProperty('collapseBacklinksPanelItems', false)
+      const collapsibleState = getConfigProperty('backlinksPanel.collapseParentItems', false)
         ? vscode.TreeItemCollapsibleState.Collapsed
         : vscode.TreeItemCollapsibleState.Expanded;
 

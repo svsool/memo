@@ -821,7 +821,7 @@ describe('getWorkspaceFolder()', () => {
 
 describe('getConfigProperty()', () => {
   it('should return config property', () => {
-    expect(getConfigProperty('imagePreviewMaxHeight', null)).toBe('200');
+    expect(getConfigProperty('linksOnHoverPreview.imageMaxHeight', null)).toBe('200');
   });
 
   it('should return default property on getting unknown config property', () => {

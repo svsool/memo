@@ -65,16 +65,16 @@
       "type": "object",
       "title": "Memo",
       "properties": {
-        "memo.imagePreviewMaxHeight": {
+        "memo.linksOnHoverPreview.imageMaxHeight": {
           "default": "200",
           "scope": "resource",
-          "description": "The maximum height of the image preview",
+          "description": "The maximum height of the image.",
           "type": "number"
         },
-        "memo.collapseBacklinksPanelItems": {
+        "memo.backlinksPanel.collapseParentItems": {
           "default": false,
           "scope": "resource",
-          "description": "Collapse backlinks panel items by default.",
+          "description": "Collapse parent items by default.",
           "type": "boolean"
         }
       }

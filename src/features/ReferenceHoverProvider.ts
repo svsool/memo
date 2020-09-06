@@ -38,14 +38,17 @@ export default class ReferenceHoverProvider implements vscode.HoverProvider {
       }
 
       if (foundUri && fs.existsSync(foundUri.fsPath)) {
-        const imagePreviewMaxHeight = Math.max(getConfigProperty('imagePreviewMaxHeight', 200), 10);
+        const imageMaxHeight = Math.max(
+          getConfigProperty('linksOnHoverPreview.imageMaxHeight', 200),
+          10,
+        );
         const getContent = () => {
           if (containsImageExt(foundUri.fsPath)) {
             return `![${
               isUncPath(foundUri.fsPath)
                 ? 'UNC paths are not supported for images preview due to VSCode Content Security Policy. Use markdown preview or open image via cmd (ctrl) + click instead.'
                 : ''
-            }](${vscode.Uri.file(foundUri.fsPath).toString()}|height=${imagePreviewMaxHeight})`;
+            }](${vscode.Uri.file(foundUri.fsPath).toString()}|height=${imageMaxHeight})`;
           } else if (containsOtherKnownExts(foundUri.fsPath)) {
             const ext = path.parse(foundUri.fsPath).ext;
             return `Preview is not supported for "${ext}" file type. Click to open in the default app.`;

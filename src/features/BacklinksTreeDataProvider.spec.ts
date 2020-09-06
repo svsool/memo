@@ -369,7 +369,7 @@ describe('BacklinksTreeDataProvider', () => {
 
     await window.showTextDocument(doc);
 
-    await updateMemoConfigProperty('collapseBacklinksPanelItems', true);
+    await updateMemoConfigProperty('backlinksPanel.collapseParentItems', true);
 
     expect((await getChildren()).every((child) => child.collapsibleState === 1)).toBe(true);
   });
@@ -387,7 +387,7 @@ describe('BacklinksTreeDataProvider', () => {
 
     await window.showTextDocument(doc);
 
-    expect(getConfigProperty('collapseBacklinksPanelItems', null)).toBe(false);
+    expect(getConfigProperty('backlinksPanel.collapseParentItems', null)).toBe(false);
 
     expect((await getChildren()).every((child) => child.collapsibleState === 2)).toBe(true);
   });
