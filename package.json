@@ -146,7 +146,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^9.1.2",
-    "@commitlint/config-conventional": "^9.1.2",
+    "@commitlint/config-conventional": "^11.0.0",
     "@types/del": "^4.0.0",
     "@types/glob": "^7.1.1",
     "@types/jest": "^26.0.13",
