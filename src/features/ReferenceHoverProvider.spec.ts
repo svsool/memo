@@ -108,9 +108,9 @@ describe('ReferenceHoverProvider', () => {
 
     const referenceHoverProvider = new ReferenceHoverProvider();
 
-    expect(referenceHoverProvider.provideHover(doc, new vscode.Position(0, 4)))
+    expect(toPlainObject(referenceHoverProvider.provideHover(doc, new vscode.Position(0, 4))))
       .toMatchInlineSnapshot(`
-      B {
+      Object {
         "contents": Array [
           "Link contains unknown extension: .unknown. Please use common file extensions .md,.png,.jpg,.jpeg,.svg,.gif,.doc,.docx,.rtf,.txt,.odt,.xls,.xlsx,.ppt,.pptm,.pptx,.pdf to enable full support.",
         ],
@@ -137,9 +137,9 @@ describe('ReferenceHoverProvider', () => {
 
     const referenceHoverProvider = new ReferenceHoverProvider();
 
-    expect(referenceHoverProvider.provideHover(doc, new vscode.Position(0, 4)))
+    expect(toPlainObject(referenceHoverProvider.provideHover(doc, new vscode.Position(0, 4))))
       .toMatchInlineSnapshot(`
-      B {
+      Object {
         "contents": Array [
           "\\"any-link\\" is not created yet. Click to create.",
         ],

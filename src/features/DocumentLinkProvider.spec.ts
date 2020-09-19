@@ -206,9 +206,9 @@ describe('DocumentLinkProvider', () => {
 
     const links = linkProvider.provideDocumentLinks(doc);
 
-    expect(links).toMatchInlineSnapshot(`
+    expect(toPlainObject(links)).toMatchInlineSnapshot(`
       Array [
-        se {
+        Object {
           "range": Array [
             Object {
               "character": 6,
