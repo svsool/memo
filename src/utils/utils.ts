@@ -230,7 +230,7 @@ export const cleanWorkspaceCache = () => {
 export const getWorkspaceFolder = (): string | undefined =>
   vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders[0].uri.fsPath;
 
-export function getConfigProperty<T>(property: string, fallback: T): T {
+export function getMemoConfigProperty<T>(property: string, fallback: T): T {
   return vscode.workspace.getConfiguration().get(`memo.${property}`, fallback);
 }
 

@@ -12,11 +12,11 @@ const {
   getImgUrlForMarkdownPreview,
   getFileUrlForMarkdownPreview,
   escapeForRegExp,
-  getConfigProperty,
+  getMemoConfigProperty,
 } = utils;
 
 export {
-  getConfigProperty,
+  getMemoConfigProperty,
   getWorkspaceFolder,
   getImgUrlForMarkdownPreview,
   getFileUrlForMarkdownPreview,

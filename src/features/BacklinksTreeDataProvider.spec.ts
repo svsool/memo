@@ -10,7 +10,7 @@ import {
   getWorkspaceFolder,
   toPlainObject,
   updateMemoConfigProperty,
-  getConfigProperty,
+  getMemoConfigProperty,
 } from '../test/testUtils';
 
 const getChildren = async () => {
@@ -387,7 +387,7 @@ describe('BacklinksTreeDataProvider', () => {
 
     await window.showTextDocument(doc);
 
-    expect(getConfigProperty('backlinksPanel.collapseParentItems', null)).toBe(false);
+    expect(getMemoConfigProperty('backlinksPanel.collapseParentItems', null)).toBe(false);
 
     expect((await getChildren()).every((child) => child.collapsibleState === 2)).toBe(true);
   });

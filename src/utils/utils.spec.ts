@@ -23,7 +23,7 @@ import {
   normalizeSlashes,
   getWorkspaceFolder,
   getWorkspaceCache,
-  getConfigProperty,
+  getMemoConfigProperty,
   matchAll,
   cacheWorkspace,
   cacheUris,
@@ -819,13 +819,13 @@ describe('getWorkspaceFolder()', () => {
   });
 });
 
-describe('getConfigProperty()', () => {
+describe('getMemoConfigProperty()', () => {
   it('should return config property', () => {
-    expect(getConfigProperty('linksOnHoverPreview.imageMaxHeight', null)).toBe('200');
+    expect(getMemoConfigProperty('linksOnHoverPreview.imageMaxHeight', null)).toBe('200');
   });
 
   it('should return default property on getting unknown config property', () => {
-    expect(getConfigProperty('unknownProperty', 'default')).toBe('default');
+    expect(getMemoConfigProperty('unknownProperty', 'default')).toBe('default');
   });
 });
 

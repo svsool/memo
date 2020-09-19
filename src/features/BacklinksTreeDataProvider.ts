@@ -8,7 +8,7 @@ import {
   getWorkspaceFolder,
   trimSlashes,
   sortPaths,
-  getConfigProperty,
+  getMemoConfigProperty,
 } from '../utils';
 import { FoundRefT } from '../types';
 
@@ -58,7 +58,7 @@ export default class BacklinksTreeDataProvider implements vscode.TreeDataProvide
         return [];
       }
 
-      const collapsibleState = getConfigProperty('backlinksPanel.collapseParentItems', false)
+      const collapsibleState = getMemoConfigProperty('backlinksPanel.collapseParentItems', false)
         ? vscode.TreeItemCollapsibleState.Collapsed
         : vscode.TreeItemCollapsibleState.Expanded;
 
