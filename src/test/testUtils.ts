@@ -116,8 +116,12 @@ const getDefaultConfigProperties = (): {
   return require('../../package.json').contributes.configuration.properties;
 };
 
-export const updateConfigProperty = async (property: string, value: unknown) => {
-  await workspace.getConfiguration().update(property, value, ConfigurationTarget.Workspace);
+export const updateConfigProperty = async (
+  property: string,
+  value: unknown,
+  target = ConfigurationTarget.Workspace,
+) => {
+  await workspace.getConfiguration().update(property, value, target);
 };
 
 export const updateMemoConfigProperty = async (property: string, value: unknown) =>

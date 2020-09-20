@@ -1,55 +1,58 @@
-import { window, Selection, workspace, Range, Position, Uri } from 'vscode';
+import { Position, Range, Selection, Uri, window, workspace } from 'vscode';
 import fs from 'fs';
 import path from 'path';
 
 import {
-  createFile,
-  rndName,
   cleanWorkspace,
   closeEditorsAndCleanWorkspace,
+  createFile,
   openTextDocument,
+  rndName,
   toPlainObject,
+  updateConfigProperty,
 } from '../test/testUtils';
+import * as utils from './utils';
 import {
+  addCachedRefs,
+  cacheRefs,
+  cacheUris,
+  cacheWorkspace,
+  cleanWorkspaceCache,
   containsImageExt,
   containsMarkdownExt,
   containsOtherKnownExts,
   containsUnknownExt,
-  fsPathToRef,
-  trimLeadingSlash,
-  trimTrailingSlash,
-  trimSlashes,
-  isLongRef,
-  normalizeSlashes,
-  getWorkspaceFolder,
-  getWorkspaceCache,
-  getMemoConfigProperty,
-  matchAll,
-  cacheWorkspace,
-  cacheUris,
-  cacheRefs,
-  addCachedRefs,
-  removeCachedRefs,
-  cleanWorkspaceCache,
-  getRefUriUnderCursor,
-  getReferenceAtPosition,
+  ensureDirectoryExists,
   escapeForRegExp,
+  extractDanglingRefs,
   extractEmbedRefs,
-  parseRef,
-  replaceRefs,
+  extractExt,
+  findAllUrisWithUnknownExts,
+  findDanglingRefsByFsPath,
+  findFilesByExts,
+  findNonIgnoredFiles,
   findReferences,
+  findUriByRef,
+  fsPathToRef,
+  getConfigProperty,
   getFileUrlForMarkdownPreview,
   getImgUrlForMarkdownPreview,
+  getMemoConfigProperty,
+  getReferenceAtPosition,
+  getRefUriUnderCursor,
+  getWorkspaceCache,
+  getWorkspaceFolder,
+  isLongRef,
   isUncPath,
-  findFilesByExts,
-  findAllUrisWithUnknownExts,
-  extractExt,
-  findUriByRef,
-  ensureDirectoryExists,
-  extractDanglingRefs,
-  findDanglingRefsByFsPath,
+  matchAll,
+  normalizeSlashes,
+  parseRef,
+  removeCachedRefs,
+  replaceRefs,
+  trimLeadingSlash,
+  trimSlashes,
+  trimTrailingSlash,
 } from './utils';
-import * as utils from './utils';
 
 describe('containsImageExt()', () => {
   test.each(['png', 'jpg', 'jpeg', 'gif'])(
@@ -1532,5 +1535,67 @@ describe('findDanglingRefsByFsPath()', () => {
     await editor.edit((edit) => edit.delete(new Range(new Position(0, 0), new Position(2, 0))));
 
     expect(await findDanglingRefsByFsPath(getWorkspaceCache().markdownUris)).toEqual({});
+  });
+});
+
+describe('findNonIgnoredFiles()', () => {
+  beforeEach(closeEditorsAndCleanWorkspace);
+
+  afterEach(closeEditorsAndCleanWorkspace);
+
+  it('should find non-ignored files', async () => {
+    const prevConfig = getConfigProperty('search.exclude', {});
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    await updateConfigProperty('search.exclude', { '**/search-ignored': true });
+
+    const allowedName = rndName();
+    const ignoredName = rndName();
+
+    await createFile(`${allowedName}.md`);
+    await createFile(`search-ignored/some-package/${ignoredName}.md`);
+
+    const files = await findNonIgnoredFiles('**/*.md');
+
+    expect(files).toHaveLength(1);
+    expect(path.basename(files[0].fsPath)).toBe(`${allowedName}.md`);
+
+    await updateConfigProperty('search.exclude', prevConfig);
+  });
+
+  describe('when exclude param passed explicitly', () => {
+    it('should find non-ignored files', async () => {
+      const allowedName = rndName();
+      const ignoredName = rndName();
+
+      await createFile(`${allowedName}.md`);
+      await createFile(`search-ignored/some-package/${ignoredName}.md`);
+
+      const files = await findNonIgnoredFiles('**/*.md', '**/search-ignored');
+
+      expect(files).toHaveLength(1);
+      expect(path.basename(files[0].fsPath)).toBe(`${allowedName}.md`);
+    });
+  });
+
+  describe('when exclude param passed explicitly and search.exclude set', () => {
+    it('should find non-ignored files', async () => {
+      const prevConfig = getConfigProperty('search.exclude', {});
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      await updateConfigProperty('search.exclude', { '**/search-ignored': true });
+
+      const allowedName = rndName();
+      const ignoredName = rndName();
+
+      await createFile(`${allowedName}.md`);
+      await createFile(`search-ignored/some-package/${ignoredName}.md`);
+      await createFile(`search-ignored-2/some-package/${ignoredName}.md`);
+
+      const files = await findNonIgnoredFiles('**/*.md', '**/search-ignored-2');
+
+      expect(files).toHaveLength(1);
+      expect(path.basename(files[0].fsPath)).toBe(`${allowedName}.md`);
+
+      await updateConfigProperty('search.exclude', prevConfig);
+    });
   });
 });

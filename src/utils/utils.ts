@@ -1,4 +1,4 @@
-import vscode, { workspace } from 'vscode';
+import vscode, { CancellationToken, GlobPattern, Uri, workspace } from 'vscode';
 import path from 'path';
 import { sort as sortPaths } from 'cross-path-sort';
 import fs from 'fs';
@@ -158,9 +158,9 @@ const workspaceCache: WorkspaceCache = {
 export const getWorkspaceCache = (): WorkspaceCache => workspaceCache;
 
 export const cacheUris = async () => {
-  const markdownUris = await vscode.workspace.findFiles('**/*.md');
-  const imageUris = await vscode.workspace.findFiles(`**/*.{${imageExts.join(',')}}`);
-  const otherUris = await vscode.workspace.findFiles(`**/*.{${otherExts.join(',')}}`);
+  const markdownUris = await findNonIgnoredFiles('**/*.md');
+  const imageUris = await findNonIgnoredFiles(`**/*.{${imageExts.join(',')}}`);
+  const otherUris = await findNonIgnoredFiles(`**/*.{${otherExts.join(',')}}`);
 
   workspaceCache.markdownUris = sortPaths(markdownUris, { pathKey: 'path', shallowFirst: true });
   workspaceCache.imageUris = sortPaths(imageUris, { pathKey: 'path', shallowFirst: true });
@@ -230,8 +230,12 @@ export const cleanWorkspaceCache = () => {
 export const getWorkspaceFolder = (): string | undefined =>
   vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders[0].uri.fsPath;
 
+export function getConfigProperty<T>(property: string, fallback: T): T {
+  return vscode.workspace.getConfiguration().get(property, fallback);
+}
+
 export function getMemoConfigProperty<T>(property: string, fallback: T): T {
-  return vscode.workspace.getConfiguration().get(`memo.${property}`, fallback);
+  return getConfigProperty(`memo.${property}`, fallback);
 }
 
 export const matchAll = (pattern: RegExp, text: string): Array<RegExpMatchArray> => {
@@ -345,7 +349,7 @@ const uncPathRegex = /^[\\\/]{2,}[^\\\/]+[\\\/]+[^\\\/]+/;
 export const isUncPath = (path: string): boolean => uncPathRegex.test(path);
 
 export const findFilesByExts = async (exts: string[]): Promise<vscode.Uri[]> =>
-  await workspace.findFiles(`**/*.{${exts.join(',')}}`);
+  await findNonIgnoredFiles(`**/*.{${exts.join(',')}}`);
 
 export const findAllUrisWithUnknownExts = async (uris: vscode.Uri[]) => {
   const unknownExts = Array.from(
@@ -471,4 +475,21 @@ export const replaceRefs = ({
   );
 
   return updatedOnce ? nextContent : null;
+};
+
+export const findNonIgnoredFiles = async (
+  include: GlobPattern,
+  excludeParam?: string | null,
+  maxResults?: number,
+  token?: CancellationToken,
+): Promise<Uri[]> => {
+  const exclude = [
+    ...Object.keys(getConfigProperty('search.exclude', {})),
+    ...Object.keys(getConfigProperty('file.exclude', {})),
+    ...[excludeParam],
+  ].join(',');
+
+  const files = await workspace.findFiles(include, `{${exclude}}`, maxResults, token);
+
+  return files;
 };

@@ -34,6 +34,11 @@ export const activate = async (context: vscode.ExtensionContext) => {
 
   context.subscriptions.push(
     ...commands,
+    vscode.workspace.onDidChangeConfiguration(async (configChangeEvent) => {
+      if (configChangeEvent.affectsConfiguration('search.exclude')) {
+        await cacheWorkspace();
+      }
+    }),
     vscode.window.createTreeView('memo.backlinksPanel', {
       treeDataProvider: backlinksTreeDataProvider,
       showCollapseAll: true,
