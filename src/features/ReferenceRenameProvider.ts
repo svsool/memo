@@ -7,6 +7,7 @@ import {
   getWorkspaceCache,
   isLongRef,
   getWorkspaceFolder,
+  containsMarkdownExt,
   containsUnknownExt,
   findFilesByExts,
   extractExt,
@@ -77,7 +78,10 @@ export default class ReferenceRenameProvider implements RenameProvider {
       const fsPath = findUriByRef(augmentedUris, ref)?.fsPath;
 
       if (fsPath) {
-        const newRelativePath = `${newName}${path.parse(newName).ext === '' ? '.md' : ''}`;
+        const ext = path.parse(newName).ext;
+        const newRelativePath = `${newName}${
+          ext === '' || (containsUnknownExt(newName) && containsMarkdownExt(fsPath)) ? '.md' : ''
+        }`;
         const newUri = Uri.file(
           isLongRef(ref)
             ? path.join(getWorkspaceFolder()!, newRelativePath)

@@ -1,8 +1,9 @@
-import vscode, { Position, window } from 'vscode';
+import vscode, { Position, window, workspace } from 'vscode';
 
 import ReferenceRenameProvider from './ReferenceRenameProvider';
 import {
   createFile,
+  fileExists,
   rndName,
   openTextDocument,
   closeEditorsAndCleanWorkspace,
@@ -14,11 +15,11 @@ describe('ReferenceRenameProvider', () => {
   afterEach(closeEditorsAndCleanWorkspace);
 
   it('should not provide rename for dangling link', async () => {
-    const filename = `${rndName()}.md`;
+    const docName = `${rndName()}.md`;
 
-    await createFile(filename, '[[nonexistenlink]]');
+    await createFile(docName, '[[nonexistenlink]]');
 
-    const doc = await openTextDocument(filename);
+    const doc = await openTextDocument(docName);
 
     const referenceRenameProvider = new ReferenceRenameProvider();
 
@@ -28,11 +29,11 @@ describe('ReferenceRenameProvider', () => {
   });
 
   it('should not provide rename for file with unsaved changes', async () => {
-    const filename = `${rndName()}.md`;
+    const docName = `${rndName()}.md`;
 
-    await createFile(filename, '[[nonexistenlink]]');
+    await createFile(docName, '[[nonexistenlink]]');
 
-    const doc = await openTextDocument(filename);
+    const doc = await openTextDocument(docName);
 
     const editor = await window.showTextDocument(doc);
 
@@ -46,11 +47,11 @@ describe('ReferenceRenameProvider', () => {
   });
 
   it('should not provide rename for multiline link', async () => {
-    const filename = `${rndName()}.md`;
+    const docName = `${rndName()}.md`;
 
-    await createFile(filename, '[[nonexisten\nlink]]');
+    await createFile(docName, '[[nonexisten\nlink]]');
 
-    const doc = await openTextDocument(filename);
+    const doc = await openTextDocument(docName);
 
     const referenceRenameProvider = new ReferenceRenameProvider();
 
@@ -60,13 +61,13 @@ describe('ReferenceRenameProvider', () => {
   });
 
   it('should provide rename for a link to the existing file', async () => {
-    const name0 = rndName();
-    const name1 = rndName();
+    const docName = rndName();
+    const existingName = rndName();
 
-    await createFile(`${name0}.md`, `[[${name1}]]`);
-    await createFile(`${name1}.md`);
+    await createFile(`${docName}.md`, `[[${existingName}]]`);
+    await createFile(`${existingName}.md`);
 
-    const doc = await openTextDocument(`${name0}.md`);
+    const doc = await openTextDocument(`${docName}.md`);
 
     const referenceRenameProvider = new ReferenceRenameProvider();
 
@@ -86,13 +87,13 @@ describe('ReferenceRenameProvider', () => {
   });
 
   it('should provide rename for a link to the existing file with an unknown extension', async () => {
-    const name0 = rndName();
-    const name1 = rndName();
+    const docName = rndName();
+    const existingFilenameWithUnknownExt = `${rndName()}.unknown`;
 
-    await createFile(`${name0}.md`, `[[${name1}.unknown]]`);
-    await createFile(`${name1}.unknown`);
+    await createFile(`${docName}.md`, `[[${existingFilenameWithUnknownExt}]]`);
+    await createFile(existingFilenameWithUnknownExt);
 
-    const doc = await openTextDocument(`${name0}.md`);
+    const doc = await openTextDocument(`${docName}.md`);
 
     const referenceRenameProvider = new ReferenceRenameProvider();
 
@@ -111,56 +112,98 @@ describe('ReferenceRenameProvider', () => {
     `);
   });
 
-  it('should provide rename edit', async () => {
-    const name0 = rndName();
-    const name1 = rndName();
-    const newLinkName = rndName();
+  it('should provide rename edit and apply it to workspace', async () => {
+    const docName = rndName();
+    const actualName = rndName();
+    const nextName = rndName();
 
-    await createFile(`${name0}.md`, `[[${name1}]]`);
-    await createFile(`${name1}.md`);
+    await createFile(`${docName}.md`, `[[${actualName}]]`);
+    await createFile(`${actualName}.md`);
 
-    const doc = await openTextDocument(`${name0}.md`);
+    const doc = await openTextDocument(`${docName}.md`);
 
     const referenceRenameProvider = new ReferenceRenameProvider();
 
     const workspaceEdit = await referenceRenameProvider.provideRenameEdits(
       doc,
       new vscode.Position(0, 2),
-      newLinkName,
+      nextName,
     );
 
-    expect(workspaceEdit!).not.toBeNull();
+    expect(fileExists(`${docName}.md`)).toBe(true);
+    expect(fileExists(`${actualName}.md`)).toBe(true);
+
+    await workspace.applyEdit(workspaceEdit);
+
+    expect(fileExists(`${docName}.md`)).toBe(true);
+    expect(fileExists(`${actualName}.md`)).toBe(false);
+    expect(fileExists(`${nextName}.md`)).toBe(true);
   });
 
   it('should provide rename edit for a link to the existing file with unknown extension', async () => {
-    const name0 = rndName();
-    const name1 = rndName();
-    const newLinkName = rndName();
+    const docName = rndName();
+    const actualName = rndName();
+    const nextName = rndName();
 
-    await createFile(`${name0}.md`, `[[${name1}.unknown]]`);
-    await createFile(`${name1}.unknown`);
+    await createFile(`${docName}.md`, `[[${actualName}.unknown]]`);
+    await createFile(`${actualName}.unknown`);
 
-    const doc = await openTextDocument(`${name0}.md`);
+    const doc = await openTextDocument(`${docName}.md`);
 
     const referenceRenameProvider = new ReferenceRenameProvider();
 
     const workspaceEdit = await referenceRenameProvider.provideRenameEdits(
       doc,
       new vscode.Position(0, 2),
-      newLinkName,
+      nextName,
     );
 
-    expect(workspaceEdit!).not.toBeNull();
+    expect(fileExists(`${docName}.md`)).toBe(true);
+    expect(fileExists(`${actualName}.unknown`)).toBe(true);
+
+    await workspace.applyEdit(workspaceEdit);
+
+    expect(fileExists(`${docName}.md`)).toBe(true);
+    expect(fileExists(`${actualName}.unknown`)).toBe(false);
+    expect(fileExists(`${nextName}.md`)).toBe(true);
+  });
+
+  it('should provide rename for markdown file with a dot in the filename', async () => {
+    const docName = rndName();
+    const actualName = rndName();
+    const nextNameWithDot = `${rndName()} v1.0 release`;
+
+    await createFile(`${docName}.md`, `[[${actualName}]]`);
+    await createFile(`${actualName}.md`);
+
+    const doc = await openTextDocument(`${docName}.md`);
+
+    const referenceRenameProvider = new ReferenceRenameProvider();
+
+    const workspaceEdit = await referenceRenameProvider.provideRenameEdits(
+      doc,
+      new vscode.Position(0, 2),
+      nextNameWithDot,
+    );
+
+    expect(fileExists(`${docName}.md`)).toBe(true);
+    expect(fileExists(`${actualName}.md`)).toBe(true);
+
+    await workspace.applyEdit(workspaceEdit);
+
+    expect(fileExists(`${docName}.md`)).toBe(true);
+    expect(fileExists(`${actualName}.md`)).toBe(false);
+    expect(fileExists(`${nextNameWithDot}.md`)).toBe(true);
   });
 
   it('should not provide rename for a link within code span', async () => {
-    const name0 = rndName();
-    const name1 = rndName();
+    const docName = rndName();
+    const someLink = rndName();
 
-    await createFile(`${name0}.md`, `\`[[${name1}]]\``);
-    await createFile(`${name1}.md`);
+    await createFile(`${docName}.md`, `\`[[${someLink}]]\``);
+    await createFile(`${someLink}.md`);
 
-    const doc = await openTextDocument(`${name0}.md`);
+    const doc = await openTextDocument(`${docName}.md`);
 
     const referenceRenameProvider = new ReferenceRenameProvider();
 
@@ -170,22 +213,22 @@ describe('ReferenceRenameProvider', () => {
   });
 
   it('should not provide rename for a link within fenced code block', async () => {
-    const name0 = rndName();
-    const name1 = rndName();
+    const docName = rndName();
+    const someLink = rndName();
 
     await createFile(
-      `${name0}.md`,
+      `${docName}.md`,
       `
     \`\`\`
     Preceding text
-    [[${name1}]]
+    [[${someLink}]]
     Following text
     \`\`\`
     `,
     );
-    await createFile(`${name1}.md`);
+    await createFile(`${someLink}.md`);
 
-    const doc = await openTextDocument(`${name0}.md`);
+    const doc = await openTextDocument(`${docName}.md`);
 
     const referenceRenameProvider = new ReferenceRenameProvider();
 

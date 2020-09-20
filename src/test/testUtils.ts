@@ -73,6 +73,18 @@ export const createFile = async (
   return Uri.file(path.join(workspaceFolder, ...filename.split('/')));
 };
 
+export const fileExists = (filename: string) => {
+  const workspaceFolder = utils.getWorkspaceFolder();
+
+  if (!workspaceFolder) {
+    return;
+  }
+
+  const filepath = path.join(workspaceFolder, ...filename.split('/'));
+
+  return fs.existsSync(filepath);
+};
+
 export const removeFile = (filename: string) =>
   fs.unlinkSync(path.join(utils.getWorkspaceFolder()!, ...filename.split('/')));
 
