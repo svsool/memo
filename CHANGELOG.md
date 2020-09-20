@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0](https://github.com/svsool/vscode-memo/compare/v0.1.14...v0.2.0) (2020-09-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* memo.imagePreviewMaxHeight -> memo.imagePreviewMaxHeight
+memo.collapseBacklinksPanelItems -> memo.backlinksPanel.collapseParentItems
+
+### Features
+
+* Take search.exclude and file.exclude settings into account when caching workspace [#116](https://github.com/svsool/vscode-memo/issues/116) ([81643ae](https://github.com/svsool/vscode-memo/commit/81643ae0194ff5093f69a6f422406172a5afbae1))
+
+
+### Bug Fixes
+
+* Change backlinks panel id namespace to align with settings ([4e9e112](https://github.com/svsool/vscode-memo/commit/4e9e1121f5192179ebc22a757cc4ca5ff32466f9))
+* **deps:** Bump dependencies ([0c1b5d1](https://github.com/svsool/vscode-memo/commit/0c1b5d1d390fb2b1f344c6705675cce0ef06df6c))
+* **deps:** Update dependencies ([ed21834](https://github.com/svsool/vscode-memo/commit/ed21834c975c8c5586d257a32b8df307c4b41fde))
+* **deps:** Update dependencies ([5eafc13](https://github.com/svsool/vscode-memo/commit/5eafc131b288fc184f7435d6295ba75db640371a))
+
+
+* Rename configuration options ([ddfcafd](https://github.com/svsool/vscode-memo/commit/ddfcafd7b19992c4e3ffd7ff330acec1fbba6137))
+
 ### [0.1.14](https://github.com/svsool/vscode-memo/compare/v0.1.13...v0.1.14) (2020-08-09)
 
 
