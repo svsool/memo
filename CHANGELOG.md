@@ -2,7 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-See all changes [here](https://github.com/svsool/vscode-memo/releases).
+### [0.2.1](https://github.com/svsool/vscode-memo/compare/v0.2.0...v0.2.1) (2020-09-20)
+
+
+### Bug Fixes
+
+* Infer previous extension on renaming to unknown extension [#120](https://github.com/svsool/vscode-memo/issues/120) ([1aad3f0](https://github.com/svsool/vscode-memo/commit/1aad3f0ee87834db2462e7ec643cbfcab1162cb9))
 
 ## [0.2.0](https://github.com/svsool/vscode-memo/compare/v0.1.14...v0.2.0) (2020-09-20)
 
