@@ -38,7 +38,7 @@ describe('createDailyQuickPick()', () => {
 
     expect(quickPickItem).not.toBeFalsy();
 
-    expect([...quickPickItem.label][0]).toMatchInlineSnapshot(`"✓"`);
+    expect([...quickPickItem.label][0]).toBe('✓');
   });
 
   it('should return all items with an indicator about missing note', async () => {
@@ -46,7 +46,7 @@ describe('createDailyQuickPick()', () => {
 
     expect(dailyQuickPick.items.every((item) => item.description === 'Missing')).toBe(true);
 
-    expect([...dailyQuickPick.items[0].label][0]).toMatchInlineSnapshot(`"✕"`);
+    expect([...dailyQuickPick.items[0].label][0]).toBe('✕');
   });
 
   it('should be able to provide items older than one month', async () => {
