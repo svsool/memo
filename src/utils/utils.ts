@@ -486,7 +486,7 @@ export const findNonIgnoredFiles = async (
   const exclude = [
     ...Object.keys(getConfigProperty('search.exclude', {})),
     ...Object.keys(getConfigProperty('file.exclude', {})),
-    ...[excludeParam],
+    ...(typeof excludeParam === 'string' ? [excludeParam] : []),
   ].join(',');
 
   const files = await workspace.findFiles(include, `{${exclude}}`, maxResults, token);
