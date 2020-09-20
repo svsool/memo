@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+See all changes [here](https://github.com/svsool/vscode-memo/releases).
+
 ## [0.2.0](https://github.com/svsool/vscode-memo/compare/v0.1.14...v0.2.0) (2020-09-20)
 
 
@@ -18,9 +20,6 @@ memo.collapseBacklinksPanelItems -> memo.backlinksPanel.collapseParentItems
 ### Bug Fixes
 
 * Change backlinks panel id namespace to align with settings ([4e9e112](https://github.com/svsool/vscode-memo/commit/4e9e1121f5192179ebc22a757cc4ca5ff32466f9))
-* **deps:** Bump dependencies ([0c1b5d1](https://github.com/svsool/vscode-memo/commit/0c1b5d1d390fb2b1f344c6705675cce0ef06df6c))
-* **deps:** Update dependencies ([ed21834](https://github.com/svsool/vscode-memo/commit/ed21834c975c8c5586d257a32b8df307c4b41fde))
-* **deps:** Update dependencies ([5eafc13](https://github.com/svsool/vscode-memo/commit/5eafc131b288fc184f7435d6295ba75db640371a))
 
 
 * Rename configuration options ([ddfcafd](https://github.com/svsool/vscode-memo/commit/ddfcafd7b19992c4e3ffd7ff330acec1fbba6137))
@@ -40,7 +39,6 @@ memo.collapseBacklinksPanelItems -> memo.backlinksPanel.collapseParentItems
 * Fix findUriByRef logic to use relative paths ([a6dbd2c](https://github.com/svsool/vscode-memo/commit/a6dbd2c38af470499e364f29425eb82a0df51b6c))
 * Fix path passed to del.sync in cleanWorkspace utility ([f60575c](https://github.com/svsool/vscode-memo/commit/f60575c2d1a749bf9817f0dabfdc16e6d9ee1db8))
 * Make links working better with dot files and explicit md extension in the link ([51d65f5](https://github.com/svsool/vscode-memo/commit/51d65f594978d30ee049feda710c3ce52ab64bad))
-* **deps:** Upgrade dependencies ([5cf3f42](https://github.com/svsool/vscode-memo/commit/5cf3f4222af9293596fecb47674c04e605110ebe))
 
 ### [0.1.13](https://github.com/svsool/vscode-memo/compare/v0.1.12...v0.1.13) (2020-08-01)
 
