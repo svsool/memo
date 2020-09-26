@@ -84,7 +84,7 @@
         "command": "editor.action.openLink",
         "key": "ctrl+enter",
         "mac": "cmd+enter",
-        "when": "editorTextFocus && editorLangId == markdown && memo:refUnderCursorExists"
+        "when": "editorTextFocus && editorLangId == markdown"
       }
     ],
     "menus": {
