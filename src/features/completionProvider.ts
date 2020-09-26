@@ -11,7 +11,13 @@ import {
 import path from 'path';
 import groupBy from 'lodash.groupby';
 
-import { getWorkspaceCache, fsPathToRef, containsImageExt, containsOtherKnownExts } from '../utils';
+import {
+  getWorkspaceCache,
+  fsPathToRef,
+  containsImageExt,
+  containsOtherKnownExts,
+  getMemoConfigProperty,
+} from '../utils';
 
 const padWithZero = (n: number): string => (n < 10 ? '0' + n : String(n));
 
@@ -71,7 +77,9 @@ export const provideCompletionItems = (document: TextDocument, position: Positio
 
     const item = new CompletionItem(longRef, CompletionItemKind.File);
 
-    item.insertText = isFirstUriInGroup ? shortRef : longRef;
+    const useLongRefsAlways = getMemoConfigProperty('linkBehavior.useLongRefsAlways', false);
+
+    item.insertText = useLongRefsAlways || !isFirstUriInGroup ? longRef : shortRef;
 
     // prepend index with 0, so a lexicographic sort doesn't mess things up
     item.sortText = padWithZero(index);
