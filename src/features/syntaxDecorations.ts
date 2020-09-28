@@ -15,6 +15,7 @@ import {
   isMdEditor,
   mathEnvCheck,
   refPattern,
+  getMemoConfigProperty,
 } from '../utils';
 
 /*
@@ -125,6 +126,10 @@ const updateDecorations = (textEditor?: TextEditor) => {
 };
 
 export const activate = (context: ExtensionContext) => {
+  if (!getMemoConfigProperty('syntaxDecorations.enable', true)) {
+    return;
+  }
+
   context.subscriptions.push(
     window.onDidChangeActiveTextEditor(updateDecorations),
     workspace.onDidChangeTextDocument((event) => {
