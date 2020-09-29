@@ -192,6 +192,6 @@
     "markdown-it": "^11.0.1",
     "markdown-it-regex": "^0.2.0",
     "moment": "^2.29.0",
-    "open": "^7.2.1"
+    "open": "^7.3.0"
   }
 }
