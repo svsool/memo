@@ -47,6 +47,10 @@ export const getDecorations = (textEditor: TextEditor): { [decorTypeName: string
     decors[decorTypeName] = [];
   });
 
+  if (!getMemoConfigProperty('syntaxDecorations.enable', true)) {
+    return decors;
+  }
+
   doc
     .getText()
     .split(/\r?\n/g)
@@ -126,10 +130,6 @@ const updateDecorations = (textEditor?: TextEditor) => {
 };
 
 export const activate = (context: ExtensionContext) => {
-  if (!getMemoConfigProperty('syntaxDecorations.enable', true)) {
-    return;
-  }
-
   context.subscriptions.push(
     window.onDidChangeActiveTextEditor(updateDecorations),
     workspace.onDidChangeTextDocument((event) => {

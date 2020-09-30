@@ -86,7 +86,7 @@
         "memo.syntaxDecorations.enable": {
           "default": true,
           "scope": "resource",
-          "description": "Enable decorations for wiki-links and other special syntax. (Requires restart)",
+          "description": "Enable decorations for wiki-links and other special syntax.",
           "type": "boolean"
         }
       }
