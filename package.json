@@ -80,13 +80,13 @@
         "memo.linkBehavior.useLongRefsAlways": {
           "default": false,
           "scope": "resource",
-		  "description": "Include folder paths into the created links. Paths are relative to the workspace root.",
+          "description": "Include folder paths into the created links. Paths are relative to the workspace root.",
           "type": "boolean"
-		},
+        },
         "memo.syntaxDecorations.enable": {
           "default": true,
           "scope": "resource",
-          "description": "Enable decorations for wiki-links and other special syntax.",
+          "description": "Enable decorations for links.",
           "type": "boolean"
         }
       }
