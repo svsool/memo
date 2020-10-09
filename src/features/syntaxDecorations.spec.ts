@@ -9,7 +9,7 @@ import {
   updateMemoConfigProperty,
 } from '../test/testUtils';
 
-describe.only('getDecorations', () => {
+describe('getDecorations', () => {
   beforeEach(closeEditorsAndCleanWorkspace);
 
   afterEach(closeEditorsAndCleanWorkspace);
