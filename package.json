@@ -83,10 +83,10 @@
           "description": "Include folder paths into the created links. Paths are relative to the workspace root.",
           "type": "boolean"
         },
-        "memo.syntaxDecorations.enable": {
+        "memo.enableSyntaxDecorations": {
           "default": true,
           "scope": "resource",
-          "description": "Enable decorations for links.",
+          "description": "Enable syntax decorations for links in the editor.",
           "type": "boolean"
         }
       }
