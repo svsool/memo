@@ -34,7 +34,7 @@ describe('getDecorations', () => {
   it('should return no decorations when decorations are disabled', async () => {
     const noteFilename = `${rndName()}.md`;
 
-    await updateMemoConfigProperty('syntaxDecorations.enable', false);
+    await updateMemoConfigProperty('enableSyntaxDecorations', false);
     await createFile(noteFilename, '[[1234512345]]');
 
     const doc = await openTextDocument(noteFilename);

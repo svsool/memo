@@ -47,7 +47,7 @@ export const getDecorations = (textEditor: TextEditor): { [decorTypeName: string
     decors[decorTypeName] = [];
   });
 
-  if (!getMemoConfigProperty('syntaxDecorations.enable', true)) {
+  if (!getMemoConfigProperty('enableSyntaxDecorations', true)) {
     return decors;
   }
 
