@@ -4,7 +4,7 @@ This help can be read using any Markdown reader. For instance, GitHub UI, howeve
 
 Memo is a markdown knowledge base with bidirectional links built on top of [VSCode](https://github.com/microsoft/vscode).
 
-One of the main things that Memo enables is creating link in Markdown files. You can create links that refer to the same note, such as this one [[README|Start here]] or refer to any other [[Note]]. Use (cmd or ctrl) + click on the [[Note]] to create a new note to the disk on the fly.
+One of the main things that Memo enables is creating links in the Markdown files. You can create links that refer to the same note, such as this one [[README|Start here]] or refer to any other [[Note]]. Use (cmd or ctrl) + click on the [[Note]] to create a new note to the disk on the fly.
 
 Memo supports everything that VSCode Markdown plugin does and many other Markdown plugins from the marketplace. There are [a lot](https://marketplace.visualstudio.com/search?term=tag%3Amarkdown&target=VSCode&category=All%20categories&sortBy=Relevance) of plugins to choose from 🙂. Enjoy discovering those that suits your writing practices most!
 
