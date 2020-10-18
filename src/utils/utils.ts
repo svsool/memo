@@ -234,6 +234,31 @@ export function getConfigProperty<T>(property: string, fallback: T): T {
   return vscode.workspace.getConfiguration().get(property, fallback);
 }
 
+export function getMemoConfigProperty(
+  property: 'links.format',
+  fallback: 'shortestPathWhenPossible',
+): 'shortestPathWhenPossible' | 'absolutePathInWorkspace';
+
+export function getMemoConfigProperty(
+  property: 'backlinksPanel.collapseParentItems',
+  fallback: null | boolean,
+): boolean;
+
+export function getMemoConfigProperty(
+  property: 'backlinksPanel.collapseParentItems',
+  fallback: null | boolean,
+): boolean;
+
+export function getMemoConfigProperty(
+  property: 'linksOnHoverPreview.imageMaxHeight',
+  fallback: null | number,
+): number;
+
+export function getMemoConfigProperty(
+  property: 'enableSyntaxDecorations',
+  fallback: boolean,
+): boolean;
+
 export function getMemoConfigProperty<T>(property: string, fallback: T): T {
   return getConfigProperty(`memo.${property}`, fallback);
 }

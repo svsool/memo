@@ -77,11 +77,14 @@
           "description": "Collapse parent items by default.",
           "type": "boolean"
         },
-        "memo.linkBehavior.useLongRefsAlways": {
-          "default": false,
-          "scope": "resource",
-          "description": "Include folder paths into the created links. Paths are relative to the workspace root.",
-          "type": "boolean"
+        "memo.links.format": {
+          "enum": [
+            "shortestPathWhenPossible",
+            "absolutePathInWorkspace"
+          ],
+          "default": "shortestPathWhenPossible",
+          "description": "Link format to insert on autocomplete and rename.",
+          "scope": "resource"
         },
         "memo.enableSyntaxDecorations": {
           "default": true,
