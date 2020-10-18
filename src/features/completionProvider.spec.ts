@@ -7,6 +7,7 @@ import {
   cacheWorkspace,
   openTextDocument,
   closeEditorsAndCleanWorkspace,
+  updateMemoConfigProperty,
 } from '../test/testUtils';
 
 describe('provideCompletionItems()', () => {
@@ -212,5 +213,39 @@ describe('provideCompletionItems()', () => {
         label: 'folder1/long-dangling-ref',
       }),
     ]);
+  });
+
+  describe('with links.format === absolutePathInWorkspace', () => {
+    it('should provide only long links', async () => {
+      const name0 = `a-${rndName()}`;
+      const name1 = `b-${rndName()}`;
+
+      await updateMemoConfigProperty('links.format', 'absolutePathInWorkspace');
+
+      await createFile(`${name0}.md`);
+      await createFile(`/folder1/${name1}.md`);
+      await createFile(`/folder1/subfolder1/${name1}.md`);
+
+      await cacheWorkspace();
+
+      const doc = await openTextDocument(`${name0}.md`);
+
+      const editor = await window.showTextDocument(doc);
+
+      await editor.edit((edit) => edit.insert(new Position(0, 0), '[['));
+
+      const completionItems = provideCompletionItems(doc, new Position(0, 2));
+
+      console.log(JSON.stringify(completionItems, null, 2));
+
+      expect(completionItems).toEqual([
+        expect.objectContaining({ insertText: name0, label: name0 }),
+        expect.objectContaining({ insertText: `folder1/${name1}`, label: `folder1/${name1}` }),
+        expect.objectContaining({
+          insertText: `folder1/subfolder1/${name1}`,
+          label: `folder1/subfolder1/${name1}`,
+        }),
+      ]);
+    });
   });
 });

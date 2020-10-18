@@ -77,9 +77,10 @@ export const provideCompletionItems = (document: TextDocument, position: Positio
 
     const item = new CompletionItem(longRef, CompletionItemKind.File);
 
-    const useLongRefsAlways = getMemoConfigProperty('linkBehavior.useLongRefsAlways', false);
+    const linksFormat = getMemoConfigProperty('links.format', 'shortestPathWhenPossible');
 
-    item.insertText = useLongRefsAlways || !isFirstUriInGroup ? longRef : shortRef;
+    item.insertText =
+      linksFormat === 'absolutePathInWorkspace' || !isFirstUriInGroup ? longRef : shortRef;
 
     // prepend index with 0, so a lexicographic sort doesn't mess things up
     item.sortText = padWithZero(index);

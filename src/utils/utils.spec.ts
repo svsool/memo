@@ -828,7 +828,7 @@ describe('getMemoConfigProperty()', () => {
   });
 
   it('should return default property on getting unknown config property', () => {
-    expect(getMemoConfigProperty('unknownProperty', 'default')).toBe('default');
+    expect(getMemoConfigProperty('unknownProperty' as any, 'default' as any)).toBe('default');
   });
 });
 
