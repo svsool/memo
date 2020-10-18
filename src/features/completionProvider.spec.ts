@@ -215,7 +215,7 @@ describe('provideCompletionItems()', () => {
     ]);
   });
 
-  describe('with links.format === absolutePathInWorkspace', () => {
+  describe('with links.format = absolutePathInWorkspace', () => {
     it('should provide only long links', async () => {
       const name0 = `a-${rndName()}`;
       const name1 = `b-${rndName()}`;
