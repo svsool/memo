@@ -12,6 +12,7 @@ import {
   closeEditorsAndCleanWorkspace,
   cacheWorkspace,
   getWorkspaceCache,
+  updateMemoConfigProperty,
   waitForExpect,
 } from '../test/testUtils';
 
@@ -194,6 +195,32 @@ describe('fsWatcher feature', () => {
       const doc = await openTextDocument(`${noteName0}.md`);
 
       await waitForExpect(() => expect(doc.getText()).toBe(`[[${nextName}.gif]]`));
+    });
+
+    describe('with links.format = absolutePathInWorkspace', () => {
+      it('should update long ref with long ref on file rename', async () => {
+        const noteName0 = rndName();
+        const noteName1 = rndName();
+        const nextNoteName1 = rndName();
+
+        await updateMemoConfigProperty('links.format', 'absolutePathInWorkspace');
+
+        await createFile(`${noteName0}.md`, `[[folder1/${noteName1}]]`, false);
+        await createFile(`${noteName1}.md`, '', false);
+        await createFile(`/folder1/${noteName1}.md`, '', false);
+
+        const edit = new WorkspaceEdit();
+        edit.renameFile(
+          Uri.file(`${getWorkspaceFolder()}/folder1/${noteName1}.md`),
+          Uri.file(`${getWorkspaceFolder()}/folder1/${nextNoteName1}.md`),
+        );
+
+        await workspace.applyEdit(edit);
+
+        const doc = await openTextDocument(`${noteName0}.md`);
+
+        await waitForExpect(() => expect(doc.getText()).toBe(`[[folder1/${nextNoteName1}]]`));
+      });
     });
   });
 

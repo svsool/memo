@@ -15,6 +15,7 @@ import {
   cacheUris,
   addCachedRefs,
   removeCachedRefs,
+  getMemoConfigProperty,
 } from '../utils';
 
 const getBasename = (pathParam: string) => path.basename(pathParam).toLowerCase();
@@ -71,6 +72,8 @@ export const activate = (
         'Recursive links update on directory rename is currently not supported.',
       );
     }
+
+    const linksFormat = getMemoConfigProperty('links.format', 'shortestPathWhenPossible');
 
     const oldFsPaths = files.map(({ oldUri }) => oldUri.fsPath);
 
@@ -140,14 +143,12 @@ export const activate = (
         basePath: workspaceFolder,
         keepExt: preserveNewExtension,
       });
-      const oldUriIsShortRef = isFirstUriInGroup(
-        oldUri.fsPath,
-        oldUrisGroupedByBasename[getBasename(oldUri.fsPath)],
-      );
-      const newUriIsShortRef = isFirstUriInGroup(
-        newUri.fsPath,
-        newUrisGroupedByBasename[getBasename(newUri.fsPath)],
-      );
+      const oldUriIsShortRef =
+        linksFormat !== 'absolutePathInWorkspace' &&
+        isFirstUriInGroup(oldUri.fsPath, oldUrisGroupedByBasename[getBasename(oldUri.fsPath)]);
+      const newUriIsShortRef =
+        linksFormat !== 'absolutePathInWorkspace' &&
+        isFirstUriInGroup(newUri.fsPath, newUrisGroupedByBasename[getBasename(newUri.fsPath)]);
 
       if (!oldShortRef || !newShortRef || !oldLongRef || !newLongRef) {
         return;
