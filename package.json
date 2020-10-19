@@ -197,7 +197,7 @@
     "vscode-test": "^1.3.0",
     "wait-for-expect": "^3.0.2",
     "webpack": "^4.44.2",
-    "webpack-cli": "^3.3.12"
+    "webpack-cli": "^4.0.0"
   },
   "dependencies": {
     "cross-path-sort": "^1.0.0",
