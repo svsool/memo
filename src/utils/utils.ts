@@ -236,8 +236,8 @@ export function getConfigProperty<T>(property: string, fallback: T): T {
 
 export function getMemoConfigProperty(
   property: 'links.format',
-  fallback: 'shortestPathWhenPossible',
-): 'shortestPathWhenPossible' | 'absolutePathInWorkspace';
+  fallback: 'short',
+): 'short' | 'absolute';
 
 export function getMemoConfigProperty(
   property: 'backlinksPanel.collapseParentItems',

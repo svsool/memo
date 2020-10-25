@@ -73,7 +73,7 @@ export const activate = (
       );
     }
 
-    const linksFormat = getMemoConfigProperty('links.format', 'shortestPathWhenPossible');
+    const linksFormat = getMemoConfigProperty('links.format', 'short');
 
     const oldFsPaths = files.map(({ oldUri }) => oldUri.fsPath);
 
@@ -144,10 +144,10 @@ export const activate = (
         keepExt: preserveNewExtension,
       });
       const oldUriIsShortRef =
-        linksFormat !== 'absolutePathInWorkspace' &&
+        linksFormat !== 'absolute' &&
         isFirstUriInGroup(oldUri.fsPath, oldUrisGroupedByBasename[getBasename(oldUri.fsPath)]);
       const newUriIsShortRef =
-        linksFormat !== 'absolutePathInWorkspace' &&
+        linksFormat !== 'absolute' &&
         isFirstUriInGroup(newUri.fsPath, newUrisGroupedByBasename[getBasename(newUri.fsPath)]);
 
       if (!oldShortRef || !newShortRef || !oldLongRef || !newLongRef) {

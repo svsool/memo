@@ -215,12 +215,12 @@ describe('provideCompletionItems()', () => {
     ]);
   });
 
-  describe('with links.format = absolutePathInWorkspace', () => {
+  describe('with links.format = absolute', () => {
     it('should provide only long links', async () => {
       const name0 = `a-${rndName()}`;
       const name1 = `b-${rndName()}`;
 
-      await updateMemoConfigProperty('links.format', 'absolutePathInWorkspace');
+      await updateMemoConfigProperty('links.format', 'absolute');
 
       await createFile(`${name0}.md`);
       await createFile(`/folder1/${name1}.md`);
