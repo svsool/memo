@@ -237,4 +237,26 @@ describe('ReferenceHoverProvider', () => {
       ],
     });
   });
+
+  it('should provide hover for a link with escape symbol for the label', async () => {
+    const name0 = rndName();
+    const name1 = rndName();
+
+    await createFile(`${name0}.md`, `[[${name1}\\|Label]]`);
+    await createFile(`${name1}.md`, '# Hello world');
+
+    const doc = await openTextDocument(`${name0}.md`);
+
+    const referenceHoverProvider = new ReferenceHoverProvider();
+
+    expect(
+      toPlainObject(referenceHoverProvider.provideHover(doc, new vscode.Position(0, 4))),
+    ).toEqual({
+      contents: ['# Hello world'],
+      range: [
+        { character: expect.any(Number), line: 0 },
+        { character: expect.any(Number), line: 0 },
+      ],
+    });
+  });
 });
