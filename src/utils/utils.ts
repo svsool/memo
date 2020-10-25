@@ -436,11 +436,16 @@ export const getRefUriUnderCursor = (): vscode.Uri | null | undefined => {
 };
 
 export const parseRef = (rawRef: string): RefT => {
-  const dividerPosition = rawRef.indexOf('|');
+  const escapedDividerPosition = rawRef.indexOf('\\|');
+  const dividerPosition =
+    escapedDividerPosition !== -1 ? escapedDividerPosition : rawRef.indexOf('|');
 
   return {
     ref: dividerPosition !== -1 ? rawRef.slice(0, dividerPosition) : rawRef,
-    label: dividerPosition !== -1 ? rawRef.slice(dividerPosition + 1, rawRef.length) : '',
+    label:
+      dividerPosition !== -1
+        ? rawRef.slice(dividerPosition + (escapedDividerPosition !== -1 ? 2 : 1), rawRef.length)
+        : '',
   };
 };
 

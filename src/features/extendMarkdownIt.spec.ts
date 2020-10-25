@@ -535,4 +535,20 @@ describe('extendMarkdownIt feature', () => {
       "
     `);
   });
+
+  it('should render html link to the existing note with escape symbol for the label', async () => {
+    const name = rndName();
+
+    await createFile(`${name}.md`);
+
+    const md = extendMarkdownIt(MarkdownIt());
+
+    const notePath = `${path.join(getWorkspaceFolder()!, `${name}.md`)}`;
+
+    const url = getFileUrlForMarkdownPreview(notePath);
+
+    expect(md.render(`[[${name}\\|Test Label]]`)).toBe(
+      `<p><a title="${url}" href="${url}">Test Label</a></p>\n`,
+    );
+  });
 });

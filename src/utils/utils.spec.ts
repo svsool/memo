@@ -561,6 +561,10 @@ describe('parseRef()', () => {
   it('should favour only first divider', () => {
     expect(parseRef('link|||Label')).toEqual({ ref: 'link', label: '||Label' });
   });
+
+  it('should ignore escape symbol', () => {
+    expect(parseRef('link\\|Label')).toEqual({ ref: 'link', label: 'Label' });
+  });
 });
 
 describe('replaceRefs()', () => {
