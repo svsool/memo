@@ -78,9 +78,10 @@
           "type": "boolean"
         },
         "memo.links.format": {
-          "enum": [
-            "shortestPathWhenPossible",
-            "absolutePathInWorkspace"
+          "enum": ["short", "absolute"],
+          "enumDescriptions": [
+            "Use short paths for unique filenames and absolute paths for duplicate filenames",
+            "Use absolute paths in workspace"
           ],
           "default": "shortestPathWhenPossible",
           "description": "Link format to insert on autocomplete and rename.",

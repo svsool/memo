@@ -197,13 +197,13 @@ describe('fsWatcher feature', () => {
       await waitForExpect(() => expect(doc.getText()).toBe(`[[${nextName}.gif]]`));
     });
 
-    describe('with links.format = absolutePathInWorkspace', () => {
+    describe('with links.format = absolute', () => {
       it('should update long ref with long ref on file rename', async () => {
         const noteName0 = rndName();
         const noteName1 = rndName();
         const nextNoteName1 = rndName();
 
-        await updateMemoConfigProperty('links.format', 'absolutePathInWorkspace');
+        await updateMemoConfigProperty('links.format', 'absolute');
 
         await createFile(`${noteName0}.md`, `[[folder1/${noteName1}]]`, false);
         await createFile(`${noteName1}.md`, '', false);
