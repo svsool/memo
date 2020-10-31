@@ -16,6 +16,7 @@ import {
   addCachedRefs,
   removeCachedRefs,
   getMemoConfigProperty,
+  isDefined,
 } from '../utils';
 
 const getBasename = (pathParam: string) => path.basename(pathParam).toLowerCase();
@@ -170,10 +171,10 @@ export const activate = (
 
         if (linksFormat === 'absolute') {
           refs = [
-            // with absolute links format, always re-sync short links with the long ones
-            { old: oldShortRef, new: newLongRef },
+            // when links format = absolute re-sync short links with the long ones
+            oldUriIsShortRef ? { old: oldShortRef, new: newLongRef } : undefined,
             { old: oldLongRef, new: newLongRef },
-          ];
+          ].filter(isDefined);
         } else if (!oldUriIsShortRef && !newUriIsShortRef) {
           // replace long ref with long ref
           // TODO: Consider finding previous short ref and make it pointing to the long ref
@@ -186,8 +187,12 @@ export const activate = (
           // TODO: Consider finding new short ref and making long refs pointing to the new short ref
           refs = [{ old: oldShortRef, new: newLongRef }];
         } else {
-          // replace short ref with short ref
-          refs = [{ old: oldShortRef, new: newShortRef }];
+          // replace short ref with the short ref
+          refs = [
+            { old: oldShortRef, new: newShortRef },
+            // sync long refs to short ones (might be the case on switching between absolute & short link formats)
+            { old: oldLongRef, new: newShortRef },
+          ];
         }
 
         const nextContent = replaceRefs({

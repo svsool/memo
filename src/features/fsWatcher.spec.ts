@@ -132,6 +132,27 @@ describe('fsWatcher feature', () => {
       await waitForExpect(() => expect(doc.getText()).toBe(`[[${nextNoteName1}]]`));
     });
 
+    it('should update long ref with short ref on file rename 2', async () => {
+      const noteName0 = rndName();
+      const noteName1 = rndName();
+      const nextNoteName1 = rndName();
+
+      await createFile(`${noteName0}.md`, `[[folder1/${noteName1}]]`, false);
+      await createFile(`/folder1/${noteName1}.md`, '', false);
+
+      const edit = new WorkspaceEdit();
+      edit.renameFile(
+        Uri.file(`${getWorkspaceFolder()}/folder1/${noteName1}.md`),
+        Uri.file(`${getWorkspaceFolder()}/folder1/${nextNoteName1}.md`),
+      );
+
+      await workspace.applyEdit(edit);
+
+      const doc = await openTextDocument(`${noteName0}.md`);
+
+      await waitForExpect(() => expect(doc.getText()).toBe(`[[${nextNoteName1}]]`));
+    });
+
     it('should update short ref with long ref on file rename', async () => {
       const noteName0 = rndName();
       const noteName1 = rndName();
@@ -265,6 +286,30 @@ describe('fsWatcher feature', () => {
         const doc = await openTextDocument(`${noteName0}.md`);
 
         await waitForExpect(() => expect(doc.getText()).toBe(`[[folder1/${nextNoteName1}]]`));
+      });
+
+      it('should not touch short ref', async () => {
+        const noteName0 = rndName();
+        const noteName1 = rndName();
+        const nextNoteName1 = rndName();
+
+        await createFile(`${noteName0}.md`, `[[${noteName1}]] [[folder1/${noteName1}]]`, false);
+        await createFile(`${noteName1}.md`, '', false);
+        await createFile(`/folder1/${noteName1}.md`, '', false);
+
+        const edit = new WorkspaceEdit();
+        edit.renameFile(
+          Uri.file(`${getWorkspaceFolder()}/folder1/${noteName1}.md`),
+          Uri.file(`${getWorkspaceFolder()}/folder1/${nextNoteName1}.md`),
+        );
+
+        await workspace.applyEdit(edit);
+
+        const doc = await openTextDocument(`${noteName0}.md`);
+
+        await waitForExpect(() =>
+          expect(doc.getText()).toBe(`[[${noteName1}]] [[folder1/${nextNoteName1}]]`),
+        );
       });
     });
   });
