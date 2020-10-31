@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0](https://github.com/svsool/vscode-memo/compare/v0.2.2...v0.3.0) (2020-10-31)
+
+
+### ⚠ BREAKING CHANGES
+
+* Rename config prop memo.linksOnHoverPreview.imageMaxHeight -> memo.links.preview.imageMaxHeight
+
+### Features
+
+* Adds flag for syntax decorations ([6bad403](https://github.com/svsool/vscode-memo/commit/6bad403ac3577271804e8f0cee6f48822da0244e))
+* Make most of the features disableable ([#167](https://github.com/svsool/vscode-memo/issues/167)) ([643824e](https://github.com/svsool/vscode-memo/commit/643824ebf6c8e42a48b144af0e95948fc77d410c))
+* Support links.format = absolute on file rename ([fe6b569](https://github.com/svsool/vscode-memo/commit/fe6b5697e1263224c6f63ec2c54d30bdd15d74e4))
+
+
+### Bug Fixes
+
+* Fix replacing multiple links at once ([2d70222](https://github.com/svsool/vscode-memo/commit/2d70222d10b5abd6a4a2b91cc6d0af7d94f8380d))
+* Properly handle escape symbol for piped links ([#164](https://github.com/svsool/vscode-memo/issues/164)) ([df899d1](https://github.com/svsool/vscode-memo/commit/df899d118973fb84d82e4e6f2a73500658c78132))
+* remove errant only ([15231d6](https://github.com/svsool/vscode-memo/commit/15231d6b5e38030243d4e40db45d13155d845966))
+
 ### [0.2.2](https://github.com/svsool/vscode-memo/compare/v0.2.1...v0.2.2) (2020-09-27)
 
 
