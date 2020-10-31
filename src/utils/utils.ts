@@ -471,7 +471,7 @@ export const replaceRefs = ({
       if (new RegExp(pattern, 'i').exec(content)) {
         let replacedOnce = false;
 
-        const nextContent = content.replace(new RegExp(pattern, 'gi'), ($0, $1, offset) => {
+        const content = nextContent.replace(new RegExp(pattern, 'gi'), ($0, $1, offset) => {
           const pos = document.positionAt(offset);
 
           if (
@@ -494,7 +494,7 @@ export const replaceRefs = ({
 
         return {
           updatedOnce: true,
-          nextContent,
+          nextContent: content,
         };
       }
 

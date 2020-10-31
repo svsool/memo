@@ -766,6 +766,21 @@ describe('replaceRefs()', () => {
       }),
     ).toBe(initialContent);
   });
+
+  it('should replace multiple links at once', async () => {
+    expect(
+      replaceRefs({
+        refs: [
+          { old: 'test-ref', new: 'folder2/new-test-ref' },
+          { old: 'folder1/test-ref', new: 'folder2/new-test-ref' },
+        ],
+        document: await workspace.openTextDocument({
+          language: 'markdown',
+          content: '[[test-ref]] [[folder1/test-ref|Test Label]]',
+        }),
+      }),
+    ).toBe('[[folder2/new-test-ref]] [[folder2/new-test-ref|Test Label]]');
+  });
 });
 
 describe('isLongRef()', () => {
