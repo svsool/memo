@@ -147,12 +147,14 @@ export const activate = (
         basePath: workspaceFolder,
         keepExt: preserveNewExtension,
       });
-      const oldUriIsShortRef =
-        linksFormat !== 'absolute' &&
-        isFirstUriInGroup(oldUri.fsPath, oldUrisGroupedByBasename[getBasename(oldUri.fsPath)]);
-      const newUriIsShortRef =
-        linksFormat !== 'absolute' &&
-        isFirstUriInGroup(newUri.fsPath, newUrisGroupedByBasename[getBasename(newUri.fsPath)]);
+      const oldUriIsShortRef = isFirstUriInGroup(
+        oldUri.fsPath,
+        oldUrisGroupedByBasename[getBasename(oldUri.fsPath)],
+      );
+      const newUriIsShortRef = isFirstUriInGroup(
+        newUri.fsPath,
+        newUrisGroupedByBasename[getBasename(newUri.fsPath)],
+      );
 
       if (!oldShortRef || !newShortRef || !oldLongRef || !newLongRef) {
         return;
@@ -166,7 +168,13 @@ export const activate = (
         const doc = await workspace.openTextDocument(Uri.file(fsPath));
         let refs: { old: string; new: string }[] = [];
 
-        if (!oldUriIsShortRef && !newUriIsShortRef) {
+        if (linksFormat === 'absolute') {
+          refs = [
+            // with absolute links format, always re-sync short links with the long ones
+            { old: oldShortRef, new: newLongRef },
+            { old: oldLongRef, new: newLongRef },
+          ];
+        } else if (!oldUriIsShortRef && !newUriIsShortRef) {
           // replace long ref with long ref
           // TODO: Consider finding previous short ref and make it pointing to the long ref
           refs = [{ old: oldLongRef, new: newLongRef }];

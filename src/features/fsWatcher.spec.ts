@@ -198,12 +198,57 @@ describe('fsWatcher feature', () => {
     });
 
     describe('with links.format = absolute', () => {
-      it('should update long ref with long ref on file rename', async () => {
+      beforeEach(async () => {
+        await updateMemoConfigProperty('links.format', 'absolute');
+      });
+
+      it('should update short ref with long ref on file rename', async () => {
+        const noteName0 = rndName();
+        const noteName1 = rndName();
+
+        await createFile(`${noteName0}.md`, `[[${noteName1}]]`, false);
+        await createFile(`/folder1/${noteName1}.md`, '', false);
+
+        await cacheWorkspace();
+
+        const edit = new WorkspaceEdit();
+        edit.renameFile(
+          Uri.file(`${getWorkspaceFolder()}/folder1/${noteName1}.md`),
+          Uri.file(`${getWorkspaceFolder()}/folder2/${noteName1}.md`),
+        );
+
+        await workspace.applyEdit(edit);
+
+        const doc = await openTextDocument(`${noteName0}.md`);
+
+        await waitForExpect(() => expect(doc.getText()).toBe(`[[folder2/${noteName1}]]`));
+      });
+
+      it('should update long ref with short ref on moving file to workspace root', async () => {
         const noteName0 = rndName();
         const noteName1 = rndName();
         const nextNoteName1 = rndName();
 
-        await updateMemoConfigProperty('links.format', 'absolute');
+        await createFile(`${noteName0}.md`, `[[folder1/${noteName1}]]`, false);
+        await createFile(`/folder1/${noteName1}.md`, '', false);
+
+        const edit = new WorkspaceEdit();
+        edit.renameFile(
+          Uri.file(`${getWorkspaceFolder()}/folder1/${noteName1}.md`),
+          Uri.file(`${getWorkspaceFolder()}/${nextNoteName1}.md`),
+        );
+
+        await workspace.applyEdit(edit);
+
+        const doc = await openTextDocument(`${noteName0}.md`);
+
+        await waitForExpect(() => expect(doc.getText()).toBe(`[[${nextNoteName1}]]`));
+      });
+
+      it('should update long ref with long ref on file rename', async () => {
+        const noteName0 = rndName();
+        const noteName1 = rndName();
+        const nextNoteName1 = rndName();
 
         await createFile(`${noteName0}.md`, `[[folder1/${noteName1}]]`, false);
         await createFile(`${noteName1}.md`, '', false);
