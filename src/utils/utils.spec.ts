@@ -828,7 +828,7 @@ describe('getWorkspaceFolder()', () => {
 
 describe('getMemoConfigProperty()', () => {
   it('should return config property', () => {
-    expect(getMemoConfigProperty('linksOnHoverPreview.imageMaxHeight', null)).toBe('200');
+    expect(getMemoConfigProperty('links.preview.imageMaxHeight', null)).toBe('200');
   });
 
   it('should return default property on getting unknown config property', () => {

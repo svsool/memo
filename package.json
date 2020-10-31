@@ -65,16 +65,28 @@
       "type": "object",
       "title": "Memo",
       "properties": {
-        "memo.linksOnHoverPreview.imageMaxHeight": {
-          "default": "200",
-          "scope": "resource",
-          "description": "The maximum height of the image.",
-          "type": "number"
-        },
         "memo.backlinksPanel.collapseParentItems": {
           "default": false,
           "scope": "resource",
           "description": "Collapse parent items by default.",
+          "type": "boolean"
+        },
+        "memo.backlinksPanel.enabled": {
+          "default": true,
+          "scope": "resource",
+          "description": "Whether to enable backlinks panel. Reload required!",
+          "type": "boolean"
+        },
+        "memo.links.completion.enabled": {
+          "default": true,
+          "scope": "resource",
+          "description": "Whether to enable links completion in the editor. Reload required!",
+          "type": "boolean"
+        },
+        "memo.links.following.enabled": {
+          "default": true,
+          "scope": "resource",
+          "description": "Whether to enable links following in the editor. Reload required!",
           "type": "boolean"
         },
         "memo.links.format": {
@@ -83,14 +95,44 @@
             "Use short paths for unique filenames and absolute paths for duplicate filenames",
             "Use absolute paths in workspace"
           ],
-          "default": "shortestPathWhenPossible",
+          "default": "short",
           "description": "Link format to insert on autocomplete and rename.",
           "scope": "resource"
         },
-        "memo.enableSyntaxDecorations": {
+        "memo.links.preview.enabled": {
           "default": true,
           "scope": "resource",
-          "description": "Enable syntax decorations for links in the editor.",
+          "description": "Whether to enable links preview on hover in the editor. Reload required!",
+          "type": "boolean"
+        },
+        "memo.links.preview.imageMaxHeight": {
+          "default": "200",
+          "scope": "resource",
+          "description": "The maximum height of the image.",
+          "type": "number"
+        },
+        "memo.links.references.enabled": {
+          "default": true,
+          "scope": "resource",
+          "description": "Whether to enable references search for links in the editor. Reload required!",
+          "type": "boolean"
+        },
+        "memo.links.sync.enabled": {
+          "default": true,
+          "scope": "resource",
+          "description": "Whether to enable automatic links synchronization and rename action in the editor. Reload required!",
+          "type": "boolean"
+        },
+        "memo.decorations.enabled": {
+          "default": true,
+          "scope": "resource",
+          "description": "Whether to enable syntax decorations for links in the editor. Reload required!",
+          "type": "boolean"
+        },
+        "memo.markdownPreview.enabled": {
+          "default": true,
+          "scope": "resource",
+          "description": "Whether to enhance built-in VSCode Markdown preview with links highlight, navigation and resource embedding. Reload required!",
           "type": "boolean"
         }
       }
@@ -122,7 +164,8 @@
       "explorer": [
         {
           "id": "memo.backlinksPanel",
-          "name": "Backlinks"
+          "name": "Backlinks",
+          "when": "memo:backlinksPanel.enabled"
         }
       ]
     },

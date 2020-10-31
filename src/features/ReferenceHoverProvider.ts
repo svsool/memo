@@ -39,7 +39,7 @@ export default class ReferenceHoverProvider implements vscode.HoverProvider {
 
       if (foundUri && fs.existsSync(foundUri.fsPath)) {
         const imageMaxHeight = Math.max(
-          getMemoConfigProperty('linksOnHoverPreview.imageMaxHeight', 200),
+          getMemoConfigProperty('links.preview.imageMaxHeight', 200),
           10,
         );
         const getContent = () => {

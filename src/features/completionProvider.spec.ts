@@ -236,8 +236,6 @@ describe('provideCompletionItems()', () => {
 
       const completionItems = provideCompletionItems(doc, new Position(0, 2));
 
-      console.log(JSON.stringify(completionItems, null, 2));
-
       expect(completionItems).toEqual([
         expect.objectContaining({ insertText: name0, label: name0 }),
         expect.objectContaining({ insertText: `folder1/${name1}`, label: `folder1/${name1}` }),

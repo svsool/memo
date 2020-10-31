@@ -67,6 +67,10 @@ export const activate = (
   const renameFilesDisposable = workspace.onDidRenameFiles(async ({ files }) => {
     await cacheUris();
 
+    if (!getMemoConfigProperty('links.sync.enabled', true)) {
+      return;
+    }
+
     if (files.some(({ newUri }) => fs.lstatSync(newUri.fsPath).isDirectory())) {
       window.showWarningMessage(
         'Recursive links update on directory rename is currently not supported.',

@@ -6,7 +6,6 @@ import {
   rndName,
   openTextDocument,
   closeEditorsAndCleanWorkspace,
-  updateMemoConfigProperty,
 } from '../test/testUtils';
 
 describe('getDecorations', () => {
@@ -18,24 +17,6 @@ describe('getDecorations', () => {
     const noteFilename = `${rndName()}.md`;
 
     await createFile(noteFilename);
-
-    const doc = await openTextDocument(noteFilename);
-
-    const editor = await window.showTextDocument(doc);
-
-    expect(getDecorations(editor)).toMatchInlineSnapshot(`
-      Object {
-        "gray": Array [],
-        "lightBlue": Array [],
-      }
-    `);
-  });
-
-  it('should return no decorations when decorations are disabled', async () => {
-    const noteFilename = `${rndName()}.md`;
-
-    await updateMemoConfigProperty('enableSyntaxDecorations', false);
-    await createFile(noteFilename, '[[1234512345]]');
 
     const doc = await openTextDocument(noteFilename);
 

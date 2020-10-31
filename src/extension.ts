@@ -13,24 +13,30 @@ import {
   extendMarkdownIt,
   newVersionNotifier,
 } from './features';
-import { cacheWorkspace } from './utils';
 import commands from './commands';
+import { cacheWorkspace, getMemoConfigProperty, MemoBoolConfigProp, isDefined } from './utils';
 
 const mdLangSelector = { language: 'markdown', scheme: '*' };
 
-export const activate = async (context: vscode.ExtensionContext) => {
+const when = <R>(configKey: MemoBoolConfigProp, cb: () => R): undefined | R =>
+  getMemoConfigProperty(configKey, true) ? cb() : undefined;
+
+export const activate = async (
+  context: vscode.ExtensionContext,
+): Promise<void | { extendMarkdownIt: typeof extendMarkdownIt }> => {
   newVersionNotifier.activate(context);
-  syntaxDecorations.activate(context);
+
+  when('decorations.enabled', () => syntaxDecorations.activate(context));
+
   if (process.env.DISABLE_FS_WATCHER !== 'true') {
     fsWatcher.activate(context);
   }
-  completionProvider.activate(context);
+
+  when('links.completion.enabled', () => completionProvider.activate(context));
+
   referenceContextWatcher.activate(context);
 
   await cacheWorkspace();
-
-  const backlinksTreeDataProvider = new BacklinksTreeDataProvider();
-  vscode.window.onDidChangeActiveTextEditor(async () => await backlinksTreeDataProvider.refresh());
 
   context.subscriptions.push(
     ...commands,
@@ -39,17 +45,43 @@ export const activate = async (context: vscode.ExtensionContext) => {
         await cacheWorkspace();
       }
     }),
-    vscode.window.createTreeView('memo.backlinksPanel', {
-      treeDataProvider: backlinksTreeDataProvider,
-      showCollapseAll: true,
-    }),
-    vscode.languages.registerDocumentLinkProvider(mdLangSelector, new DocumentLinkProvider()),
-    vscode.languages.registerHoverProvider(mdLangSelector, new ReferenceHoverProvider()),
-    vscode.languages.registerReferenceProvider(mdLangSelector, new ReferenceProvider()),
-    vscode.languages.registerRenameProvider(mdLangSelector, new ReferenceRenameProvider()),
+    ...[
+      when('links.following.enabled', () =>
+        vscode.languages.registerDocumentLinkProvider(mdLangSelector, new DocumentLinkProvider()),
+      ),
+      when('links.preview.enabled', () =>
+        vscode.languages.registerHoverProvider(mdLangSelector, new ReferenceHoverProvider()),
+      ),
+      when('links.references.enabled', () =>
+        vscode.languages.registerReferenceProvider(mdLangSelector, new ReferenceProvider()),
+      ),
+      when('links.sync.enabled', () =>
+        vscode.languages.registerRenameProvider(mdLangSelector, new ReferenceRenameProvider()),
+      ),
+    ].filter(isDefined),
   );
 
-  return {
+  vscode.commands.executeCommand(
+    'setContext',
+    'memo:backlinksPanel.enabled',
+    getMemoConfigProperty('backlinksPanel.enabled', true),
+  );
+
+  when('backlinksPanel.enabled', () => {
+    const backlinksTreeDataProvider = new BacklinksTreeDataProvider();
+
+    vscode.window.onDidChangeActiveTextEditor(
+      async () => await backlinksTreeDataProvider.refresh(),
+    );
+    context.subscriptions.push(
+      vscode.window.createTreeView('memo.backlinksPanel', {
+        treeDataProvider: backlinksTreeDataProvider,
+        showCollapseAll: true,
+      }),
+    );
+  });
+
+  return when('markdownPreview.enabled', () => ({
     extendMarkdownIt,
-  };
+  }));
 };

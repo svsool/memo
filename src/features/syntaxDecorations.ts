@@ -15,7 +15,6 @@ import {
   isMdEditor,
   mathEnvCheck,
   refPattern,
-  getMemoConfigProperty,
 } from '../utils';
 
 /*
@@ -46,10 +45,6 @@ export const getDecorations = (textEditor: TextEditor): { [decorTypeName: string
   Object.keys(decorationTypes).forEach((decorTypeName) => {
     decors[decorTypeName] = [];
   });
-
-  if (!getMemoConfigProperty('enableSyntaxDecorations', true)) {
-    return decors;
-  }
 
   doc
     .getText()

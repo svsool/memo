@@ -234,6 +234,16 @@ export function getConfigProperty<T>(property: string, fallback: T): T {
   return vscode.workspace.getConfiguration().get(property, fallback);
 }
 
+export type MemoBoolConfigProp =
+  | 'decorations.enabled'
+  | 'links.completion.enabled'
+  | 'links.following.enabled'
+  | 'links.preview.enabled'
+  | 'links.references.enabled'
+  | 'links.sync.enabled'
+  | 'backlinksPanel.enabled'
+  | 'markdownPreview.enabled';
+
 export function getMemoConfigProperty(
   property: 'links.format',
   fallback: 'short',
@@ -245,19 +255,11 @@ export function getMemoConfigProperty(
 ): boolean;
 
 export function getMemoConfigProperty(
-  property: 'backlinksPanel.collapseParentItems',
-  fallback: null | boolean,
-): boolean;
-
-export function getMemoConfigProperty(
-  property: 'linksOnHoverPreview.imageMaxHeight',
+  property: 'links.preview.imageMaxHeight',
   fallback: null | number,
 ): number;
 
-export function getMemoConfigProperty(
-  property: 'enableSyntaxDecorations',
-  fallback: boolean,
-): boolean;
+export function getMemoConfigProperty(property: MemoBoolConfigProp, fallback: boolean): boolean;
 
 export function getMemoConfigProperty<T>(property: string, fallback: T): T {
   return getConfigProperty(`memo.${property}`, fallback);
@@ -523,3 +525,5 @@ export const findNonIgnoredFiles = async (
 
   return files;
 };
+
+export const isDefined = <T>(argument: T | undefined): argument is T => argument !== undefined;
