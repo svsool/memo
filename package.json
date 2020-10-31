@@ -95,8 +95,8 @@
             "absolute"
           ],
           "enumDescriptions": [
-            "Use short paths for unique filenames and absolute paths for duplicate filenames",
-            "Use absolute paths in workspace"
+            "Short path when filename is unique across workspace and absolute path when not",
+            "Always absolute path in workspace"
           ],
           "default": "short",
           "description": "Link format to insert on autocomplete and rename.",
