@@ -237,7 +237,7 @@
     "lint-staged": "^10.5.1",
     "prettier": "^2.1.2",
     "standard-version": "^9.0.0",
-    "ts-jest": "^26.4.3",
+    "ts-jest": "^26.4.4",
     "ts-loader": "^8.0.7",
     "typescript": "^4.0.5",
     "vsce": "^1.81.1",
