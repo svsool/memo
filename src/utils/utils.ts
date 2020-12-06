@@ -319,10 +319,11 @@ export const extractEmbedRefs = (content: string) => {
 };
 
 export const findReferences = async (
-  ref: string,
+  refs: string | string[],
   excludePaths: string[] = [],
 ): Promise<FoundRefT[]> => {
-  const refs: FoundRefT[] = [];
+  const searchRefs = typeof refs === 'string' ? [refs] : refs;
+  const foundRefs: FoundRefT[] = [];
 
   for (const { fsPath } of workspaceCache.markdownUris) {
     if (excludePaths.includes(fsPath) || !fs.existsSync(fsPath)) {
@@ -330,7 +331,10 @@ export const findReferences = async (
     }
 
     const fileContent = fs.readFileSync(fsPath).toString();
-    const refRegexp = new RegExp(`\\[\\[(${escapeForRegExp(ref)}(\\|[^\\[\\]]+?)?)\\]\\]`, 'gi');
+    const refRegexp = new RegExp(
+      `\\[\\[((${searchRefs.map((ref) => escapeForRegExp(ref)).join('|')})(\\|[^\\[\\]]+?)?)\\]\\]`,
+      'gi',
+    );
 
     const fileContentLines = fileContent.split(/\r?\n/g);
 
@@ -348,7 +352,7 @@ export const findReferences = async (
 
         const matchText = lineText.slice(Math.max(offset - 2, 0), lineText.length);
 
-        refs.push({
+        foundRefs.push({
           location: new vscode.Location(
             vscode.Uri.file(fsPath),
             new vscode.Range(
@@ -362,7 +366,7 @@ export const findReferences = async (
     });
   }
 
-  return refs;
+  return foundRefs;
 };
 
 export const getFileUrlForMarkdownPreview = (filePath: string): string =>

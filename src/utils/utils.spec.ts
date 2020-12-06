@@ -1078,6 +1078,53 @@ describe('findReferences()', () => {
     ]);
   });
 
+  it('should find multiple references', async () => {
+    const name = `note-${rndName()}`;
+
+    await createFile(
+      `${name}.md`,
+      `[[test1]]
+    ![[nested-folder/test]]
+    [[nested-folder/test-2]]
+    [[test1-1]]`,
+    );
+
+    const refs = await findReferences(['test1', 'nested-folder/test']);
+
+    expect(refs).toHaveLength(2);
+
+    expect(toPlainObject(refs)).toMatchObject([
+      {
+        location: {
+          uri: {
+            $mid: 1,
+            path: expect.toEndWith(`${name}.md`),
+            scheme: 'file',
+          },
+          range: [
+            { line: 0, character: 2 },
+            { line: 0, character: 7 },
+          ],
+        },
+        matchText: '[[test1]]',
+      },
+      {
+        location: {
+          uri: {
+            $mid: 1,
+            path: expect.toEndWith(`${name}.md`),
+            scheme: 'file',
+          },
+          range: [
+            { line: 1, character: 7 },
+            { line: 1, character: 25 },
+          ],
+        },
+        matchText: '[[nested-folder/test]]',
+      },
+    ]);
+  });
+
   it('should find references bypassing excluded paths', async () => {
     const name0 = rndName();
     const name1 = rndName();

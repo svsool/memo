@@ -1,14 +1,16 @@
-import vscode from 'vscode';
+import vscode, { workspace } from 'vscode';
 import path from 'path';
 import groupBy from 'lodash.groupby';
 
 import {
+  getWorkspaceCache,
   containsMarkdownExt,
   findReferences,
-  getWorkspaceFolder,
   trimSlashes,
   sortPaths,
   getMemoConfigProperty,
+  fsPathToRef,
+  isDefined,
 } from '../utils';
 import { FoundRefT } from '../types';
 
@@ -39,16 +41,49 @@ export default class BacklinksTreeDataProvider implements vscode.TreeDataProvide
 
   public async getChildren(element?: Backlink) {
     if (!element) {
-      const fsPath = vscode.window.activeTextEditor?.document.uri.fsPath;
+      const uri = vscode.window.activeTextEditor?.document.uri;
+      const fsPath = uri?.fsPath;
 
-      if (!fsPath || (fsPath && !containsMarkdownExt(fsPath))) {
+      if (!uri || !fsPath || (fsPath && !containsMarkdownExt(fsPath))) {
         return [];
       }
 
-      const refFromFilename = path.parse(fsPath).name;
+      const workspaceFolder = workspace.getWorkspaceFolder(uri);
+
+      if (!workspaceFolder) {
+        return [];
+      }
+
+      const shortRef = fsPathToRef({
+        path: uri.fsPath,
+        keepExt: false,
+      });
+
+      const longRef = fsPathToRef({
+        path: uri.fsPath,
+        basePath: workspaceFolder.uri.fsPath,
+        keepExt: false,
+      });
+
+      if (!shortRef || !longRef) {
+        return [];
+      }
+
+      const urisByPathBasename = groupBy(getWorkspaceCache().markdownUris, ({ fsPath }) =>
+        path.basename(fsPath).toLowerCase(),
+      );
+
+      const urisGroup = urisByPathBasename[path.basename(fsPath).toLowerCase()] || [];
+
+      const isFirstUriInGroup = urisGroup.findIndex((uriParam) => uriParam.fsPath === fsPath) === 0;
 
       const referencesByPath = groupBy(
-        await findReferences(refFromFilename, [fsPath]),
+        await findReferences(
+          [shortRef !== longRef && isFirstUriInGroup ? shortRef : undefined, longRef].filter(
+            isDefined,
+          ),
+          [fsPath],
+        ),
         ({ location }) => location.uri.fsPath,
       );
 
@@ -70,7 +105,7 @@ export default class BacklinksTreeDataProvider implements vscode.TreeDataProvide
         );
         backlink.description = `(${referencesByPath[pathParam].length}) ${trimSlashes(
           pathParam
-            .replace(getWorkspaceFolder()!, '')
+            .replace(workspaceFolder.uri.fsPath, '')
             .replace(new RegExp(`${path.basename(pathParam)}$`), ''),
         )}`;
         backlink.tooltip = pathParam;

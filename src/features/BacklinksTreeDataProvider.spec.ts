@@ -301,6 +301,271 @@ describe('BacklinksTreeDataProvider', () => {
     ]);
   });
 
+  describe('issue #209', () => {
+    it('should provide proper backlinks for root level non-unique filename', async () => {
+      const nonUniqueFilename = `nonUniqueFilename-${rndName()}`;
+      const sample1Filename = `sample1-${rndName()}`;
+      const sample2Filename = `sample2-${rndName()}`;
+      const samplesFolderName = `samples-${rndName()}`;
+
+      await createFile(
+        `${samplesFolderName}/${sample1Filename}.md`,
+        `Checkout [[${samplesFolderName}/${nonUniqueFilename}]]`,
+      );
+      await createFile(
+        `${samplesFolderName}/${sample2Filename}.md`,
+        `Checkout [[${nonUniqueFilename}]]`,
+      );
+      await createFile(`${samplesFolderName}/${nonUniqueFilename}.md`);
+      await createFile(`${nonUniqueFilename}.md`);
+
+      const doc = await openTextDocument(`${nonUniqueFilename}.md`);
+      await window.showTextDocument(doc);
+
+      expect(toPlainObject(await getChildren())).toMatchObject([
+        {
+          collapsibleState: 2,
+          label: `${sample2Filename}.md`,
+          refs: expect.any(Array),
+          description: `(1) ${samplesFolderName}`,
+          tooltip: `${path.join(
+            getWorkspaceFolder()!,
+            samplesFolderName,
+            `${sample2Filename}.md`,
+          )}`,
+          command: {
+            command: 'vscode.open',
+            arguments: [
+              expect.objectContaining({
+                path: Uri.file(
+                  path.join(getWorkspaceFolder()!, samplesFolderName, `${sample2Filename}.md`),
+                ).path,
+                scheme: 'file',
+              }),
+              {
+                selection: [
+                  {
+                    line: 0,
+                    character: 0,
+                  },
+                  {
+                    line: 0,
+                    character: 0,
+                  },
+                ],
+              },
+            ],
+            title: 'Open File',
+          },
+          children: [
+            {
+              collapsibleState: 0,
+              label: '1:11',
+              description: `[[${nonUniqueFilename}]]`,
+              tooltip: `[[${nonUniqueFilename}]]`,
+              command: {
+                command: 'vscode.open',
+                arguments: [
+                  expect.objectContaining({
+                    path: Uri.file(
+                      path.join(getWorkspaceFolder()!, samplesFolderName, `${sample2Filename}.md`),
+                    ).path,
+                    scheme: 'file',
+                  }),
+                  {
+                    selection: [
+                      {
+                        line: 0,
+                        character: 11,
+                      },
+                      {
+                        line: 0,
+                        character: expect.any(Number),
+                      },
+                    ],
+                  },
+                ],
+                title: 'Open File',
+              },
+            },
+          ],
+        },
+      ]);
+    });
+
+    it('should provide proper backlinks for nested non-unique filename', async () => {
+      const nonUniqueFilename = `nonUniqueFilename-${rndName()}`;
+      const sample1Filename = `sample1-${rndName()}`;
+      const sample2Filename = `sample2-${rndName()}`;
+      const samplesFolderName = `samples-${rndName()}`;
+
+      await createFile(
+        `${samplesFolderName}/${sample1Filename}.md`,
+        `Checkout [[${samplesFolderName}/${nonUniqueFilename}]]`,
+      );
+      await createFile(
+        `${samplesFolderName}/${sample2Filename}.md`,
+        `Checkout [[${nonUniqueFilename}]]`,
+      );
+      await createFile(`${samplesFolderName}/${nonUniqueFilename}.md`);
+      await createFile(`${nonUniqueFilename}.md`);
+
+      const doc = await openTextDocument(`${samplesFolderName}/${nonUniqueFilename}.md`);
+      await window.showTextDocument(doc);
+
+      expect(toPlainObject(await getChildren())).toMatchObject([
+        {
+          collapsibleState: 2,
+          label: `${sample1Filename}.md`,
+          refs: expect.any(Array),
+          description: `(1) ${samplesFolderName}`,
+          tooltip: `${path.join(
+            getWorkspaceFolder()!,
+            samplesFolderName,
+            `${sample1Filename}.md`,
+          )}`,
+          command: {
+            command: 'vscode.open',
+            arguments: [
+              expect.objectContaining({
+                path: Uri.file(
+                  path.join(getWorkspaceFolder()!, samplesFolderName, `${sample1Filename}.md`),
+                ).path,
+                scheme: 'file',
+              }),
+              {
+                selection: [
+                  {
+                    line: 0,
+                    character: 0,
+                  },
+                  {
+                    line: 0,
+                    character: 0,
+                  },
+                ],
+              },
+            ],
+            title: 'Open File',
+          },
+          children: [
+            {
+              collapsibleState: 0,
+              label: '1:11',
+              description: `[[${samplesFolderName}/${nonUniqueFilename}]]`,
+              tooltip: `[[${samplesFolderName}/${nonUniqueFilename}]]`,
+              command: {
+                command: 'vscode.open',
+                arguments: [
+                  expect.objectContaining({
+                    path: Uri.file(
+                      path.join(getWorkspaceFolder()!, samplesFolderName, `${sample1Filename}.md`),
+                    ).path,
+                    scheme: 'file',
+                  }),
+                  {
+                    selection: [
+                      {
+                        line: 0,
+                        character: 11,
+                      },
+                      {
+                        line: 0,
+                        character: expect.any(Number),
+                      },
+                    ],
+                  },
+                ],
+                title: 'Open File',
+              },
+            },
+          ],
+        },
+      ]);
+    });
+
+    it('should provide proper backlink for long ref', async () => {
+      const noteReferencedViaLongRef = `noteReferencedViaLongRef-${rndName()}`;
+      const noteWithLongRef = `noteWithLongRef-${rndName()}`;
+      const folderName = `folderName-${rndName()}`;
+
+      await createFile(
+        `${folderName}/${noteWithLongRef}.md`,
+        `Checkout [[${folderName}/${noteReferencedViaLongRef}]]`,
+      );
+      await createFile(`${folderName}/${noteReferencedViaLongRef}.md`);
+
+      const doc = await openTextDocument(`${folderName}/${noteReferencedViaLongRef}.md`);
+      await window.showTextDocument(doc);
+
+      expect(toPlainObject(await getChildren())).toMatchObject([
+        {
+          collapsibleState: 2,
+          label: `${noteWithLongRef}.md`,
+          refs: expect.any(Array),
+          description: `(1) ${folderName}`,
+          tooltip: `${path.join(getWorkspaceFolder()!, folderName, `${noteWithLongRef}.md`)}`,
+          command: {
+            command: 'vscode.open',
+            arguments: [
+              expect.objectContaining({
+                path: Uri.file(
+                  path.join(getWorkspaceFolder()!, folderName, `${noteWithLongRef}.md`),
+                ).path,
+                scheme: 'file',
+              }),
+              {
+                selection: [
+                  {
+                    line: 0,
+                    character: 0,
+                  },
+                  {
+                    line: 0,
+                    character: 0,
+                  },
+                ],
+              },
+            ],
+            title: 'Open File',
+          },
+          children: [
+            {
+              collapsibleState: 0,
+              label: '1:11',
+              description: `[[${folderName}/${noteReferencedViaLongRef}]]`,
+              tooltip: `[[${folderName}/${noteReferencedViaLongRef}]]`,
+              command: {
+                command: 'vscode.open',
+                arguments: [
+                  expect.objectContaining({
+                    path: Uri.file(
+                      path.join(getWorkspaceFolder()!, folderName, `${noteWithLongRef}.md`),
+                    ).path,
+                    scheme: 'file',
+                  }),
+                  {
+                    selection: [
+                      {
+                        line: 0,
+                        character: 11,
+                      },
+                      {
+                        line: 0,
+                        character: expect.any(Number),
+                      },
+                    ],
+                  },
+                ],
+                title: 'Open File',
+              },
+            },
+          ],
+        },
+      ]);
+    });
+  });
+
   it('should not provide backlinks for link within code span', async () => {
     const link = rndName();
     const name0 = rndName();
