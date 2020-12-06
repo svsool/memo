@@ -10,7 +10,6 @@ Inspired by [Obsidian.md](https://obsidian.md/) and [RoamResearch](https://roamr
 [![](https://github.com/svsool/vscode-memo/workflows/CI/badge.svg?branch=master)](https://github.com/svsool/vscode-memo/actions?query=workflow%3ACI+branch%3Amaster)
 [![codecov](https://codecov.io/gh/svsool/vscode-memo/branch/master/graph/badge.svg)](https://codecov.io/gh/svsool/vscode-memo)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/svsool/vscode-memo/blob/master/CONTRIBUTING.md)
-[![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://www.paypal.com/donate?hosted_button_id=39ZWMB4YQY45W)
 
 ## Why?
 
@@ -103,7 +102,6 @@ If you want to try out Memo just install it via marketplace using [this link](ht
 - File bugs, feature requests in [GitHub Issues](https://github.com/svsool/vscode-memo/issues).
 - Leave a review on [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=svsool.markdown-memo&ssr=false#review-details).
 - Read [CONTRIBUTING.md](CONTRIBUTING.md) for contributing to the code base.
-- I maintain Memo in my spare time, consider [donating](https://www.paypal.com/donate/?hosted_button_id=39ZWMB4YQY45W&Z3JncnB0=) to keep it improving.
 
 ## Changelog
 
