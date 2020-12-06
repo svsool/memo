@@ -169,9 +169,9 @@ export const activate = (
         const doc = await workspace.openTextDocument(Uri.file(fsPath));
         let refs: { old: string; new: string }[] = [];
 
-        if (linksFormat === 'absolute') {
+        if (linksFormat === 'long' || linksFormat === 'absolute') {
           refs = [
-            // when links format = absolute re-sync short links with the long ones
+            // when links format = long re-sync short links with the long ones
             oldUriIsShortRef ? { old: oldShortRef, new: newLongRef } : undefined,
             { old: oldLongRef, new: newLongRef },
           ].filter(isDefined);
@@ -190,7 +190,7 @@ export const activate = (
           // replace short ref with the short ref
           refs = [
             { old: oldShortRef, new: newShortRef },
-            // sync long refs to short ones (might be the case on switching between absolute & short link formats)
+            // sync long refs to short ones (might be the case on switching between long & short link formats)
             { old: oldLongRef, new: newShortRef },
           ];
         }

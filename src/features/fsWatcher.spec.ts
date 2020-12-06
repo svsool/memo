@@ -218,9 +218,9 @@ describe('fsWatcher feature', () => {
       await waitForExpect(() => expect(doc.getText()).toBe(`[[${nextName}.gif]]`));
     });
 
-    describe('with links.format = absolute', () => {
+    describe('with links.format = long', () => {
       beforeEach(async () => {
-        await updateMemoConfigProperty('links.format', 'absolute');
+        await updateMemoConfigProperty('links.format', 'long');
       });
 
       it('should update short ref with long ref on file rename', async () => {

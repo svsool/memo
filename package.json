@@ -92,7 +92,7 @@
         "memo.links.format": {
           "enum": [
             "short",
-            "absolute"
+            "long"
           ],
           "enumDescriptions": [
             "Short path when filename is unique across workspace and absolute path when not",
