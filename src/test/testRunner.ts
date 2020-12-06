@@ -42,7 +42,7 @@ export function run(): Promise<void> {
           setupFilesAfterEnv: ['jest-extended'],
           globals: JSON.stringify({
             'ts-jest': {
-              tsConfig: path.resolve(rootDir, './tsconfig.json'),
+              tsconfig: path.resolve(rootDir, './tsconfig.json'),
             },
           }),
           ci: process.env.JEST_CI === 'true',
