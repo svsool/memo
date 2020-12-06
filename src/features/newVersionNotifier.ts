@@ -10,7 +10,7 @@ const teasers: { [key: string]: string } = {
   '0.1.10': 'Memo v0.1.10! Links rename, opening links in the default app and more.',
 };
 
-const showMeAction = 'Show Me';
+const showChangelogAction = 'Show Changelog';
 
 export const activate = (context: ExtensionContext) => {
   try {
@@ -29,8 +29,8 @@ export const activate = (context: ExtensionContext) => {
 
     fs.writeFileSync(versionPath, currentVersion);
 
-    window.showInformationMessage(teaserMsg, showMeAction, 'Dismiss').then((option) => {
-      if (option === showMeAction) {
+    window.showInformationMessage(teaserMsg, showChangelogAction, 'Dismiss').then((option) => {
+      if (option === showChangelogAction) {
         commands.executeCommand(
           'vscode.open',
           Uri.parse('https://github.com/svsool/vscode-memo/blob/master/CHANGELOG.md'),
