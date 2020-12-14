@@ -238,7 +238,7 @@
     "prettier": "^2.2.1",
     "standard-version": "^9.0.0",
     "ts-jest": "^26.4.4",
-    "ts-loader": "^8.0.11",
+    "ts-loader": "^8.0.12",
     "typescript": "^4.1.2",
     "vsce": "^1.81.1",
     "vscode-test": "^1.4.1",
