@@ -3,7 +3,7 @@ import vscode from 'vscode';
 import openDocumentByReference from './openDocumentByReference';
 import openRandomNote from './openRandomNote';
 import openReferenceInDefaultApp from './openReferenceInDefaultApp';
-import openLinkInNextColumn from './openLinkInNextColumn';
+import openReferenceInNextColumn from './openReferenceInNextColumn';
 import openDailyNote from './openDailyNote';
 import { cacheWorkspace, cleanWorkspaceCache, getWorkspaceCache } from '../utils';
 
@@ -15,7 +15,7 @@ const commands = [
   vscode.commands.registerCommand('memo.openRandomNote', openRandomNote),
   vscode.commands.registerCommand('memo.openDailyNote', openDailyNote),
   vscode.commands.registerCommand('memo.openReferenceInDefaultApp', openReferenceInDefaultApp),
-  vscode.commands.registerCommand('memo.openLinkInNextColumn', openLinkInNextColumn),
+  vscode.commands.registerCommand('memo.openReferenceInNextColumn', openReferenceInNextColumn),
 ];
 
 export default commands;
