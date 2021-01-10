@@ -35,6 +35,7 @@
     "onCommand:memo.openRandomNote",
     "onCommand:memo.openDailyNote",
     "onCommand:memo.openReferenceInDefaultApp",
+    "onCommand:memo.openLinkInNextColumn",
     "onCommand:_memo.openReference",
     "onCommand:_memo.cacheWorkspace",
     "onCommand:_memo.cleanWorkspaceCache",
@@ -58,6 +59,11 @@
       {
         "command": "memo.openReferenceInDefaultApp",
         "title": "Open link in the default app",
+        "category": "Memo"
+      },
+      {
+        "command": "memo.openLinkInNextColumn",
+        "title": "Open link in the next column of this editor",
         "category": "Memo"
       }
     ],
@@ -146,6 +152,12 @@
         "key": "ctrl+enter",
         "mac": "cmd+enter",
         "when": "editorTextFocus && editorLangId == markdown"
+      },
+      {
+        "command": "memo.openLinkInNextColumn",
+        "key": "ctrl+shift+enter",
+        "mac": "cmd+shift+enter",
+        "when": "editorTextFocus && editorLangId == markdown"
       }
     ],
     "menus": {
@@ -160,6 +172,10 @@
         {
           "command": "memo.openReferenceInDefaultApp",
           "when": "editorLangId == markdown && memo:refUnderCursorExists"
+        },
+        {
+          "command": "memo.openLinkInNextColumn",
+          "when": "editorLangId == markdown "
         }
       ]
     },
