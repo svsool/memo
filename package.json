@@ -175,7 +175,7 @@
         },
         {
           "command": "memo.openReferenceInNextColumn",
-          "when": "editorLangId == markdown "
+          "when": "editorLangId == markdown"
         }
       ]
     },
