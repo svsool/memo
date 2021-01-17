@@ -25,12 +25,7 @@
     "eqeqeq": "warn",
     "no-throw-literal": "warn",
     "semi": "off",
-    "prettier/prettier": [
-      "error",
-      {
-        "endOfLine": "auto"
-      }
-    ],
+    "prettier/prettier": "error",
     "camelcase": 0,
     "default-case": 0,
     "curly": ["error", "all"],
