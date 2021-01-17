@@ -8,14 +8,14 @@ const openReferenceInNextColumn = async () => {
     return;
   }
 
-  const refObj = getReferenceAtPosition(
+  const refAtPos = getReferenceAtPosition(
     activeTextEditor.document,
     activeTextEditor.selection.start,
   );
 
-  if (refObj && refObj.ref) {
+  if (refAtPos) {
     commands.executeCommand('_memo.openDocumentByReference', {
-      reference: refObj.ref,
+      reference: refAtPos.ref,
       showOption: vscode.ViewColumn.Beside,
     });
   }
