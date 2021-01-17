@@ -2,7 +2,7 @@ import vscode, { commands } from 'vscode';
 
 import { getReferenceAtPosition } from '../utils';
 
-const openReferenceInNextColumn = async () => {
+const openReferenceBeside = async () => {
   const activeTextEditor = vscode.window.activeTextEditor;
   if (!activeTextEditor) {
     return;
@@ -21,4 +21,4 @@ const openReferenceInNextColumn = async () => {
   }
 };
 
-export default openReferenceInNextColumn;
+export default openReferenceBeside;
