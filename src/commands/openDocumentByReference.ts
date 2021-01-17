@@ -15,7 +15,7 @@ const openDocumentByReference = async ({
   showOption = vscode.ViewColumn.Active,
 }: {
   reference: string;
-  showOption?: vscode.ViewColumn | { preserveFocus: boolean; viewColumn: vscode.ViewColumn };
+  showOption?: vscode.ViewColumn;
 }) => {
   const { ref } = parseRef(reference);
 
