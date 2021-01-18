@@ -166,6 +166,11 @@
           "when": "editorLangId == markdown && memo:refUnderCursorExists",
           "group": "memo",
           "command": "memo.openReferenceInDefaultApp"
+        },
+        {
+          "when": "editorLangId == markdown && memo:refFocusedOrHovered",
+          "group": "memo",
+          "command": "memo.openReferenceBeside"
         }
       ],
       "commandPalette": [
