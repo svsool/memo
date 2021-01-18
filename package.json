@@ -157,7 +157,7 @@
         "command": "memo.openReferenceBeside",
         "key": "ctrl+shift+enter",
         "mac": "cmd+shift+enter",
-        "when": "editorTextFocus && editorLangId == markdown"
+        "when": "editorTextFocus && editorLangId == markdown && memo:refFocusedOrHovered"
       }
     ],
     "menus": {
@@ -175,7 +175,7 @@
         },
         {
           "command": "memo.openReferenceBeside",
-          "when": "editorLangId == markdown"
+          "when": "editorLangId == markdown && memo:refFocusedOrHovered"
         }
       ]
     },
