@@ -1,5 +1,5 @@
 import path from 'path';
-import { commands } from 'vscode';
+import { commands, ViewColumn } from 'vscode';
 
 import openDocumentByReference from './openDocumentByReference';
 import {
@@ -169,6 +169,31 @@ describe('openDocumentByReference command', () => {
           path: expect.toEndWith(`${name}.md.md`),
           scheme: 'file',
         }),
+      ],
+    ]);
+
+    executeCommandSpy.mockRestore();
+  });
+
+  it('should take showOption to open ref to the side', async () => {
+    const executeCommandSpy = jest.spyOn(commands, 'executeCommand');
+
+    const name = rndName();
+    await openDocumentByReference({
+      reference: `${name}`,
+      showOption: ViewColumn.Beside,
+    });
+    expect(
+      toPlainObject(executeCommandSpy.mock.calls.filter(([command]) => command === 'vscode.open')),
+    ).toMatchObject([
+      [
+        'vscode.open',
+        expect.objectContaining({
+          $mid: 1,
+          path: expect.toEndWith(`${name}.md`),
+          scheme: 'file',
+        }),
+        -2, // ViewColumn.Beside
       ],
     ]);
 
