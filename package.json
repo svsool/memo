@@ -220,7 +220,7 @@
     "@types/node": "^14.14.10",
     "@types/open": "^6.2.1",
     "@types/vscode": "^1.51.0",
-    "@typescript-eslint/eslint-plugin": "^4.9.0",
+    "@typescript-eslint/eslint-plugin": "^4.14.0",
     "@typescript-eslint/parser": "^4.9.0",
     "cross-env": "^7.0.3",
     "del": "^6.0.0",
