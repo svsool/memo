@@ -1,6 +1,6 @@
 import { window, workspace, commands, ExtensionContext } from 'vscode';
 
-import { getRefUriUnderCursor, getRefUnderCursor, getReferenceAtPosition } from '../utils';
+import { getRefUriUnderCursor, getRefUnderCursor } from '../utils';
 
 const updateRefExistsContext = () => {
   commands.executeCommand('setContext', 'memo:refUnderCursorExists', !!getRefUriUnderCursor());
