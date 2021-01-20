@@ -40,7 +40,7 @@ const openDocumentByReference = async ({
         fs.writeFileSync(filePath, '');
       }
 
-      await vscode.commands.executeCommand('vscode.open', vscode.Uri.file(filePath));
+      await vscode.commands.executeCommand('vscode.open', vscode.Uri.file(filePath), showOption);
     }
   }
 };
