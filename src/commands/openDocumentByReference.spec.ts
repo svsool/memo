@@ -144,6 +144,7 @@ describe('openDocumentByReference command', () => {
           path: expect.toEndWith(`${name}.png`),
           scheme: 'file',
         }),
+        ViewColumn.Active,
       ],
     ]);
 
@@ -169,6 +170,7 @@ describe('openDocumentByReference command', () => {
           path: expect.toEndWith(`${name}.md.md`),
           scheme: 'file',
         }),
+        ViewColumn.Active,
       ],
     ]);
 
@@ -193,7 +195,7 @@ describe('openDocumentByReference command', () => {
           path: expect.toEndWith(`${name}.md`),
           scheme: 'file',
         }),
-        -2, // ViewColumn.Beside
+        ViewColumn.Beside,
       ],
     ]);
 
