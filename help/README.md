@@ -14,7 +14,7 @@ I myself do prefer using Memo as a diary and adopted the following structure:
 
 ![[Structure 2.png]]
 
-As you probably noticed, I use `yyyy-mm-dd ` format for naming my daily notes, which makes it easier to refer to certain dates or days throughout my diary. I'm planning to add dates highlight to the editor so that whenever you refer to date via the link for instance [[2020-07-05]] Memo will also provide a hint what day and month it is in a human-readable way.
+As you probably noticed, I use `yyyy-mm-dd ` format for naming my daily notes, which makes it easier to refer to certain dates or days throughout my diary.
 
 Markdown is a well-known language for its flexibility, especially when it comes to writing and making notes, so you are free to choose your own and unique style of managing a personal knowledge base.
 
