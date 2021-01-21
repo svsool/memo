@@ -10,13 +10,19 @@ import {
   getWorkspaceFolder,
 } from '../utils';
 
-const openDocumentByReference = async ({ reference }: { reference: string }) => {
+const openDocumentByReference = async ({
+  reference,
+  showOption = vscode.ViewColumn.Active,
+}: {
+  reference: string;
+  showOption?: vscode.ViewColumn;
+}) => {
   const { ref } = parseRef(reference);
 
   const uri = findUriByRef(getWorkspaceCache().allUris, ref);
 
   if (uri) {
-    await vscode.commands.executeCommand('vscode.open', uri);
+    await vscode.commands.executeCommand('vscode.open', uri, showOption);
   } else {
     const workspaceFolder = getWorkspaceFolder()!;
     if (workspaceFolder) {
@@ -34,7 +40,7 @@ const openDocumentByReference = async ({ reference }: { reference: string }) => 
         fs.writeFileSync(filePath, '');
       }
 
-      await vscode.commands.executeCommand('vscode.open', vscode.Uri.file(filePath));
+      await vscode.commands.executeCommand('vscode.open', vscode.Uri.file(filePath), showOption);
     }
   }
 };

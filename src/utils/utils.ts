@@ -432,12 +432,21 @@ export const ensureDirectoryExists = (filePath: string) => {
   }
 };
 
-export const getRefUriUnderCursor = (): vscode.Uri | null | undefined => {
+export const getRefUnderCursor = ():
+  | { range: vscode.Range; ref: string; label: string }
+  | null
+  | undefined => {
   const activeTextEditor = vscode.window.activeTextEditor;
 
   const refAtPos =
     activeTextEditor &&
     getReferenceAtPosition(activeTextEditor.document, activeTextEditor.selection.start);
+
+  return refAtPos;
+};
+
+export const getRefUriUnderCursor = (): vscode.Uri | null | undefined => {
+  const refAtPos = getRefUnderCursor();
 
   return refAtPos && findUriByRef(getWorkspaceCache().allUris, refAtPos.ref);
 };
