@@ -2,6 +2,8 @@
 
 - `Open link` command which allows you to follow links or simply use `cmd / ctrl + click`
   - ![[Open link command.png]]
+- `Open link to the side` command which allows you to open link in the adjacent/new column of the editor `cmd / ctrl + shift + enter`
+  - ![[Open link to the side.png]]
 - `Open daily note` command which creates a note with a title in `yyyy-mm-dd` format or opens an already existing one instead
   - ![[Open daily note.gif]]
 - `Open random note` command which allows your to explore you knowledge base a little bit
