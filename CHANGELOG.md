@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.3](https://github.com/svsool/vscode-memo/compare/v0.3.2...v0.3.3) (2021-01-24)
+
+
+### Features
+
+* Add context menu "Open menu to the side" ([618eadd](https://github.com/svsool/vscode-memo/commit/618eadd1e2c09af0470dd9c3612f241234679c85))
+* Add memo:refFocusedOrHovered ([9ce62a6](https://github.com/svsool/vscode-memo/commit/9ce62a6b6d1bf619eb1cd9dff33c5bcb1d5b83d5))
+* open link in adjacent/new editor column ([#81](https://github.com/svsool/vscode-memo/issues/81)) ([8c9c260](https://github.com/svsool/vscode-memo/commit/8c9c260d136a0d900ff223ad18ffb61cd5fe398a))
+
+
+### Bug Fixes
+
+* add showOption ([c1d3066](https://github.com/svsool/vscode-memo/commit/c1d3066c349037497efdadc33f1546d18c899e32))
+* eslint error "Delete `CR` on Windows ([7cfad0f](https://github.com/svsool/vscode-memo/commit/7cfad0f46aa5b4cbaa0494c33271625495b6ea3e))
+* Fix tests for openReferenceBeside ([1050a94](https://github.com/svsool/vscode-memo/commit/1050a9416023620d1a0905c9b31fb2d3baed5fee))
+* remove space ([4945f95](https://github.com/svsool/vscode-memo/commit/4945f95187cbb91167ad2fa10852b75a6e39fd38))
+
 ### [0.3.1](https://github.com/svsool/vscode-memo/compare/v0.3.0...v0.3.1) (2020-12-06)
 
 
