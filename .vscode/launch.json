@@ -27,7 +27,7 @@
         "${workspaceFolder}/tmp/test-workspace",
         "--disable-extensions",
 				"--extensionDevelopmentPath=${workspaceFolder}",
-				"--extensionTestsPath=${workspaceFolder}/out/test/testRunner",
+				"--extensionTestsPath=${workspaceFolder}/out/test/testRunner"
 			],
 			"outFiles": [
 				"${workspaceFolder}/out/test/**/*.js"

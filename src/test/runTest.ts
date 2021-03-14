@@ -1,6 +1,4 @@
 import * as path from 'path';
-import fs from 'fs';
-import os from 'os';
 import { runTests } from 'vscode-test';
 
 process.env.FORCE_COLOR = '1';
@@ -15,7 +13,8 @@ async function main() {
     // Passed to --extensionTestsPath
     const extensionTestsPath = path.resolve(__dirname, './testRunner');
 
-    const tmpWorkspaceDir = fs.mkdtempSync(path.join(os.tmpdir(), 'memo-'));
+    // Temp workspace dir re-created automatically see precompile:tests script in package.json
+    const tmpWorkspaceDir = path.join(extensionDevelopmentPath, 'tmp', 'test-workspace');
 
     // Download VS Code, unzip it and run the integration test
     await runTests({
