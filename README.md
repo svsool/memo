@@ -11,12 +11,6 @@ Inspired by [Obsidian.md](https://obsidian.md/) and [RoamResearch](https://roamr
 [![codecov](https://codecov.io/gh/svsool/vscode-memo/branch/master/graph/badge.svg)](https://codecov.io/gh/svsool/vscode-memo)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/svsool/vscode-memo/blob/master/CONTRIBUTING.md)
 
-## Known issues
-
-Image hover and link provider features are currently not compatible with VSCode 1.53 and 1.54. [Possible fix](https://github.com/svsool/vscode-memo/issues/306) is investigated, so use it at your discretion.
-
-To enjoy all features, you can use VSCode 1.52 (November 2020), which can be downloaded from [this page](https://code.visualstudio.com/updates/v1_52).
-
 ## Why?
 
 Because your knowledge base deserves to be powered by open source. Read more [here](https://github.com/svsool/vscode-memo/issues/9#issuecomment-658893538).
@@ -24,6 +18,12 @@ Because your knowledge base deserves to be powered by open source. Read more [he
 ## Getting started
 
 If you want to try out Memo just install it via marketplace using [this link](https://marketplace.visualstudio.com/items?itemName=svsool.markdown-memo) and open the [help](https://github.com/svsool/vscode-memo/tree/master/help) folder in VSCode.
+
+## Known issues
+
+Image hover and link provider features are currently not compatible with VSCode 1.53 and 1.54. [Possible fix](https://github.com/svsool/vscode-memo/issues/306) is investigated, so use it at your discretion.
+
+To enjoy all features, you can use VSCode 1.52 (November 2020), which can be downloaded from [this page](https://code.visualstudio.com/updates/v1_52).
 
 ## Features
 
