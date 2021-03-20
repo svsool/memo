@@ -50,7 +50,8 @@ describe('ReferenceHoverProvider', () => {
     });
   });
 
-  it('should provide hover for image', async () => {
+  // Skipped until a proper solution found. See this issue https://github.com/svsool/vscode-memo/issues/306.
+  it.skip('should provide hover for image', async () => {
     const name0 = rndName();
     const name1 = rndName();
 
