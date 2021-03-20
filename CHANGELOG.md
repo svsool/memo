@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.4](https://github.com/svsool/vscode-memo/compare/v0.3.3...v0.3.4) (2021-03-20)
+
+
+### Bug Fixes
+
+* Add a note about degraded experience on image hover with vscode 1.53/1.54 ([cd085f9](https://github.com/svsool/vscode-memo/commit/cd085f935ce36cb91a4f58dd5d373d17004dec31))
+* Fix backlink error when filenames contain regex symbols ([06bd81d](https://github.com/svsool/vscode-memo/commit/06bd81db9ddf4547654a88b2de2a850be302773e))
+* Make follow link to work with vscode 1.53/1.54 ([b60258e](https://github.com/svsool/vscode-memo/commit/b60258eff4ab54cf7d1d59f6f6cb8f2025083e83))
+
 ### [0.3.3](https://github.com/svsool/vscode-memo/compare/v0.3.2...v0.3.3) (2021-01-24)
 
 
