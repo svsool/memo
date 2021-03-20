@@ -8,6 +8,9 @@ on:
       - 'v*'
   pull_request:
 
+env:
+  NODE_VERSION: 14.4.0
+
 jobs:
   check-types:
     name: Check Types
@@ -15,7 +18,9 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v1.4.4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
       - name: Install Dependencies
         run: yarn
       - name: Check Types
@@ -26,7 +31,9 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v1.4.4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
       - name: Install Dependencies
         run: yarn
       - name: Check Types
@@ -42,7 +49,9 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v1.4.4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
       - name: Install Dependencies
         run: yarn
       - name: Run Tests
@@ -64,7 +73,9 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v1.4.4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
       - name: Install Dependencies
         run: yarn
       - name: Package
@@ -82,7 +93,9 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v1.4.4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
       - name: Install Dependencies
         run: yarn
       - name: Publish
