@@ -103,9 +103,14 @@ export default class BacklinksTreeDataProvider implements vscode.TreeDataProvide
           referencesByPath[pathParam],
           collapsibleState,
         );
-        backlink.description = `(${referencesByPath[pathParam].length}) ${trimSlashes(
-          pathParam.replace(workspaceFolder.uri.fsPath, '').replace(path.basename(pathParam), ''),
-        )}`;
+        backlink.description = [
+          `(${referencesByPath[pathParam].length})`,
+          trimSlashes(
+            pathParam.replace(workspaceFolder.uri.fsPath, '').replace(path.basename(pathParam), ''),
+          ).trim(),
+        ]
+          .filter(Boolean)
+          .join(' ');
         backlink.tooltip = pathParam;
         backlink.command = {
           command: 'vscode.open',

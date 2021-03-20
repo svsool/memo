@@ -50,7 +50,7 @@ describe('BacklinksTreeDataProvider', () => {
         collapsibleState: 2,
         label: `a-${name0}.md`,
         refs: expect.any(Array),
-        description: '(1) ',
+        description: '(1)',
         tooltip: `${path.join(getWorkspaceFolder()!, `a-${name0}.md`)}`,
         command: {
           command: 'vscode.open',
@@ -109,7 +109,7 @@ describe('BacklinksTreeDataProvider', () => {
         collapsibleState: 2,
         label: `b-${name1}.md`,
         refs: expect.any(Array),
-        description: '(1) ',
+        description: '(1)',
         tooltip: `${path.join(getWorkspaceFolder()!, `b-${name1}.md`)}`,
         command: {
           command: 'vscode.open',
@@ -184,7 +184,7 @@ describe('BacklinksTreeDataProvider', () => {
         collapsibleState: 2,
         label: `a-${name0}.md`,
         refs: expect.any(Array),
-        description: '(1) ',
+        description: '(1)',
         tooltip: `${path.join(getWorkspaceFolder()!, `a-${name0}.md`)}`,
         command: {
           command: 'vscode.open',
@@ -243,7 +243,7 @@ describe('BacklinksTreeDataProvider', () => {
         collapsibleState: 2,
         label: `b-${name1}.md`,
         refs: expect.any(Array),
-        description: '(1) ',
+        description: '(1)',
         tooltip: `${path.join(getWorkspaceFolder()!, `b-${name1}.md`)}`,
         command: {
           command: 'vscode.open',
@@ -655,5 +655,79 @@ describe('BacklinksTreeDataProvider', () => {
     expect(getMemoConfigProperty('backlinksPanel.collapseParentItems', null)).toBe(false);
 
     expect((await getChildren()).every((child) => child.collapsibleState === 2)).toBe(true);
+  });
+
+  it('should provide backlink for file with regexp symbols in name', async () => {
+    const linkWithRegexpSymbol = `?`;
+    const name0 = rndName();
+
+    await createFile(`${linkWithRegexpSymbol}.md`, `[[${name0}]]`);
+    await createFile(`${name0}.md`);
+
+    const doc = await openTextDocument(`${name0}.md`);
+    await window.showTextDocument(doc);
+
+    expect(toPlainObject(await getChildren())).toMatchObject([
+      {
+        collapsibleState: 2,
+        label: `${linkWithRegexpSymbol}.md`,
+        refs: expect.any(Array),
+        description: '(1)',
+        tooltip: `${path.join(getWorkspaceFolder()!, `${linkWithRegexpSymbol}.md`)}`,
+        command: {
+          command: 'vscode.open',
+          arguments: [
+            expect.objectContaining({
+              path: Uri.file(path.join(getWorkspaceFolder()!, `${linkWithRegexpSymbol}.md`)).path,
+              scheme: 'file',
+            }),
+            {
+              selection: [
+                {
+                  line: 0,
+                  character: 0,
+                },
+                {
+                  line: 0,
+                  character: 0,
+                },
+              ],
+            },
+          ],
+          title: 'Open File',
+        },
+        children: [
+          {
+            collapsibleState: 0,
+            label: '1:2',
+            description: `[[${name0}]]`,
+            tooltip: `[[${name0}]]`,
+            command: {
+              command: 'vscode.open',
+              arguments: [
+                expect.objectContaining({
+                  path: Uri.file(path.join(getWorkspaceFolder()!, `${linkWithRegexpSymbol}.md`))
+                    .path,
+                  scheme: 'file',
+                }),
+                {
+                  selection: [
+                    {
+                      line: 0,
+                      character: 2,
+                    },
+                    {
+                      line: 0,
+                      character: expect.any(Number),
+                    },
+                  ],
+                },
+              ],
+              title: 'Open File',
+            },
+          },
+        ],
+      },
+    ]);
   });
 });
