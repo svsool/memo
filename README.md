@@ -21,7 +21,7 @@ If you want to try out Memo just install it via marketplace using [this link](ht
 
 ## Known issues
 
-Image hover and link provider features are currently not compatible with VSCode 1.53 and 1.54. [Possible fix](https://github.com/svsool/vscode-memo/issues/306) is investigated, so use it at your discretion.
+Image preview on hover is currently not compatible with VSCode 1.53 and 1.54. [Possible fix](https://github.com/svsool/vscode-memo/issues/306) is investigated, so use it at your discretion.
 
 To enjoy all features, you can use VSCode 1.52 (November 2020), which can be downloaded from [this page](https://code.visualstudio.com/updates/v1_52).
 
