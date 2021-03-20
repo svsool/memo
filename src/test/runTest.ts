@@ -20,7 +20,6 @@ async function main() {
     await runTests({
       extensionDevelopmentPath,
       extensionTestsPath,
-      version: '1.52.1',
       launchArgs: [tmpWorkspaceDir, '--disable-extensions'],
     });
   } catch (err) {
