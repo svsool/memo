@@ -657,77 +657,80 @@ describe('BacklinksTreeDataProvider', () => {
     expect((await getChildren()).every((child) => child.collapsibleState === 2)).toBe(true);
   });
 
-  it('should provide backlink for file with regexp symbols in name', async () => {
-    const linkWithRegexpSymbol = `?`;
-    const name0 = rndName();
+  // This test fails under Windows platform, because it does not permit question mark and some other characters in file names
+  if (process.platform !== 'win32') {
+    it('should provide backlink for file with regexp symbols in name', async () => {
+      const linkWithRegexpSymbol = `?`;
+      const name0 = rndName();
 
-    await createFile(`${linkWithRegexpSymbol}.md`, `[[${name0}]]`);
-    await createFile(`${name0}.md`);
+      await createFile(`${linkWithRegexpSymbol}.md`, `[[${name0}]]`);
+      await createFile(`${name0}.md`);
 
-    const doc = await openTextDocument(`${name0}.md`);
-    await window.showTextDocument(doc);
+      const doc = await openTextDocument(`${name0}.md`);
+      await window.showTextDocument(doc);
 
-    expect(toPlainObject(await getChildren())).toMatchObject([
-      {
-        collapsibleState: 2,
-        label: `${linkWithRegexpSymbol}.md`,
-        refs: expect.any(Array),
-        description: '(1)',
-        tooltip: `${path.join(getWorkspaceFolder()!, `${linkWithRegexpSymbol}.md`)}`,
-        command: {
-          command: 'vscode.open',
-          arguments: [
-            expect.objectContaining({
-              path: Uri.file(path.join(getWorkspaceFolder()!, `${linkWithRegexpSymbol}.md`)).path,
-              scheme: 'file',
-            }),
+      expect(toPlainObject(await getChildren())).toMatchObject([
+        {
+          collapsibleState: 2,
+          label: `${linkWithRegexpSymbol}.md`,
+          refs: expect.any(Array),
+          description: '(1)',
+          tooltip: `${path.join(getWorkspaceFolder()!, `${linkWithRegexpSymbol}.md`)}`,
+          command: {
+            command: 'vscode.open',
+            arguments: [
+              expect.objectContaining({
+                path: Uri.file(path.join(getWorkspaceFolder()!, `${linkWithRegexpSymbol}.md`)).path,
+                scheme: 'file',
+              }),
+              {
+                selection: [
+                  {
+                    line: 0,
+                    character: 0,
+                  },
+                  {
+                    line: 0,
+                    character: 0,
+                  },
+                ],
+              },
+            ],
+            title: 'Open File',
+          },
+          children: [
             {
-              selection: [
-                {
-                  line: 0,
-                  character: 0,
-                },
-                {
-                  line: 0,
-                  character: 0,
-                },
-              ],
+              collapsibleState: 0,
+              label: '1:2',
+              description: `[[${name0}]]`,
+              tooltip: `[[${name0}]]`,
+              command: {
+                command: 'vscode.open',
+                arguments: [
+                  expect.objectContaining({
+                    path: Uri.file(path.join(getWorkspaceFolder()!, `${linkWithRegexpSymbol}.md`))
+                      .path,
+                    scheme: 'file',
+                  }),
+                  {
+                    selection: [
+                      {
+                        line: 0,
+                        character: 2,
+                      },
+                      {
+                        line: 0,
+                        character: expect.any(Number),
+                      },
+                    ],
+                  },
+                ],
+                title: 'Open File',
+              },
             },
           ],
-          title: 'Open File',
         },
-        children: [
-          {
-            collapsibleState: 0,
-            label: '1:2',
-            description: `[[${name0}]]`,
-            tooltip: `[[${name0}]]`,
-            command: {
-              command: 'vscode.open',
-              arguments: [
-                expect.objectContaining({
-                  path: Uri.file(path.join(getWorkspaceFolder()!, `${linkWithRegexpSymbol}.md`))
-                    .path,
-                  scheme: 'file',
-                }),
-                {
-                  selection: [
-                    {
-                      line: 0,
-                      character: 2,
-                    },
-                    {
-                      line: 0,
-                      character: expect.any(Number),
-                    },
-                  ],
-                },
-              ],
-              title: 'Open File',
-            },
-          },
-        ],
-      },
-    ]);
-  });
+      ]);
+    });
+  }
 });
