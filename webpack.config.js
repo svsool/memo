@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 
 const config = {
   target: 'node',
@@ -29,6 +30,7 @@ const config = {
       },
     ],
   },
+  plugins: [new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/)],
 };
 
 module.exports = config;
