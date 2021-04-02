@@ -243,7 +243,7 @@
     "@types/node": "^14.14.37",
     "@types/open": "^6.2.1",
     "@types/semver": "^7.3.4",
-    "@types/vscode": "^1.54.0",
+    "@types/vscode": "^1.55.0",
     "@typescript-eslint/eslint-plugin": "^4.19.0",
     "@typescript-eslint/parser": "^4.20.0",
     "cross-env": "^7.0.3",
