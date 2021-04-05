@@ -279,7 +279,7 @@
     "markdown-it": "^12.0.4",
     "markdown-it-regex": "^0.2.0",
     "moment": "^2.29.1",
-    "open": "^8.0.4",
+    "open": "^8.0.5",
     "semver": "^7.3.5"
   }
 }
