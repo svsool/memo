@@ -8,6 +8,8 @@ import {
   ensureDirectoryExists,
   parseRef,
   getWorkspaceFolder,
+  getMemoConfigProperty,
+  isLongRef,
 } from '../utils';
 
 const openDocumentByReference = async ({
@@ -28,10 +30,20 @@ const openDocumentByReference = async ({
     if (workspaceFolder) {
       const paths = ref.split('/');
       const refExt = path.parse(ref).ext;
-      const pathsWithExt = [
+
+      const resolvedRef = path.join(
         ...paths.slice(0, -1),
         `${paths.slice(-1)}${refExt !== '.md' && refExt !== '' ? '' : '.md'}`,
-      ];
+      );
+
+      // Apply default folder rule if it's a short ref(i.e. doesn't have an existing dir in ref).
+      const defaultPath = !isLongRef(ref)
+        ? getMemoConfigProperty('links.rules', []).find((rule) =>
+            new RegExp(rule.rule).test(resolvedRef),
+          )?.folder
+        : undefined;
+
+      const pathsWithExt = (defaultPath ? [defaultPath] : []).concat([resolvedRef]);
       const filePath = path.join(workspaceFolder, ...pathsWithExt);
 
       // don't override file content if it already exists

@@ -126,6 +126,12 @@
           "description": "Whether to enable references search for links in the editor. Reload required!",
           "type": "boolean"
         },
+        "memo.links.rules": {
+          "default": [],
+          "scope": "resource",
+          "markdownDescription": "Rules to create the files for short links. The file will be created in dir of **the first one in the list** that matches the filename.",
+          "type": "array"
+        },
         "memo.links.sync.enabled": {
           "default": true,
           "scope": "resource",
