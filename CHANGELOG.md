@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.5](https://github.com/svsool/vscode-memo/compare/v0.3.4...v0.3.5) (2021-04-24)
+
+
+### Bug Fixes
+
+* Re-enable image preview on hover in latest vscode versions ([abce6b9](https://github.com/svsool/vscode-memo/commit/abce6b9858d1336516385e2a4fc1e88940be6168))
+
 ### [0.3.4](https://github.com/svsool/vscode-memo/compare/v0.3.3...v0.3.4) (2021-03-20)
 
 
