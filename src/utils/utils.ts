@@ -404,9 +404,12 @@ export const findUriByRef = (uris: vscode.Uri[], ref: string): vscode.Uri | unde
 
     if (containsImageExt(ref) || containsOtherKnownExts(ref) || containsUnknownExt(ref)) {
       if (isLongRef(ref)) {
+        const relativeFsPathNormalized = normalizeSlashes(relativeFsPath);
+        const refLowerCased = ref.toLowerCase();
+
         return (
-          normalizeSlashes(relativeFsPath).endsWith(ref.toLowerCase()) ||
-          normalizeSlashes(relativeFsPath).endsWith(`${ref.toLowerCase()}.md`)
+          relativeFsPathNormalized.endsWith(refLowerCased) ||
+          relativeFsPathNormalized.endsWith(`${refLowerCased}.md`)
         );
       }
 
