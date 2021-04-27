@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.7](https://github.com/svsool/vscode-memo/compare/v0.3.6...v0.3.7) (2021-04-27)
+
+
+### Bug Fixes
+
+* Fix findUriByRef for long links with dots ([#346](https://github.com/svsool/vscode-memo/issues/346), [#339](https://github.com/svsool/vscode-memo/issues/339)) ([6ec7cca](https://github.com/svsool/vscode-memo/commit/6ec7ccaad17cf5e2686d61f1ed3c49d5d53043d2))
+
 ### [0.3.6](https://github.com/svsool/vscode-memo/compare/v0.3.5...v0.3.6) (2021-04-24)
 
 ### [0.3.5](https://github.com/svsool/vscode-memo/compare/v0.3.4...v0.3.5) (2021-04-24)
