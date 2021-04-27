@@ -976,6 +976,60 @@ describe('getReferenceAtPosition()', () => {
       }
     `);
   });
+
+  it('should get reference at position for a short link with dots', async () => {
+    expect(
+      getReferenceAtPosition(
+        await workspace.openTextDocument({
+          language: 'markdown',
+          content: '![[test-v1.1.0]]',
+        }),
+        new Position(0, 4),
+      ),
+    ).toMatchInlineSnapshot(`
+      Object {
+        "label": "",
+        "range": Array [
+          Object {
+            "character": 1,
+            "line": 0,
+          },
+          Object {
+            "character": 16,
+            "line": 0,
+          },
+        ],
+        "ref": "test-v1.1.0",
+      }
+    `);
+  });
+
+  it('should get reference at position for a long link with dots', async () => {
+    expect(
+      getReferenceAtPosition(
+        await workspace.openTextDocument({
+          language: 'markdown',
+          content: '![[test/test-v1.1.0]]',
+        }),
+        new Position(0, 4),
+      ),
+    ).toMatchInlineSnapshot(`
+      Object {
+        "label": "",
+        "range": Array [
+          Object {
+            "character": 1,
+            "line": 0,
+          },
+          Object {
+            "character": 21,
+            "line": 0,
+          },
+        ],
+        "ref": "test/test-v1.1.0",
+      }
+    `);
+  });
 });
 
 describe('escapeForRegExp()', () => {
@@ -1491,6 +1545,36 @@ describe('findUriByRef()', () => {
     expect(
       toPlainObject(await findUriByRef([Uri.file('/Users/Memo/Diary/.md')], '.md')),
     ).toBeUndefined();
+  });
+
+  it('should find uri by ref for a short link with dots', async () => {
+    expect(
+      toPlainObject(
+        await findUriByRef([Uri.file('/Users/Memo/Diary/test/test-v1.1.0.md')], 'test-v1.1.0'),
+      ),
+    ).toEqual(
+      expect.objectContaining({
+        $mid: 1,
+        fsPath: expect.toEndWith('test-v1.1.0.md'),
+        path: expect.toEndWith('test-v1.1.0.md'),
+        scheme: 'file',
+      }),
+    );
+  });
+
+  it('should find uri by ref for a long link with dots', async () => {
+    expect(
+      toPlainObject(
+        await findUriByRef([Uri.file('/Users/Memo/Diary/test/test-v1.1.0.md')], 'test/test-v1.1.0'),
+      ),
+    ).toEqual(
+      expect.objectContaining({
+        $mid: 1,
+        fsPath: expect.toEndWith('test-v1.1.0.md'),
+        path: expect.toEndWith('test-v1.1.0.md'),
+        scheme: 'file',
+      }),
+    );
   });
 });
 
