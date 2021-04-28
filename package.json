@@ -234,7 +234,7 @@
     "@commitlint/config-conventional": "^12.1.1",
     "@types/del": "^4.0.0",
     "@types/glob": "^7.1.1",
-    "@types/jest": "^26.0.22",
+    "@types/jest": "^26.0.23",
     "@types/lodash.debounce": "^4.0.6",
     "@types/lodash.groupby": "^4.6.6",
     "@types/lodash.range": "^3.2.6",
