@@ -212,7 +212,7 @@
   "scripts": {
     "vscode:prepublish": "webpack --mode production",
     "deploy:vsce": "vsce publish --yarn",
-    "deploy:ovsx": "ovsx publish --yarn",
+    "deploy:ovsx": "ovsx publish --yarn --packagePath ./",
     "package": "vsce package --yarn",
     "clean": "del dist out",
     "lint": "eslint src --ext ts",

@@ -101,10 +101,6 @@ jobs:
       - name: Publish to Visual Studio Marketplace
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
-        run: yarn deploy
-      - name: Publish to Visual Studio Marketplace
-        env:
-          VSCE_PAT: ${{ secrets.VSCE_PAT }}
         run: yarn deploy:vsce
       - name: Publish to Open VSX Registry
         env:
