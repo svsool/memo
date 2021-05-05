@@ -263,7 +263,7 @@ export function getMemoConfigProperty(
 export function getMemoConfigProperty(
   property: 'links.rules',
   fallback: null | Array<LinkRuleT>,
-): Array<LinkRuleT>;
+): LinkRuleT[];
 
 export function getMemoConfigProperty(property: MemoBoolConfigProp, fallback: boolean): boolean;
 
