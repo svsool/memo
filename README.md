@@ -73,6 +73,22 @@ To enjoy all features, you can use VSCode 1.52 (November 2020), which can be dow
 
 ![Creating notes on the fly](./help/Attachments/Creating%20notes%20from%20links.png)
 
+  - Also supporting configurable rules to specify the destination of the newly created notes.
+  The following snippet is an example to create daily notes in directory `Daily` and all other notes in `Notes`.
+
+  ```json
+    [{
+      "rule": "/([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))\\.md$",
+      "comment": "Daily notes yyyy-mm-dd",
+      "folder": "/Daily"
+    },
+    { 
+      "rule": "\\.md$",
+      "comment": "All other notes",
+      "folder": "/Notes"
+    ]}
+  ```
+
 - 🖇 **Backlinks panel**
 
 ![Backlinks panel](./help/Attachments/Backlinks%20panel.png)

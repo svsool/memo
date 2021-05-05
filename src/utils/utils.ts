@@ -3,7 +3,7 @@ import path from 'path';
 import { sort as sortPaths } from 'cross-path-sort';
 import fs from 'fs';
 
-import { WorkspaceCache, RefT, FoundRefT } from '../types';
+import { WorkspaceCache, RefT, FoundRefT, LinkRuleT } from '../types';
 import { isInCodeSpan, isInFencedCodeBlock } from './externalUtils';
 import { default as createDailyQuickPick } from './createDailyQuickPick';
 
@@ -259,6 +259,11 @@ export function getMemoConfigProperty(
   property: 'links.preview.imageMaxHeight',
   fallback: null | number,
 ): number;
+
+export function getMemoConfigProperty(
+  property: 'links.rules',
+  fallback: null | Array<LinkRuleT>,
+): LinkRuleT[];
 
 export function getMemoConfigProperty(property: MemoBoolConfigProp, fallback: boolean): boolean;
 
