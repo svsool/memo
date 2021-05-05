@@ -129,7 +129,7 @@
         "memo.links.rules": {
           "default": [],
           "scope": "resource",
-          "markdownDescription": "Rules to create the files for short links. The file will be created in dir of **the first one in the list** that matches the filename.",
+          "description": "Rules specifying the location where new files should be created for short links. Applicable only if links format is set to short in the settings. In case if multiple rules matching the file path, the rule that comes first will be applied.",
           "type": "array"
         },
         "memo.links.sync.enabled": {
