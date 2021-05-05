@@ -36,12 +36,20 @@ const openDocumentByReference = async ({
         `${paths.slice(-1)}${refExt !== '.md' && refExt !== '' ? '' : '.md'}`,
       );
 
-      // Apply default folder rule if it's a short ref(i.e. doesn't have an existing dir in ref).
-      const defaultPath = !isLongRef(ref)
-        ? getMemoConfigProperty('links.rules', []).find((rule) =>
-            new RegExp(rule.rule).test(resolvedRef),
-          )?.folder
-        : undefined;
+      let defaultPath;
+      try {
+        // Apply default folder rule if it's a short ref(i.e. doesn't have an existing dir in ref).
+        defaultPath = !isLongRef(ref)
+          ? getMemoConfigProperty('links.rules', []).find((rule) =>
+              new RegExp(rule.rule).test(resolvedRef),
+            )?.folder
+          : undefined;
+      } catch (error) {
+        vscode.window.showWarningMessage(
+          `Fail to decide path to create the file, please check config. error: ${error}`,
+        );
+        return;
+      }
 
       const pathsWithExt = (defaultPath ? [defaultPath] : []).concat([resolvedRef]);
       const filePath = path.join(workspaceFolder, ...pathsWithExt);

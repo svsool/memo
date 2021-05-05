@@ -78,12 +78,12 @@ To enjoy all features, you can use VSCode 1.52 (November 2020), which can be dow
 
   ```json
     [{
-      "rule": "/([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))\.md$/",
+      "rule": "/([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))\\.md$",
       "comment": "Daily notes yyyy-mm-dd",
       "folder": "/Daily"
     },
     { 
-      "rule": "\.md$",
+      "rule": "\\.md$",
       "comment": "All other notes",
       "folder": "/Notes"
     ]}
