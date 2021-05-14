@@ -31,28 +31,24 @@ const openDocumentByReference = async ({
       const paths = ref.split('/');
       const refExt = path.parse(ref).ext;
 
-      const resolvedRef = path.join(
+      const refWithExt = path.join(
         ...paths.slice(0, -1),
         `${paths.slice(-1)}${refExt !== '.md' && refExt !== '' ? '' : '.md'}`,
       );
 
-      let defaultPath;
-      try {
-        // Apply default folder rule if it's a short ref(i.e. doesn't have an existing dir in ref).
-        defaultPath = !isLongRef(ref)
-          ? getMemoConfigProperty('links.rules', []).find((rule) =>
-              new RegExp(rule.rule).test(resolvedRef),
-            )?.folder
-          : undefined;
-      } catch (error) {
-        vscode.window.showWarningMessage(
-          `Fail to decide path to create the file, please check config. error: ${error}`,
-        );
-        return;
-      }
+      const linksFormat = getMemoConfigProperty('links.format', 'short');
+      const linksRules = getMemoConfigProperty('links.rules', []);
 
-      const pathsWithExt = (defaultPath ? [defaultPath] : []).concat([resolvedRef]);
-      const filePath = path.join(workspaceFolder, ...pathsWithExt);
+      const shortRefFolder =
+        linksFormat === 'short' && !isLongRef(ref)
+          ? Array.isArray(linksRules) &&
+            linksRules.find((rule) => new RegExp(rule.rule).test(refWithExt))?.folder
+          : undefined;
+
+      const filePath = path.join(
+        workspaceFolder,
+        ...(shortRefFolder ? [shortRefFolder, refWithExt] : [refWithExt]),
+      );
 
       // don't override file content if it already exists
       if (!fs.existsSync(filePath)) {
