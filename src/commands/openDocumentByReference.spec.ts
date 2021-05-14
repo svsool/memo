@@ -10,6 +10,7 @@ import {
   getOpenedPaths,
   closeEditorsAndCleanWorkspace,
   toPlainObject,
+  updateMemoConfigProperty,
 } from '../test/testUtils';
 
 describe('openDocumentByReference command', () => {
@@ -200,5 +201,61 @@ describe('openDocumentByReference command', () => {
     ]);
 
     executeCommandSpy.mockRestore();
+  });
+
+  it('should create a note in a configured sub dir', async () => {
+    await updateMemoConfigProperty('links.rules', [
+      {
+        rule: '.*\\.md$',
+        comment: 'all notes',
+        folder: '/Notes',
+      },
+    ]);
+
+    const name = rndName();
+
+    expect(getOpenedFilenames()).not.toContain(`${name}.md`);
+
+    await openDocumentByReference({ reference: name });
+
+    expect(getOpenedPaths()).toContain(
+      `${path.join(getWorkspaceFolder()!, 'Notes', `${name}.md`)}`,
+    );
+  });
+
+  it('should not create a note in a configured sub dir for long links', async () => {
+    await updateMemoConfigProperty('links.rules', [
+      {
+        rule: '.*\\.md$',
+        comment: 'all notes',
+        folder: '/Notes',
+      },
+    ]);
+
+    const name = `dir/${rndName()}`;
+
+    expect(getOpenedFilenames()).not.toContain(`${name}.md`);
+
+    await openDocumentByReference({ reference: name });
+
+    expect(getOpenedPaths()).toContain(`${path.join(getWorkspaceFolder()!, `${name}.md`)}`);
+  });
+
+  it('should create a note in a root dir when no matching rule found', async () => {
+    await updateMemoConfigProperty('links.rules', [
+      {
+        rule: '.*\\.txt$',
+        comment: 'all text',
+        folder: '/Text',
+      },
+    ]);
+
+    const name = rndName();
+
+    expect(getOpenedFilenames()).not.toContain(`${name}.md`);
+
+    await openDocumentByReference({ reference: name });
+
+    expect(getOpenedPaths()).toContain(`${path.join(getWorkspaceFolder()!, `${name}.md`)}`);
   });
 });
