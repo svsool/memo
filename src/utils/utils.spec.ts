@@ -1251,7 +1251,7 @@ describe('getFileUrlForMarkdownPreview()', () => {
 describe('getImgUrlForMarkdownPreview()', () => {
   it('should get img url for markdown preview', () => {
     expect(getImgUrlForMarkdownPreview('/Users/Memo/Diary/image.png')).toBe(
-      'vscode-resource://file///Users/Memo/Diary/image.png',
+      '/Users/Memo/Diary/image.png',
     );
   });
 });

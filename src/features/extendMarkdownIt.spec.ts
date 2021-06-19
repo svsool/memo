@@ -43,7 +43,9 @@ describe('extendMarkdownIt feature', () => {
 
     const url = getFileUrlForMarkdownPreview(notePath);
 
-    expect(md.render(`[[${name}]]`)).toBe(`<p><a title="${url}" href="${url}">${name}</a></p>\n`);
+    expect(md.render(`[[${name}]]`)).toBe(
+      `<p><a title="${url}" href="${url}" data-href="${url}">${name}</a></p>\n`,
+    );
   });
 
   it('should render html link to the existing note with a label', async () => {
@@ -58,7 +60,7 @@ describe('extendMarkdownIt feature', () => {
     const url = getFileUrlForMarkdownPreview(notePath);
 
     expect(md.render(`[[${name}|Test Label]]`)).toBe(
-      `<p><a title="${url}" href="${url}">Test Label</a></p>\n`,
+      `<p><a title="${url}" href="${url}" data-href="${url}">Test Label</a></p>\n`,
     );
   });
 
@@ -74,7 +76,7 @@ describe('extendMarkdownIt feature', () => {
     const url = getFileUrlForMarkdownPreview(notePath);
 
     expect(md.render(`[[${name}.any|Test Label]]`)).toBe(
-      `<p><a title="${url}" href="${url}">Test Label</a></p>\n`,
+      `<p><a title="${url}" href="${url}" data-href="${url}">Test Label</a></p>\n`,
     );
   });
 
@@ -90,7 +92,7 @@ describe('extendMarkdownIt feature', () => {
     const url = getFileUrlForMarkdownPreview(notePath);
 
     expect(md.render(`[[.${name}|Test Label]]`)).toBe(
-      `<p><a title="${url}" href="${url}">Test Label</a></p>\n`,
+      `<p><a title="${url}" href="${url}" data-href="${url}">Test Label</a></p>\n`,
     );
   });
 
@@ -119,7 +121,7 @@ describe('extendMarkdownIt feature', () => {
     const url = getFileUrlForMarkdownPreview(imagePath);
 
     expect(md.render(`[[${name}.png]]`)).toBe(
-      `<p><a title="${url}" href="${url}">${name}.png</a></p>\n`,
+      `<p><a title="${url}" href="${url}" data-href="${url}">${name}.png</a></p>\n`,
     );
   });
 
@@ -135,7 +137,7 @@ describe('extendMarkdownIt feature', () => {
     const url = getFileUrlForMarkdownPreview(imagePath);
 
     expect(md.render(`[[.${name}.png]]`)).toBe(
-      `<p><a title="${url}" href="${url}">.${name}.png</a></p>\n`,
+      `<p><a title="${url}" href="${url}" data-href="${url}">.${name}.png</a></p>\n`,
     );
   });
 
@@ -151,7 +153,7 @@ describe('extendMarkdownIt feature', () => {
     const url = getFileUrlForMarkdownPreview(imagePath);
 
     expect(md.render(`[[${name}.png|Test Label]]`)).toBe(
-      `<p><a title="${url}" href="${url}">Test Label</a></p>\n`,
+      `<p><a title="${url}" href="${url}" data-href="${url}">Test Label</a></p>\n`,
     );
   });
 
@@ -170,11 +172,10 @@ describe('extendMarkdownIt feature', () => {
     await createFile(`${name}.png`);
 
     const md = extendMarkdownIt(MarkdownIt());
+    const src = getImgUrlForMarkdownPreview(path.join(getWorkspaceFolder()!, `${name}.png`));
 
     expect(md.render(`![[${name}.png]]`)).toBe(
-      `<p><div><img src="${getImgUrlForMarkdownPreview(
-        path.join(getWorkspaceFolder()!, `${name}.png`),
-      )}" alt="${name}.png" /></div></p>\n`,
+      `<p><div><img src="${src}" data-src="${src}" alt="${name}.png" /></div></p>\n`,
     );
   });
 
@@ -196,7 +197,7 @@ describe('extendMarkdownIt feature', () => {
     const url = getFileUrlForMarkdownPreview(notePath);
 
     expect(md.render(`[[[[${name}]]]]]]`)).toBe(
-      `<p>[[<a title="${url}" href="${url}">${name}</a>]]]]</p>\n`,
+      `<p>[[<a title="${url}" href="${url}" data-href="${url}">${name}</a>]]]]</p>\n`,
     );
   });
 
@@ -206,11 +207,10 @@ describe('extendMarkdownIt feature', () => {
     await createFile(`${name}.png`);
 
     const md = extendMarkdownIt(MarkdownIt());
+    const src = getImgUrlForMarkdownPreview(path.join(getWorkspaceFolder()!, `${name}.png`));
 
     expect(md.render(`[[![[${name}.png]]]]]]`)).toBe(
-      `<p>[[<div><img src="${getImgUrlForMarkdownPreview(
-        path.join(getWorkspaceFolder()!, `${name}.png`),
-      )}" alt="${name}.png" /></div>]]]]</p>\n`,
+      `<p>[[<div><img src="${src}" data-src="${src}" alt="${name}.png" /></div>]]]]</p>\n`,
     );
   });
 
@@ -226,7 +226,9 @@ describe('extendMarkdownIt feature', () => {
 
     const url = getFileUrlForMarkdownPreview(notePath);
 
-    expect(md.render(`[[${name}]]`)).toBe(`<p><a title="${url}" href="${url}">${name}</a></p>\n`);
+    expect(md.render(`[[${name}]]`)).toBe(
+      `<p><a title="${url}" href="${url}" data-href="${url}">${name}</a></p>\n`,
+    );
   });
 
   it('should render html link to the note on short link without extension', async () => {
@@ -243,7 +245,9 @@ describe('extendMarkdownIt feature', () => {
 
     const url = getFileUrlForMarkdownPreview(notePath);
 
-    expect(md.render(`[[${name}]]`)).toBe(`<p><a title="${url}" href="${url}">${name}</a></p>\n`);
+    expect(md.render(`[[${name}]]`)).toBe(
+      `<p><a title="${url}" href="${url}" data-href="${url}">${name}</a></p>\n`,
+    );
   });
 
   it('should render embedded note', async () => {
@@ -538,7 +542,6 @@ describe('extendMarkdownIt feature', () => {
 
   it('should render html link to the existing note with escape symbol for the label', async () => {
     const name = rndName();
-
     await createFile(`${name}.md`);
 
     const md = extendMarkdownIt(MarkdownIt());
@@ -548,7 +551,7 @@ describe('extendMarkdownIt feature', () => {
     const url = getFileUrlForMarkdownPreview(notePath);
 
     expect(md.render(`[[${name}\\|Test Label]]`)).toBe(
-      `<p><a title="${url}" href="${url}">Test Label</a></p>\n`,
+      `<p><a title="${url}" href="${url}" data-href="${url}">Test Label</a></p>\n`,
     );
   });
 });

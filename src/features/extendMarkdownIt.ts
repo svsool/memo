@@ -24,7 +24,7 @@ const getUnknownExtRefAnchor = (text: string, ref: string) =>
   }. Please use common file extensions ${commonExtsHint} to enable full support." href="javascript:void(0)">${text}</a>`;
 
 const getRefAnchor = (href: string, text: string) =>
-  `<a title="${href}" href="${href}">${text}</a>`;
+  `<a title="${href}" href="${href}" data-href="${href}">${text}</a>`;
 
 const extendMarkdownIt = (md: MarkdownIt) => {
   const refsStack: string[] = [];
@@ -40,7 +40,9 @@ const extendMarkdownIt = (md: MarkdownIt) => {
           const imagePath = findUriByRef(getWorkspaceCache().imageUris, ref)?.fsPath;
 
           if (imagePath) {
-            return `<div><img src="${getImgUrlForMarkdownPreview(imagePath)}" alt="${
+            return `<div><img src="${getImgUrlForMarkdownPreview(
+              imagePath,
+            )}" data-src="${getImgUrlForMarkdownPreview(imagePath)}" alt="${
               label || ref
             }" /></div>`;
           }
