@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.9](https://github.com/svsool/vscode-memo/compare/v0.3.8...v0.3.9) (2021-06-19)
+
+
+### Features
+
+* Support configurable location for creating notes ([77f995e](https://github.com/svsool/vscode-memo/commit/77f995e05bb3b90b08f8128c9d2c7be2ee8751d7))
+* Support configurable location for creating notes ([8c4a64f](https://github.com/svsool/vscode-memo/commit/8c4a64fc2d66ba7a67fe607b089ff7bc58786ee0))
+* Support configurable root location for creating notes ([f9a02ad](https://github.com/svsool/vscode-memo/commit/f9a02ade1c350c70dc4d99e077d900fc0dee9c9e))
+
+
+### Bug Fixes
+
+* Fix links in markdown preview in the latest vscode ([#367](https://github.com/svsool/vscode-memo/issues/367), [#401](https://github.com/svsool/vscode-memo/issues/401)) ([4c3f630](https://github.com/svsool/vscode-memo/commit/4c3f630481d6c606810e098536aadba411f38433))
+
 ### [0.3.8](https://github.com/svsool/vscode-memo/compare/v0.3.7...v0.3.8) (2021-04-30)
 
 ### [0.3.7](https://github.com/svsool/vscode-memo/compare/v0.3.6...v0.3.7) (2021-04-27)
