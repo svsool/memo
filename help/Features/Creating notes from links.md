@@ -4,7 +4,7 @@ You can automatically create a `[[Note]]` if does not exist yet just by clicking
 
 ## Link formats
 
-Memo supports two link formats, `short` (by default) and `long`.
+Memo supports two link formats, `short` (by default) and `long` ones.
 
 ```json
 // settings.json
@@ -17,9 +17,11 @@ Memo supports two link formats, `short` (by default) and `long`.
 
 Short links are helpful for hierarchy-free knowledge bases where the path itself doesn't bring a lot of context.
 
-Memo will try to use `short` links whenever possible and fallback to the `long` ones otherwise. Learn next how it works.
+Memo will try to use `short` links whenever possible and fallback to the `long` ones otherwise.
 
-1. Workspace tree where `note.md` is a unique name:
+Let's learn how it works in the following two cases.
+
+1. Workspace tree where `note.md` is a unique filename:
 
 ```
 <root>
@@ -28,9 +30,9 @@ Memo will try to use `short` links whenever possible and fallback to the `long` 
         └── note.md
 ```
 
-In this case on typing `[[not` autocomplete will offer only one result and Memo will insert a `[[note]]` link pointing to `<root>/folder1/folder2/note.md`.
+In this case on typing `[[not` autocomplete will offer only one result and Memo will insert a `short` link `[[note]]` pointing to `<root>/folder1/folder2/note.md`.
 
-2. Workspace tree where `note.md` is not a unique name:
+2. Workspace tree where `note.md` is not a unique filename:
 
 ```
 <root>
@@ -48,9 +50,9 @@ Autocomplete results are pre-sorted using a path sorting algorithm. For example,
 
 On picking (1) item Memo will insert a `short` link `[[note]]` pointing to `<root>/note.md` file.
 
-On picking (2) item Memo will insert a `long` link pointing to `[[folder1/folder2/note]]` file.
+On picking (2) item Memo will insert a `long` link `[[folder1/folder2/note]]` pointing to `<root>/folder1/folder2/note.md` file.
 
-Mixing short and long link behaviors helps to avoid clashes, however, long links shouldn't be pervasive with hierarchy-free knowledge bases, and short links prevalent instead.
+Mixing short and long link behaviors helps to avoid clashes. However, with hierarchy-free knowledge bases, short links should be prevalent over long links, and such conflicts shouldn't happen very often.
 
 ### Long links
 
