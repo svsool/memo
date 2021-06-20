@@ -7,10 +7,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Features
 
-* Support configurable location for creating notes ([77f995e](https://github.com/svsool/vscode-memo/commit/77f995e05bb3b90b08f8128c9d2c7be2ee8751d7))
-* Support configurable location for creating notes ([8c4a64f](https://github.com/svsool/vscode-memo/commit/8c4a64fc2d66ba7a67fe607b089ff7bc58786ee0))
-* Support configurable root location for creating notes ([f9a02ad](https://github.com/svsool/vscode-memo/commit/f9a02ade1c350c70dc4d99e077d900fc0dee9c9e))
-
+* Support configurable location for creating notes ([#331](https://github.com/svsool/vscode-memo/pull/331))
 
 ### Bug Fixes
 
