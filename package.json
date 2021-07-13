@@ -89,6 +89,12 @@
           "description": "Whether to enable links completion in the editor. Reload required!",
           "type": "boolean"
         },
+        "memo.links.completion.removeRedundantSymlinks": {
+          "default": false,
+          "scope": "resource",
+          "description": "Whether to remove redundant symlinked files from suggestions.",
+          "type": "boolean"
+        },
         "memo.links.following.enabled": {
           "default": true,
           "scope": "resource",

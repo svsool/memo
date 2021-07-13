@@ -237,6 +237,7 @@ export function getConfigProperty<T>(property: string, fallback: T): T {
 export type MemoBoolConfigProp =
   | 'decorations.enabled'
   | 'links.completion.enabled'
+  | 'links.completion.removeRedundantSymlinks'
   | 'links.following.enabled'
   | 'links.preview.enabled'
   | 'links.references.enabled'

@@ -8,6 +8,7 @@ import {
   Uri,
   ExtensionContext,
 } from 'vscode';
+import fs from 'fs';
 import path from 'path';
 import groupBy from 'lodash.groupby';
 
@@ -48,6 +49,14 @@ export const provideCompletionItems = (document: TextDocument, position: Positio
 
   const urisByPathBasename = groupBy(uris, ({ fsPath }) => path.basename(fsPath).toLowerCase());
 
+  for (const basename in urisByPathBasename) {
+    const urisByCanonical = groupBy(urisByPathBasename[basename], (uri) =>
+      fs.realpathSync(uri.fsPath),
+    );
+    const unique = Object.values(urisByCanonical).map((uris) => uris[0]); // take random one, e.g. first
+    urisByPathBasename[basename] = unique;
+  }
+
   uris.forEach((uri, index) => {
     const workspaceFolder = workspace.getWorkspaceFolder(uri);
 
@@ -68,8 +77,17 @@ export const provideCompletionItems = (document: TextDocument, position: Positio
 
     const urisGroup = urisByPathBasename[path.basename(uri.fsPath).toLowerCase()] || [];
 
-    const isFirstUriInGroup =
-      urisGroup.findIndex((uriParam) => uriParam.fsPath === uri.fsPath) === 0;
+    const searchResult = urisGroup.findIndex((uriParam) => uriParam.fsPath === uri.fsPath);
+
+    const isFirstUriInGroup = searchResult === 0;
+
+    // if all other files with the same basename were symlinks then urisGroup.length will be 1
+    // and some uris in main array will be missing in group - that's ok
+    const isSymlinked = searchResult === -1 && urisGroup.length === 1;
+
+    if (isSymlinked && getMemoConfigProperty('links.completion.removeRedundantSymlinks', false)) {
+      return;
+    }
 
     if (!longRef || !shortRef) {
       return;
@@ -80,7 +98,7 @@ export const provideCompletionItems = (document: TextDocument, position: Positio
     const linksFormat = getMemoConfigProperty('links.format', 'short');
 
     item.insertText =
-      linksFormat === 'long' || linksFormat === 'absolute' || !isFirstUriInGroup
+      linksFormat === 'long' || linksFormat === 'absolute' || (!isFirstUriInGroup && !isSymlinked)
         ? longRef
         : shortRef;
 

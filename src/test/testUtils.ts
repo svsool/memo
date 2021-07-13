@@ -73,6 +73,36 @@ export const createFile = async (
   return Uri.file(path.join(workspaceFolder, ...filename.split('/')));
 };
 
+export const createSymlink = async (
+  filename: string,
+  target: string,
+  syncCache: boolean = true,
+): Promise<Uri | undefined> => {
+  const workspaceFolder = utils.getWorkspaceFolder();
+
+  if (!workspaceFolder) {
+    return;
+  }
+
+  const filepath = path.join(workspaceFolder, ...filename.split('/'));
+  const dirname = path.dirname(filepath);
+  const targetpath = path.join(workspaceFolder, ...target.split('/'));
+
+  utils.ensureDirectoryExists(filepath);
+
+  if (!fs.existsSync(dirname)) {
+    throw new Error(`Directory ${dirname} does not exist`);
+  }
+
+  fs.symlinkSync(targetpath, filepath);
+
+  if (syncCache) {
+    await cacheWorkspace();
+  }
+
+  return Uri.file(path.join(workspaceFolder, ...filename.split('/')));
+};
+
 export const fileExists = (filename: string) => {
   const workspaceFolder = utils.getWorkspaceFolder();
 
