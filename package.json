@@ -251,7 +251,7 @@
     "@types/open": "^6.2.1",
     "@types/vscode": "^1.55.0",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
-    "@typescript-eslint/parser": "^4.22.0",
+    "@typescript-eslint/parser": "^4.28.3",
     "cross-env": "^7.0.3",
     "del": "^6.0.0",
     "del-cli": "^3.0.1",
