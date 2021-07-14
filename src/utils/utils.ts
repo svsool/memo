@@ -1,7 +1,15 @@
-import vscode, { CancellationToken, GlobPattern, Uri, workspace } from 'vscode';
+import vscode, {
+  CancellationToken,
+  CompletionItem,
+  CompletionItemKind,
+  GlobPattern,
+  Uri,
+  workspace,
+} from 'vscode';
 import path from 'path';
 import { sort as sortPaths } from 'cross-path-sort';
 import fs from 'fs';
+import groupBy from 'lodash.groupby';
 
 import { WorkspaceCache, RefT, FoundRefT, LinkRuleT } from '../types';
 import { isInCodeSpan, isInFencedCodeBlock } from './externalUtils';
@@ -153,6 +161,9 @@ const workspaceCache: WorkspaceCache = {
   allUris: [],
   danglingRefsByFsPath: {},
   danglingRefs: [],
+  docsCompletionItems: [],
+  resourcesCompletionItems: [],
+  refsCompletionItems: [],
 };
 
 export const getWorkspaceCache = (): WorkspaceCache => workspaceCache;
@@ -169,6 +180,8 @@ export const cacheUris = async () => {
     pathKey: 'path',
     shallowFirst: true,
   });
+
+  cacheUrisCompletionItems();
 };
 
 export const cacheRefs = async () => {
@@ -177,6 +190,124 @@ export const cacheRefs = async () => {
     Array.from(new Set(Object.values(workspaceCache.danglingRefsByFsPath).flatMap((refs) => refs))),
     { shallowFirst: true },
   );
+
+  cacheRefsCompletionItems();
+};
+
+const padWithZero = (n: number): string => (n < 10 ? '0' + n : String(n));
+
+export const generateRefsCompletitionItems = () => {
+  const completionItems: CompletionItem[] = [];
+
+  const danglingRefs = getWorkspaceCache().danglingRefs;
+
+  const urisCompletionItemsLength = Math.max(
+    getWorkspaceCache().resourcesCompletionItems.length,
+    getWorkspaceCache().docsCompletionItems.length,
+  );
+
+  danglingRefs.forEach((ref, index) => {
+    const item = new CompletionItem(ref, CompletionItemKind.File);
+
+    item.insertText = ref;
+
+    // prepend index with 0, so a lexicographic sort doesn't mess things up
+    item.sortText = padWithZero(urisCompletionItemsLength + index);
+
+    completionItems.push(item);
+  });
+
+  return completionItems;
+};
+
+export const generateUrisCompletitionItems = (uris: vscode.Uri[]) => {
+  const completionItems: CompletionItem[] = [];
+
+  const urisByPathBasename = groupBy(uris, ({ fsPath }) => path.basename(fsPath).toLowerCase());
+
+  for (const basename in urisByPathBasename) {
+    const urisByCanonical = groupBy(urisByPathBasename[basename], (uri) =>
+      fs.realpathSync(uri.fsPath),
+    );
+    const unique = Object.values(urisByCanonical).map((uris) => uris[0]); // take random one, e.g. first
+    urisByPathBasename[basename] = unique;
+  }
+
+  uris.forEach((uri, index) => {
+    const workspaceFolder = workspace.getWorkspaceFolder(uri);
+
+    if (!workspaceFolder) {
+      return;
+    }
+
+    const longRef = fsPathToRef({
+      path: uri.fsPath,
+      basePath: workspaceFolder.uri.fsPath,
+      keepExt: containsImageExt(uri.fsPath) || containsOtherKnownExts(uri.fsPath),
+    });
+
+    const shortRef = fsPathToRef({
+      path: uri.fsPath,
+      keepExt: containsImageExt(uri.fsPath) || containsOtherKnownExts(uri.fsPath),
+    });
+
+    const urisGroup = urisByPathBasename[path.basename(uri.fsPath).toLowerCase()] || [];
+
+    const searchResult = urisGroup.findIndex((uriParam) => uriParam.fsPath === uri.fsPath);
+
+    const isFirstUriInGroup = searchResult === 0;
+
+    // if all other files with the same basename were symlinks then urisGroup.length will be 1
+    // and some uris in main array will be missing in group - that's ok
+    const isSymlinked = searchResult === -1 && urisGroup.length === 1;
+
+    if (isSymlinked && getMemoConfigProperty('links.completion.removeRedundantSymlinks', false)) {
+      return;
+    }
+
+    if (!longRef || !shortRef) {
+      return;
+    }
+
+    const item = new CompletionItem(longRef, CompletionItemKind.File);
+
+    const linksFormat = getMemoConfigProperty('links.format', 'short');
+
+    item.insertText =
+      linksFormat === 'long' || linksFormat === 'absolute' || (!isFirstUriInGroup && !isSymlinked)
+        ? longRef
+        : shortRef;
+
+    completionItems.push(item);
+  });
+
+  return completionItems;
+};
+
+export const cacheUrisCompletionItems = () => {
+  const markdownCompletitionItems = generateUrisCompletitionItems(getWorkspaceCache().markdownUris);
+  const imageCompletitionItems = generateUrisCompletitionItems(getWorkspaceCache().imageUris);
+  const otherFilesCompletitionItems = generateUrisCompletitionItems(getWorkspaceCache().otherUris);
+
+  const docsCompletionItems = [
+    ...markdownCompletitionItems,
+    ...imageCompletitionItems,
+    ...otherFilesCompletitionItems,
+  ];
+  const resourcesCompletionItems = [...imageCompletitionItems, ...markdownCompletitionItems];
+
+  workspaceCache.docsCompletionItems = docsCompletionItems.map((item, index) => {
+    item.sortText = padWithZero(index);
+    return item;
+  });
+  workspaceCache.resourcesCompletionItems = resourcesCompletionItems.map((item, index) => {
+    item.sortText = padWithZero(index);
+    return item;
+  });
+};
+
+export const cacheRefsCompletionItems = () => {
+  workspaceCache.refsCompletionItems = generateRefsCompletitionItems();
 };
 
 export const addCachedRefs = async (uris: vscode.Uri[]) => {
@@ -191,6 +322,8 @@ export const addCachedRefs = async (uris: vscode.Uri[]) => {
     Array.from(new Set(Object.values(workspaceCache.danglingRefsByFsPath).flatMap((refs) => refs))),
     { shallowFirst: true },
   );
+
+  cacheRefsCompletionItems();
 };
 
 export const removeCachedRefs = async (uris: vscode.Uri[]) => {
@@ -211,6 +344,8 @@ export const removeCachedRefs = async (uris: vscode.Uri[]) => {
     Array.from(new Set(Object.values(workspaceCache.danglingRefsByFsPath).flatMap((refs) => refs))),
     { shallowFirst: true },
   );
+
+  cacheRefsCompletionItems();
 };
 
 export const cacheWorkspace = async () => {
@@ -225,6 +360,8 @@ export const cleanWorkspaceCache = () => {
   workspaceCache.allUris = [];
   workspaceCache.danglingRefsByFsPath = {};
   workspaceCache.danglingRefs = [];
+  workspaceCache.docsCompletionItems = [];
+  workspaceCache.resourcesCompletionItems = [];
 };
 
 export const getWorkspaceFolder = (): string | undefined =>

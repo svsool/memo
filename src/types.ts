@@ -1,4 +1,4 @@
-import { Uri, Location } from 'vscode';
+import { Uri, Location, CompletionItem } from 'vscode';
 
 export type WorkspaceCache = {
   imageUris: Uri[];
@@ -7,6 +7,9 @@ export type WorkspaceCache = {
   allUris: Uri[];
   danglingRefs: string[];
   danglingRefsByFsPath: { [key: string]: string[] };
+  docsCompletionItems: CompletionItem[];
+  resourcesCompletionItems: CompletionItem[];
+  refsCompletionItems: CompletionItem[];
 };
 
 export type RefT = {
