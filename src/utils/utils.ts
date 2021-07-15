@@ -3,6 +3,7 @@ import vscode, {
   CompletionItem,
   CompletionItemKind,
   GlobPattern,
+  MarkdownString,
   Uri,
   workspace,
 } from 'vscode';
@@ -194,7 +195,10 @@ export const cacheRefs = async () => {
   cacheRefsCompletionItems();
 };
 
-const padWithZero = (n: number): string => (n < 10 ? '0' + n : String(n));
+const padWithZero = (n: number): string => {
+  const asStr = n.toString();
+  return '0'.repeat(10 - asStr.length) + asStr;
+};
 
 export const generateRefsCompletitionItems = () => {
   const completionItems: CompletionItem[] = [];
@@ -273,16 +277,45 @@ export const generateUrisCompletitionItems = (uris: vscode.Uri[]) => {
 
     const linksFormat = getMemoConfigProperty('links.format', 'short');
 
-    item.insertText =
+    const ref =
       linksFormat === 'long' || linksFormat === 'absolute' || (!isFirstUriInGroup && !isSymlinked)
         ? longRef
         : shortRef;
+
+    const insertTitle = getMemoConfigProperty('links.completion.insertTitle', true);
+    const showPreviews = getMemoConfigProperty('links.completion.showPreviews', true);
+    const showImagePreviews = getMemoConfigProperty('links.completion.showImagePreviews', true);
+
+    let contents = '';
+    if (containsMarkdownExt(uri.fsPath) && (insertTitle || showPreviews)) {
+      contents = fs.readFileSync(uri.fsPath).toString();
+    }
+
+    if (containsMarkdownExt(uri.fsPath) && insertTitle) {
+      const sanitizedTitle = extractMarkdownTitle(contents)?.replace(/[*_\[\]]/g, '');
+      item.insertText = sanitizedTitle && ref !== sanitizedTitle ? `${ref}|${sanitizedTitle}` : ref;
+    } else {
+      item.insertText = ref;
+    }
+
+    if (showPreviews) {
+      if (containsMarkdownExt(uri.fsPath)) {
+        item.documentation = new MarkdownString(contents);
+      } else if (containsImageExt(uri.fsPath) && showImagePreviews) {
+        item.documentation = new MarkdownString(`![](${encodeURI(uri.fsPath)})`);
+      }
+    }
 
     completionItems.push(item);
   });
 
   return completionItems;
 };
+
+function extractMarkdownTitle(contents: string) {
+  const results = contents.match(/^\s*# (.*)/);
+  return results ? results[1].trim() : null;
+}
 
 export const cacheUrisCompletionItems = () => {
   const markdownCompletitionItems = generateUrisCompletitionItems(getWorkspaceCache().markdownUris);
@@ -294,7 +327,13 @@ export const cacheUrisCompletionItems = () => {
     ...imageCompletitionItems,
     ...otherFilesCompletitionItems,
   ];
-  const resourcesCompletionItems = [...imageCompletitionItems, ...markdownCompletitionItems];
+
+  // make shallow copy or sort texts will interfere
+  const resourcesCompletionItems = [...imageCompletitionItems, ...markdownCompletitionItems].map(
+    (item) => {
+      return { ...item };
+    },
+  );
 
   workspaceCache.docsCompletionItems = docsCompletionItems.map((item, index) => {
     item.sortText = padWithZero(index);
@@ -374,6 +413,9 @@ export function getConfigProperty<T>(property: string, fallback: T): T {
 export type MemoBoolConfigProp =
   | 'decorations.enabled'
   | 'links.completion.enabled'
+  | 'links.completion.showPreviews'
+  | 'links.completion.showImagePreviews'
+  | 'links.completion.insertTitle'
   | 'links.completion.removeRedundantSymlinks'
   | 'links.following.enabled'
   | 'links.preview.enabled'
