@@ -275,7 +275,7 @@
     "vsce": "^1.87.1",
     "vscode-test": "^1.5.2",
     "wait-for-expect": "^3.0.2",
-    "webpack": "^5.35.1",
+    "webpack": "^5.45.1",
     "webpack-cli": "^4.6.0"
   },
   "dependencies": {
