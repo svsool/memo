@@ -15,13 +15,15 @@ import {
 const openDocumentByReference = async ({
   reference,
   showOption = vscode.ViewColumn.Active,
+  file = "",
 }: {
   reference: string;
   showOption?: vscode.ViewColumn;
+  file?: string;
 }) => {
   const { ref } = parseRef(reference);
 
-  const uri = findUriByRef(getWorkspaceCache().allUris, ref);
+  const uri = findUriByRef(getWorkspaceCache().allUris, ref, file);
 
   if (uri) {
     await vscode.commands.executeCommand('vscode.open', uri, showOption);

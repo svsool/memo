@@ -28,7 +28,10 @@ export default class DocumentLinkProvider implements vscode.DocumentLinkProvider
             const link = new vscode.DocumentLink(
               new vscode.Range(linkStart, linkEnd),
               vscode.Uri.parse('command:_memo.openDocumentByReference').with({
-                query: JSON.stringify({ reference: encodeURIComponent(reference) }),
+                query: JSON.stringify({
+                  reference: encodeURIComponent(reference),
+                  file: document.fileName
+                }),
               }),
             );
 

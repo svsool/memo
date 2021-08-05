@@ -26,7 +26,7 @@ export default class ReferenceHoverProvider implements vscode.HoverProvider {
       );
 
       const uris = getWorkspaceCache().allUris;
-      const foundUri = findUriByRef(uris, ref);
+      const foundUri = findUriByRef(uris, ref, document.fileName);
 
       if (!foundUri && containsUnknownExt(ref)) {
         return new vscode.Hover(

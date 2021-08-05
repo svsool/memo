@@ -405,10 +405,12 @@ export const extractExt = (value: string) => path.parse(value).ext.replace(/^\./
 export const expandDotRef = (ref: string, file: string): string => {
   if (/^\.\.?[\\\/]/.test(ref)) {
     const filedir = path.dirname(file);
-    const fullRef = path.normalize(path.format({
+    const expandDirRef = path.normalize(path.format({
       dir: filedir, base: ref
     }));
-    return fullRef;
+    const relativeFsPath =
+      path.sep + path.relative(getWorkspaceFolder()!.toLowerCase(), expandDirRef.toLowerCase());
+    return normalizeSlashes(relativeFsPath);
   }
 
   return ref;
