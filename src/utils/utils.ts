@@ -97,7 +97,7 @@ export const fsPathToRef = ({
 
 const refRegexp = new RegExp(refPattern, 'gi');
 
-export const extractDanglingRefs = (content: string) => {
+export const extractDanglingRefs = (content: string, file: string = '') => {
   const refs: string[] = [];
 
   content.split(/\r?\n/g).forEach((lineText, lineNum) => {
@@ -112,7 +112,7 @@ export const extractDanglingRefs = (content: string) => {
 
         const { ref } = parseRef(reference);
 
-        if (!findUriByRef(getWorkspaceCache().allUris, ref)) {
+        if (!findUriByRef(getWorkspaceCache().allUris, ref, file)) {
           refs.push(ref);
         }
       }
@@ -136,7 +136,7 @@ export const findDanglingRefsByFsPath = async (uris: vscode.Uri[]) => {
     }
 
     const doc = workspace.textDocuments.find((doc) => doc.uri.fsPath === fsPath);
-    const refs = extractDanglingRefs(doc ? doc.getText() : fs.readFileSync(fsPath).toString());
+    const refs = extractDanglingRefs(doc ? doc.getText() : fs.readFileSync(fsPath).toString(), fsPath);
 
     if (refs.length) {
       refsByFsPath[fsPath] = refs;
@@ -402,7 +402,22 @@ export const findAllUrisWithUnknownExts = async (uris: vscode.Uri[]) => {
 
 export const extractExt = (value: string) => path.parse(value).ext.replace(/^\./, '');
 
-export const findUriByRef = (uris: vscode.Uri[], ref: string): vscode.Uri | undefined => {
+export const expandDotRef = (ref: string, file: string): string => {
+  if (/^\.\.?[\\\/]/.test(ref)) {
+    const filedir = path.dirname(file);
+    const fullRef = path.normalize(path.format({
+      dir: filedir, base: ref
+    }));
+    return fullRef;
+  }
+
+  return ref;
+};
+
+export const findUriByRef = (uris: vscode.Uri[], ref: string, file: string = ''): vscode.Uri | undefined => {
+  if (isLongRef(ref)) {
+    ref = expandDotRef(ref, file);
+  }
   return uris.find((uri) => {
     const relativeFsPath =
       path.sep + path.relative(getWorkspaceFolder()!.toLowerCase(), uri.fsPath.toLowerCase());
