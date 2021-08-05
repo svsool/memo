@@ -1,3 +1,4 @@
+import vscode from 'vscode';
 import MarkdownIt from 'markdown-it';
 import markdownItRegex from 'markdown-it-regex';
 import path from 'path';
@@ -28,6 +29,7 @@ const getRefAnchor = (href: string, text: string) =>
 
 const extendMarkdownIt = (md: MarkdownIt) => {
   const refsStack: string[] = [];
+  const file = !!vscode.window.activeTextEditor ? vscode.window.activeTextEditor.document.fileName : '';
 
   const mdExtended = md
     .use(markdownItRegex, {
@@ -37,7 +39,7 @@ const extendMarkdownIt = (md: MarkdownIt) => {
         const { ref, label } = parseRef(rawRef);
 
         if (containsImageExt(ref)) {
-          const imagePath = findUriByRef(getWorkspaceCache().imageUris, ref)?.fsPath;
+          const imagePath = findUriByRef(getWorkspaceCache().imageUris, ref, file)?.fsPath;
 
           if (imagePath) {
             return `<div><img src="${getImgUrlForMarkdownPreview(
@@ -48,7 +50,7 @@ const extendMarkdownIt = (md: MarkdownIt) => {
           }
         }
 
-        const fsPath = findUriByRef(getWorkspaceCache().markdownUris, ref)?.fsPath;
+        const fsPath = findUriByRef(getWorkspaceCache().markdownUris, ref, file)?.fsPath;
 
         if (!fsPath && containsUnknownExt(ref)) {
           return getUnknownExtRefAnchor(label || ref, ref);
@@ -100,7 +102,7 @@ const extendMarkdownIt = (md: MarkdownIt) => {
       replace: (rawRef: string) => {
         const { ref, label } = parseRef(rawRef);
 
-        const fsPath = findUriByRef(getWorkspaceCache().allUris, ref)?.fsPath;
+        const fsPath = findUriByRef(getWorkspaceCache().allUris, ref, file)?.fsPath;
 
         if (!fsPath && containsUnknownExt(ref)) {
           return getUnknownExtRefAnchor(label || ref, ref);
