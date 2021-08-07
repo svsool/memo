@@ -547,7 +547,7 @@ describe('getRefUriUnderCursor()', () => {
 
 describe('parseRef()', () => {
   it('should fail on providing wrong parameter type', () => {
-    expect(() => parseRef((undefined as unknown) as string)).toThrow();
+    expect(() => parseRef(undefined as unknown as string)).toThrow();
   });
 
   it('should return empty ref and label', () => {

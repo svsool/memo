@@ -26,9 +26,9 @@ describe('fsWatcher feature', () => {
   let deactivateFsWatcher: Function;
 
   beforeEach(() => {
-    mockContext = ({
+    mockContext = {
       subscriptions: [],
-    } as unknown) as ExtensionContext;
+    } as unknown as ExtensionContext;
 
     deactivateFsWatcher = fsWatcher.activate(mockContext, {
       uriCachingDelay: 50,

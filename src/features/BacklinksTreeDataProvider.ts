@@ -28,8 +28,8 @@ export default class BacklinksTreeDataProvider implements vscode.TreeDataProvide
   private _onDidChangeTreeData: vscode.EventEmitter<Backlink | undefined> = new vscode.EventEmitter<
     Backlink | undefined
   >();
-  readonly onDidChangeTreeData: vscode.Event<Backlink | undefined> = this._onDidChangeTreeData
-    .event;
+  readonly onDidChangeTreeData: vscode.Event<Backlink | undefined> =
+    this._onDidChangeTreeData.event;
 
   refresh(): void {
     this._onDidChangeTreeData.fire(undefined);

@@ -14,12 +14,12 @@ import {
 describe('openReferenceInDefaultApp command', () => {
   beforeEach(async () => {
     await closeEditorsAndCleanWorkspace();
-    ((open as unknown) as jest.Mock).mockClear();
+    (open as unknown as jest.Mock).mockClear();
   });
 
   afterEach(async () => {
     await closeEditorsAndCleanWorkspace();
-    ((open as unknown) as jest.Mock).mockClear();
+    (open as unknown as jest.Mock).mockClear();
   });
 
   it('should call open command-line tool when editor selection is within the reference', async () => {

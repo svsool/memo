@@ -11,10 +11,10 @@ describe('newVersionNotifier feature', () => {
 
   it('should not fail on activate', () => {
     expect(() => {
-      const mockContext = ({
+      const mockContext = {
         subscriptions: [],
         extensionPath: path.resolve(path.join(__dirname, '..', '..')),
-      } as unknown) as ExtensionContext;
+      } as unknown as ExtensionContext;
       newVersionNotifier.activate(mockContext);
       mockContext.subscriptions.forEach((sub) => sub.dispose());
     }).not.toThrow();

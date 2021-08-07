@@ -10,7 +10,7 @@ describe('referenceContextWatcher feature', () => {
 
   it('should not fail on activate', () => {
     expect(() => {
-      const mockContext = ({ subscriptions: [] } as unknown) as ExtensionContext;
+      const mockContext = { subscriptions: [] } as unknown as ExtensionContext;
       referenceContextWatcher.activate(mockContext);
       expect(mockContext.subscriptions.length).toBeGreaterThan(0);
       mockContext.subscriptions.forEach((sub) => sub.dispose());
