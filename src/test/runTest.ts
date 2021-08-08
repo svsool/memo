@@ -20,7 +20,7 @@ async function main() {
     await runTests({
       extensionDevelopmentPath,
       extensionTestsPath,
-      launchArgs: [tmpWorkspaceDir, '--disable-extensions'],
+      launchArgs: [tmpWorkspaceDir, '--disable-extensions', '--disable-workspace-trust'],
     });
   } catch (err) {
     console.error('Failed to run tests');
