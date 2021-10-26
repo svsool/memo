@@ -287,5 +287,6 @@
     "markdown-it-regex": "^0.2.0",
     "moment": "^2.29.1",
     "open": "^8.2.1"
-  }
+  },
+  "packageManager": "yarn@3.1.0"
 }

@@ -1,0 +1,1 @@
+{"version":"0.3.9","name":"markdown-memo","dependencies":{"cross-path-sort":{"version":"1.0.0"},"lodash.debounce":{"version":"4.0.8"},"lodash.groupby":{"version":"4.6.0"},"lodash.range":{"version":"3.2.0"},"markdown-it-regex":{"version":"0.2.0"},"markdown-it":{"version":"12.2.0"},"moment":{"version":"2.29.1"},"open":{"version":"8.2.1"}}}

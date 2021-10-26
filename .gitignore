@@ -7,3 +7,10 @@ node_modules
 yarn-error.log
 VERSION
 coverage/
+vscode-memo.code-workspace
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
