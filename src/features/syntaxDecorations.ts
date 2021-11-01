@@ -32,18 +32,26 @@ const decorationTypes: { [type: string]: TextEditorDecorationType } = {
   }),
 };
 
-const decors: { [decorTypeName: string]: Range[] } = {};
+const decors: { [fileName: string]: { [decorTypeName: string]: Range[] } } = {};
 
 const regexToDecorationTypes: { [regexp: string]: string[] } = {
   // [[ref]]
   [refPattern]: ['gray', 'lightBlue', 'gray'],
 };
 
-export const getDecorations = (textEditor: TextEditor): { [decorTypeName: string]: Range[] } => {
+export const getDecorations = (
+  textEditor: TextEditor,
+  recompute: boolean = false,
+): { [decorTypeName: string]: Range[] } => {
   const doc = textEditor.document;
 
+  if (!recompute && doc.fileName in decors) {
+    return decors[doc.fileName];
+  }
+
+  decors[doc.fileName] = {};
   Object.keys(decorationTypes).forEach((decorTypeName) => {
-    decors[decorTypeName] = [];
+    decors[doc.fileName][decorTypeName] = [];
   });
 
   doc
@@ -100,16 +108,16 @@ export const getDecorations = (textEditor: TextEditor): { [decorTypeName: string
             if (decorTypeName.length === 0) {
               continue;
             }
-            decors[decorTypeName].push(range);
+            decors[doc.fileName][decorTypeName].push(range);
           }
         }
       });
     });
 
-  return decors;
+  return decors[doc.fileName];
 };
 
-const updateDecorations = (textEditor?: TextEditor) => {
+const updateDecorations = (textEditor?: TextEditor, recompute: boolean = false) => {
   const editor = textEditor || window.activeTextEditor;
   const doc = editor?.document;
 
@@ -117,7 +125,7 @@ const updateDecorations = (textEditor?: TextEditor) => {
     return;
   }
 
-  const decors = getDecorations(editor);
+  const decors = getDecorations(editor, recompute);
 
   Object.keys(decors).forEach((decorTypeName) => {
     editor && editor.setDecorations(decorationTypes[decorTypeName], decors[decorTypeName]);
@@ -134,17 +142,20 @@ export const activate = (context: ExtensionContext) => {
         if (timeout) {
           clearTimeout(timeout);
         }
-        timeout = setTimeout(() => updateDecorations(editor), 200);
+        timeout = setTimeout(() => updateDecorations(editor, true), 200);
       };
 
       if (editor !== undefined && event.document === editor.document) {
         triggerUpdateDecorations(editor);
       }
     }),
+    workspace.onDidCloseTextDocument((event) => {
+      delete decors[event.fileName];
+    }),
   );
 
   const editor = window.activeTextEditor;
   if (editor) {
-    updateDecorations(editor);
+    updateDecorations(editor, true);
   }
 };
