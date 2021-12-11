@@ -9,7 +9,7 @@ on:
   pull_request:
 
 env:
-  NODE_VERSION: 14.4.0
+  NODE_VERSION: 14.17.0
 
 jobs:
   check-types:
