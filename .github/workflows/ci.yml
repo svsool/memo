@@ -2,13 +2,12 @@ name: CI
 
 on:
   push:
-    branches:
-      - '**'
-    tags:
-      - 'v*'
     branches-ignore:
       - "dependabot/npm_and_yarn/**"
+    tags:
+      - 'v*'
 
 jobs:
-  ci:
-    uses: svsool/vscode-memo/.github/workflows/ci_jobs.yml
+  ci_jobs:
+    name: CI Jobs
+    uses: svsool/vscode-memo/.github/workflows/ci_jobs.yml@593c886f480a99ba18fe4fce8de01c4634174041
