@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.10](https://github.com/svsool/vscode-memo/compare/v0.3.9...v0.3.10) (2021-12-12)
+
+
+### Bug Fixes
+
+* Fix links in markdown preview ([#481](https://github.com/svsool/vscode-memo/issues/481)) ([0c2cb34](https://github.com/svsool/vscode-memo/commit/0c2cb348d5001855cb910998e51df36aeee4b325))
+
 ### [0.3.9](https://github.com/svsool/vscode-memo/compare/v0.3.8...v0.3.9) (2021-06-19)
 
 
