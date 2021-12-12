@@ -1,0 +1,10 @@
+name: Dependabot CI
+
+on:
+  pull_request_target
+
+permissions: read-all
+
+jobs:
+  ci:
+    uses: svsool/vscode-memo/.github/workflows/ci_jobs.yml
