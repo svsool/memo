@@ -288,6 +288,6 @@ describe('resolveCompletionItem()', () => {
 
     expect(
       ((await resolveCompletionItem(completionItem)).documentation as MarkdownString).value,
-    ).toBe(`![](${Uri.file(completionItem.fsPath).toString()}|height=200)`);
+    ).toBe(`![](${Uri.file(completionItem.fsPath).toString()})`);
   });
 });

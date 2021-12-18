@@ -125,18 +125,9 @@ export const resolveCompletionItem = async (item: MemoCompletionItem) => {
   if (item.fsPath) {
     try {
       if (containsMarkdownExt(item.fsPath)) {
-        const documentation = (await readFile(item.fsPath)).toString();
-
-        item.documentation = new MarkdownString(documentation);
+        item.documentation = new MarkdownString((await readFile(item.fsPath)).toString());
       } else if (containsImageExt(item.fsPath) && !isUncPath(item.fsPath)) {
-        const imageMaxHeight = Math.max(
-          getMemoConfigProperty('links.preview.imageMaxHeight', 200),
-          10,
-        );
-
-        item.documentation = new MarkdownString(
-          `![](${Uri.file(item.fsPath).toString()}|height=${imageMaxHeight})`,
-        );
+        item.documentation = new MarkdownString(`![](${Uri.file(item.fsPath).toString()})`);
       }
     } catch (error) {
       console.error(error);
