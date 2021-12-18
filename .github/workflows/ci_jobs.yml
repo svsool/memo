@@ -2,6 +2,11 @@ name: CI Jobs
 
 on:
   workflow_call:
+    secrets:
+      VSCE_PAT:
+        required: true
+      OVSX_PAT:
+        required: true
 
 env:
   NODE_VERSION: 14.17.0

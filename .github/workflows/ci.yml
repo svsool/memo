@@ -11,3 +11,6 @@ jobs:
   ci_jobs:
     name: CI Jobs
     uses: svsool/vscode-memo/.github/workflows/ci_jobs.yml@593c886f480a99ba18fe4fce8de01c4634174041
+    secrets:
+      VSCE_PAT: ${{ secrets.VSCE_PAT }}
+      OVSX_PAT: ${{ secrets.OVSX_PAT }}
