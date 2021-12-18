@@ -41,6 +41,7 @@
     "onCommand:memo.openDailyNote",
     "onCommand:memo.openReferenceInDefaultApp",
     "onCommand:memo.openReferenceBeside",
+    "onCommand:memo.pasteHtmlAsMarkdown",
     "onCommand:memo.extractRangeToNewNote",
     "onCommand:_memo.openReference",
     "onCommand:_memo.cacheWorkspace",
@@ -70,6 +71,11 @@
       {
         "command": "memo.openReferenceBeside",
         "title": "Open link to the side",
+        "category": "Memo"
+      },
+      {
+        "command": "memo.pasteHtmlAsMarkdown",
+        "title": "Paste HTML as Markdown",
         "category": "Memo"
       },
       {
@@ -286,6 +292,7 @@
     "ovsx": "^0.2.1",
     "prettier": "^2.5.1",
     "standard-version": "^9.3.2",
+    "terser-webpack-plugin": "^5.3.0",
     "ts-jest": "^27.1.2",
     "ts-loader": "^9.2.6",
     "typescript": "^4.5.4",

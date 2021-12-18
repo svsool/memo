@@ -1,7 +1,8 @@
 const path = require('path');
 const webpack = require('webpack');
+const TerserPlugin = require('terser-webpack-plugin');
 
-const config = {
+module.exports = (env, argv) => ({
   target: 'node',
   entry: './src/extension.ts',
   output: {
@@ -30,7 +31,24 @@ const config = {
       },
     ],
   },
-  plugins: [new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/)],
-};
-
-module.exports = config;
+  optimization:
+    argv.mode === 'production'
+      ? {
+          minimize: true,
+          minimizer: [
+            new TerserPlugin({
+              terserOptions: {
+                keep_fnames: /^(HTML|SVG)/, // https://github.com/fgnass/domino/issues/144,
+                compress: {
+                  passes: 2,
+                },
+              },
+            }),
+          ],
+        }
+      : undefined,
+  plugins: [
+    new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
+    new webpack.IgnorePlugin({ resourceRegExp: /canvas|bufferutil|utf-8-validate/ }),
+  ],
+});
