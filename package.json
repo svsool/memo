@@ -28,7 +28,10 @@
     "reference",
     "links",
     "link",
-    "zettelkasten"
+    "zettelkasten",
+    "notes",
+    "note",
+    "note-taking"
   ],
   "activationEvents": [
     "onLanguage:markdown",
