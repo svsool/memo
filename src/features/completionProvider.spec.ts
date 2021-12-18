@@ -1,6 +1,10 @@
-import { window, Position } from 'vscode';
+import { window, Position, CompletionItem, CompletionItemKind, MarkdownString, Uri } from 'vscode';
 
-import { provideCompletionItems } from './completionProvider';
+import {
+  MemoCompletionItem,
+  provideCompletionItems,
+  resolveCompletionItem,
+} from './completionProvider';
 import {
   createFile,
   rndName,
@@ -245,5 +249,45 @@ describe('provideCompletionItems()', () => {
         }),
       ]);
     });
+  });
+});
+
+describe('resolveCompletionItem()', () => {
+  beforeEach(closeEditorsAndCleanWorkspace);
+
+  afterEach(closeEditorsAndCleanWorkspace);
+
+  it('should add documentation for a markdown completion item', async () => {
+    const noteName = `note-${rndName()}`;
+
+    const noteUri = await createFile(`${noteName}.md`, 'Test documentation');
+
+    const completionItem: MemoCompletionItem = new CompletionItem(
+      noteName,
+      CompletionItemKind.File,
+    );
+
+    completionItem.fsPath = noteUri!.fsPath;
+
+    expect(
+      ((await resolveCompletionItem(completionItem)).documentation as MarkdownString).value,
+    ).toBe('Test documentation');
+  });
+
+  it('should add documentation for an image completion item', async () => {
+    const imageName = `image-${rndName()}`;
+
+    const imageUri = await createFile(`${imageName}.png`);
+
+    const completionItem: MemoCompletionItem = new CompletionItem(
+      imageName,
+      CompletionItemKind.File,
+    );
+
+    completionItem.fsPath = imageUri!.fsPath;
+
+    expect(
+      ((await resolveCompletionItem(completionItem)).documentation as MarkdownString).value,
+    ).toBe(`![](${Uri.file(completionItem.fsPath).toString()}|height=200)`);
   });
 });

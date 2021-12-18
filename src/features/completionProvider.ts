@@ -7,19 +7,30 @@ import {
   CompletionItemKind,
   Uri,
   ExtensionContext,
+  MarkdownString,
 } from 'vscode';
+import util from 'util';
 import path from 'path';
 import groupBy from 'lodash.groupby';
+import fs from 'fs';
 
 import {
   getWorkspaceCache,
   fsPathToRef,
+  containsMarkdownExt,
   containsImageExt,
   containsOtherKnownExts,
   getMemoConfigProperty,
+  isUncPath,
 } from '../utils';
 
 const padWithZero = (n: number): string => (n < 10 ? '0' + n : String(n));
+
+export type MemoCompletionItem = CompletionItem & {
+  fsPath?: string;
+};
+
+const readFile = util.promisify(fs.readFile);
 
 export const provideCompletionItems = (document: TextDocument, position: Position) => {
   const linePrefix = document.lineAt(position).text.substr(0, position.character);
@@ -31,7 +42,7 @@ export const provideCompletionItems = (document: TextDocument, position: Positio
     return undefined;
   }
 
-  const completionItems: CompletionItem[] = [];
+  const completionItems: MemoCompletionItem[] = [];
 
   const uris: Uri[] = [
     ...(isResourceAutocomplete
@@ -75,7 +86,7 @@ export const provideCompletionItems = (document: TextDocument, position: Positio
       return;
     }
 
-    const item = new CompletionItem(longRef, CompletionItemKind.File);
+    const item = new CompletionItem(longRef, CompletionItemKind.File) as MemoCompletionItem;
 
     const linksFormat = getMemoConfigProperty('links.format', 'short');
 
@@ -86,6 +97,8 @@ export const provideCompletionItems = (document: TextDocument, position: Positio
 
     // prepend index with 0, so a lexicographic sort doesn't mess things up
     item.sortText = padWithZero(index);
+
+    item.fsPath = uri.fsPath;
 
     completionItems.push(item);
   });
@@ -108,12 +121,38 @@ export const provideCompletionItems = (document: TextDocument, position: Positio
   return completionItems;
 };
 
+export const resolveCompletionItem = async (item: MemoCompletionItem) => {
+  if (item.fsPath) {
+    try {
+      if (containsMarkdownExt(item.fsPath)) {
+        const documentation = (await readFile(item.fsPath)).toString();
+
+        item.documentation = new MarkdownString(documentation);
+      } else if (containsImageExt(item.fsPath) && !isUncPath(item.fsPath)) {
+        const imageMaxHeight = Math.max(
+          getMemoConfigProperty('links.preview.imageMaxHeight', 200),
+          10,
+        );
+
+        item.documentation = new MarkdownString(
+          `![](${Uri.file(item.fsPath).toString()}|height=${imageMaxHeight})`,
+        );
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  return item;
+};
+
 export const activate = (context: ExtensionContext) =>
   context.subscriptions.push(
     languages.registerCompletionItemProvider(
       'markdown',
       {
         provideCompletionItems,
+        resolveCompletionItem,
       },
       '[',
     ),
