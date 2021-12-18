@@ -41,6 +41,7 @@
     "onCommand:memo.openDailyNote",
     "onCommand:memo.openReferenceInDefaultApp",
     "onCommand:memo.openReferenceBeside",
+    "onCommand:memo.pasteHtmlAsMarkdown",
     "onCommand:_memo.openReference",
     "onCommand:_memo.cacheWorkspace",
     "onCommand:_memo.cleanWorkspaceCache",
@@ -69,6 +70,11 @@
       {
         "command": "memo.openReferenceBeside",
         "title": "Open link to the side",
+        "category": "Memo"
+      },
+      {
+        "command": "memo.pasteHtmlAsMarkdown",
+        "title": "Paste HTML as Markdown",
         "category": "Memo"
       }
     ],
@@ -245,6 +251,7 @@
     "@commitlint/cli": "^15.0.0",
     "@commitlint/config-conventional": "^15.0.0",
     "@types/del": "^4.0.0",
+    "@types/fs-extra": "^9.0.13",
     "@types/glob": "^7.2.0",
     "@types/jest": "^27.0.3",
     "@types/lodash.debounce": "^4.0.6",
@@ -254,6 +261,7 @@
     "@types/moment": "^2.13.0",
     "@types/node": "^17.0.0",
     "@types/open": "^6.2.1",
+    "@types/turndown": "^5.0.1",
     "@types/vscode": "^1.63.1",
     "@typescript-eslint/eslint-plugin": "^5.7.0",
     "@typescript-eslint/parser": "^5.7.0",
@@ -285,12 +293,14 @@
   },
   "dependencies": {
     "cross-path-sort": "^1.0.0",
+    "fs-extra": "^10.0.0",
     "lodash.debounce": "^4.0.8",
     "lodash.groupby": "^4.6.0",
     "lodash.range": "^3.2.0",
     "markdown-it": "^12.3.0",
     "markdown-it-regex": "^0.2.0",
     "moment": "^2.29.1",
-    "open": "^8.4.0"
+    "open": "^8.4.0",
+    "turndown": "^7.1.1"
   }
 }

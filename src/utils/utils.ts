@@ -6,8 +6,9 @@ import fs from 'fs';
 import { WorkspaceCache, RefT, FoundRefT, LinkRuleT } from '../types';
 import { isInCodeSpan, isInFencedCodeBlock } from './externalUtils';
 import { default as createDailyQuickPick } from './createDailyQuickPick';
+import { readClipboard } from './clipboardUtils';
 
-export { sortPaths, createDailyQuickPick };
+export { sortPaths, createDailyQuickPick, readClipboard };
 
 const markdownExtRegex = /\.md$/i;
 

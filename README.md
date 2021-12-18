@@ -88,6 +88,10 @@ If you want to try out Memo just install it via marketplace using [this link](ht
 
   - "Open link in the default app" command for opening unsupported file formats in the system default app
 
+  - "Paste HTML as Markdown" command which can partially replace a web clipper functionality
+
+    - ![Paste HTML as Markdown](./help/Attachments/Paste%20HTML%20as%20Markdown.gif)
+
   - "Rename Symbol" command support for renaming links right in the editor
 
 ## FAQ
@@ -97,7 +101,6 @@ If you want to try out Memo just install it via marketplace using [this link](ht
 - How to follow link on `cmd+enter` or `ctrl+enter` like in Obsidian?
   - Bind built-in `editor.action.openLink` command to `cmd+enter` ([see example](https://github.com/svsool/vscode-memo/issues/2#issuecomment-654981827)) or use `cmd+click` on the link
 - [Pasting images from clipboard](./help/How%20to/Pasting%20images%20from%20clipboard.md)
-- [Pasting HTML as Markdown](./help/How%20to/Pasting%20HTML%20as%20Markdown.md)
 - Memo missing some feature? Please consider exploring other Markdown plugins from VS Marketplace first. There are [plenty of them](https://marketplace.visualstudio.com/search?term=markdown&target=VSCode&category=All%20categories&sortBy=Relevance).
 
 ## Contributing
