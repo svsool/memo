@@ -9,4 +9,4 @@ jobs:
   ci_jobs:
     name: CI Jobs
     if: ${{ github.actor == 'dependabot[bot]' }}
-    uses: svsool/vscode-memo/.github/workflows/ci_jobs.yml@593c886f480a99ba18fe4fce8de01c4634174041
+    uses: svsool/vscode-memo/.github/workflows/ci_jobs.yml@75ea7d4b8a3f49d7cfc809ced788ad84636369d0
