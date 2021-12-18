@@ -8,4 +8,5 @@ permissions: read-all
 jobs:
   ci_jobs:
     name: CI Jobs
+    if: ${{ github.actor == 'dependabot[bot]' }}
     uses: svsool/vscode-memo/.github/workflows/ci_jobs.yml@593c886f480a99ba18fe4fce8de01c4634174041
