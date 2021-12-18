@@ -94,6 +94,8 @@ If you want to try out Memo just install it via marketplace using [this link](ht
 
   - "Rename Symbol" command support for renaming links right in the editor
 
+  - "Extract range to a new note" command to ease notes refactoring
+
 ## FAQ
 
 - [Memo vs Foam](https://github.com/svsool/vscode-memo/issues/9#issuecomment-658346216)

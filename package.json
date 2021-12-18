@@ -42,6 +42,7 @@
     "onCommand:memo.openReferenceInDefaultApp",
     "onCommand:memo.openReferenceBeside",
     "onCommand:memo.pasteHtmlAsMarkdown",
+    "onCommand:memo.extractRangeToNewNote",
     "onCommand:_memo.openReference",
     "onCommand:_memo.cacheWorkspace",
     "onCommand:_memo.cleanWorkspaceCache",
@@ -75,6 +76,11 @@
       {
         "command": "memo.pasteHtmlAsMarkdown",
         "title": "Paste HTML as Markdown",
+        "category": "Memo"
+      },
+      {
+        "command": "memo.extractRangeToNewNote",
+        "title": "Extract range to a new note",
         "category": "Memo"
       }
     ],
@@ -198,6 +204,10 @@
         {
           "command": "memo.openReferenceBeside",
           "when": "editorLangId == markdown && memo:refFocusedOrHovered"
+        },
+        {
+          "command": "memo.extractRangeToNewNote",
+          "when": "editorHasSelection && editorLangId == markdown"
         }
       ]
     },

@@ -12,6 +12,7 @@ import {
   BacklinksTreeDataProvider,
   extendMarkdownIt,
   newVersionNotifier,
+  codeActionProvider,
 } from './features';
 import commands from './commands';
 import { cacheWorkspace, getMemoConfigProperty, MemoBoolConfigProp, isDefined } from './utils';
@@ -40,6 +41,7 @@ export const activate = async (
 
   context.subscriptions.push(
     ...commands,
+    vscode.languages.registerCodeActionsProvider(mdLangSelector, codeActionProvider),
     vscode.workspace.onDidChangeConfiguration(async (configChangeEvent) => {
       if (configChangeEvent.affectsConfiguration('search.exclude')) {
         await cacheWorkspace();

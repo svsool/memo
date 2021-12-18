@@ -6,6 +6,7 @@ import openReferenceInDefaultApp from './openReferenceInDefaultApp';
 import openReferenceBeside from './openReferenceBeside';
 import openDailyNote from './openDailyNote';
 import pasteHtmlAsMarkdown from './pasteHtmlAsMarkdown';
+import extractRangeToNewNote from './extractRangeToNewNote';
 import { cacheWorkspace, cleanWorkspaceCache, getWorkspaceCache } from '../utils';
 
 const commands = [
@@ -17,6 +18,7 @@ const commands = [
   vscode.commands.registerCommand('memo.openDailyNote', openDailyNote),
   vscode.commands.registerCommand('memo.openReferenceInDefaultApp', openReferenceInDefaultApp),
   vscode.commands.registerCommand('memo.openReferenceBeside', openReferenceBeside),
+  vscode.commands.registerCommand('memo.extractRangeToNewNote', extractRangeToNewNote),
   vscode.commands.registerCommand('memo.pasteHtmlAsMarkdown', pasteHtmlAsMarkdown),
 ];
 

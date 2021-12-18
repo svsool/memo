@@ -27,3 +27,7 @@
 ### `Rename Symbol` command which allows you to rename links right in the editor
 
 ![[Automatic link synchronization 2.gif]]
+
+### `Extract range to a new note` command to ease notes refactoring
+
+![[Extracting range to a new note.gif]]
