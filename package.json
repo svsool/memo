@@ -41,7 +41,6 @@
     "onCommand:memo.openDailyNote",
     "onCommand:memo.openReferenceInDefaultApp",
     "onCommand:memo.openReferenceBeside",
-    "onCommand:memo.pasteHtmlAsMarkdown",
     "onCommand:memo.extractRangeToNewNote",
     "onCommand:_memo.openReference",
     "onCommand:_memo.cacheWorkspace",
@@ -71,11 +70,6 @@
       {
         "command": "memo.openReferenceBeside",
         "title": "Open link to the side",
-        "category": "Memo"
-      },
-      {
-        "command": "memo.pasteHtmlAsMarkdown",
-        "title": "Paste HTML as Markdown",
         "category": "Memo"
       },
       {
