@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.13](https://github.com/svsool/vscode-memo/compare/v0.3.12...v0.3.13) (2021-12-18)
+
+
+### Features
+
+* Add "Extract range to a new note" command ([da3074a](https://github.com/svsool/vscode-memo/commit/da3074a11a21144812b3c735f6b77170067f171b))
+* Add "Paste HTML as Markdown" command ([501b48b](https://github.com/svsool/vscode-memo/commit/501b48bb0da6154d462e10c87384e7d07e85e4f2))
+
 ### [0.3.12](https://github.com/svsool/vscode-memo/compare/v0.3.11...v0.3.12) (2021-12-18)
 
 ### [0.3.11](https://github.com/svsool/vscode-memo/compare/v0.3.10...v0.3.11) (2021-12-18)
