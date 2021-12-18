@@ -4,7 +4,7 @@
   "description": "Markdown knowledge base with bidirectional [[link]]s built on top of VSCode",
   "publisher": "svsool",
   "version": "0.3.11",
-  "author": "Svyatoslav Sobol <svyatoslav.sobol@gmail.com>",
+  "author": "Svyatoslav Sobol <svyat.nx@gmail.com>",
   "license": "MIT",
   "icon": "media/memo.png",
   "repository": {
@@ -15,7 +15,7 @@
     "url": "https://github.com/svsool/vscode-memo/issues"
   },
   "engines": {
-    "vscode": "^1.63.0"
+    "vscode": "^1.63.1"
   },
   "categories": [
     "Other"
@@ -28,6 +28,8 @@
     "reference",
     "links",
     "link",
+    "wiki-links",
+    "wiki-link",
     "zettelkasten",
     "notes",
     "note",
