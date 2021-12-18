@@ -3,7 +3,7 @@
   "displayName": "Markdown Memo",
   "description": "Markdown knowledge base with bidirectional [[link]]s built on top of VSCode",
   "publisher": "svsool",
-  "version": "0.3.14",
+  "version": "0.3.15",
   "author": "Svyatoslav Sobol <svyat.nx@gmail.com>",
   "license": "MIT",
   "icon": "media/memo.png",

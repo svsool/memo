@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.15](https://github.com/svsool/vscode-memo/compare/v0.3.14...v0.3.15) (2021-12-18)
+
+
+### Bug Fixes
+
+* Fix "Paste HTML as Markdown" command ([8c324f8](https://github.com/svsool/vscode-memo/commit/8c324f88b004c987b0b3ea814f4c19c4770a1399))
+
 ### [0.3.14](https://github.com/svsool/vscode-memo/compare/v0.3.13...v0.3.14) (2021-12-18)
 
 
