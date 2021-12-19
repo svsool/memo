@@ -8,8 +8,8 @@ import {
   ensureDirectoryExists,
   parseRef,
   getWorkspaceFolder,
-  getMemoConfigProperty,
-  isLongRef,
+  getRefWithExt,
+  resolveShortRefFolder,
 } from '../utils';
 
 const openDocumentByReference = async ({
@@ -28,22 +28,8 @@ const openDocumentByReference = async ({
   } else {
     const workspaceFolder = getWorkspaceFolder()!;
     if (workspaceFolder) {
-      const paths = ref.split('/');
-      const refExt = path.parse(ref).ext;
-
-      const refWithExt = path.join(
-        ...paths.slice(0, -1),
-        `${paths.slice(-1)}${refExt !== '.md' && refExt !== '' ? '' : '.md'}`,
-      );
-
-      const linksFormat = getMemoConfigProperty('links.format', 'short');
-      const linksRules = getMemoConfigProperty('links.rules', []);
-
-      const shortRefFolder =
-        linksFormat === 'short' && !isLongRef(ref)
-          ? Array.isArray(linksRules) &&
-            linksRules.find((rule) => new RegExp(rule.rule).test(refWithExt))?.folder
-          : undefined;
+      const refWithExt = getRefWithExt(ref);
+      const shortRefFolder = resolveShortRefFolder(ref);
 
       const filePath = path.join(
         workspaceFolder,

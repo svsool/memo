@@ -98,8 +98,21 @@ The following snippet would instruct Memo to create daily notes in `Daily` direc
       {
         "rule": "\\.md$",
         "comment": "All other notes",
-        "folder": "/Notes"
+        "folder": "$CURRENT_FILE_DIRECTORY"
       }
     ]
 }
   ```
+
+The following variables can be used as part of the `folder` value:
+
+- `$CURRENT_FILE_DIRECTORY` - directory of currently opened file relative to workspace
+- `$CURRENT_YEAR` - The current year (example '2021')
+- `$CURRENT_YEAR_SHORT` - The current year's last two digits
+- `$CURRENT_MONTH` - The month as two digits (example '02')
+- `$CURRENT_DATE` - The day of the month as two digits (example '08')
+- `$CURRENT_HOUR` - The current hour in 24-hour clock format
+- `$CURRENT_MINUTE` - The current minute as two digits
+- `$CURRENT_SECOND` - The current second as two digits
+- `$CURRENT_SECONDS_UNIX` - The number of seconds since the Unix epoch
+- `$0-$N` - RegExp capturing group based on the matched rule

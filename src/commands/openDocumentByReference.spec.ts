@@ -203,59 +203,111 @@ describe('openDocumentByReference command', () => {
     executeCommandSpy.mockRestore();
   });
 
-  it('should create a note in a configured sub dir', async () => {
-    await updateMemoConfigProperty('links.rules', [
-      {
-        rule: '.*\\.md$',
-        comment: 'all notes',
-        folder: '/Notes',
-      },
-    ]);
+  describe('with custom links.rules config', () => {
+    it('should create a note in a configured sub dir', async () => {
+      await updateMemoConfigProperty('links.rules', [
+        {
+          rule: '.*\\.md$',
+          comment: 'all notes',
+          folder: '/Notes',
+        },
+      ]);
 
-    const name = rndName();
+      const name = rndName();
 
-    expect(getOpenedFilenames()).not.toContain(`${name}.md`);
+      expect(getOpenedFilenames()).not.toContain(`${name}.md`);
 
-    await openDocumentByReference({ reference: name });
+      await openDocumentByReference({ reference: name });
 
-    expect(getOpenedPaths()).toContain(
-      `${path.join(getWorkspaceFolder()!, 'Notes', `${name}.md`)}`,
-    );
-  });
+      expect(getOpenedPaths()).toContain(
+        `${path.join(getWorkspaceFolder()!, 'Notes', `${name}.md`)}`,
+      );
+    });
 
-  it('should not create a note in a configured sub dir for long links', async () => {
-    await updateMemoConfigProperty('links.rules', [
-      {
-        rule: '.*\\.md$',
-        comment: 'all notes',
-        folder: '/Notes',
-      },
-    ]);
+    it('should not create a note in a configured sub dir for long links', async () => {
+      await updateMemoConfigProperty('links.rules', [
+        {
+          rule: '.*\\.md$',
+          comment: 'all notes',
+          folder: '/Notes',
+        },
+      ]);
 
-    const name = `dir/${rndName()}`;
+      const name = `dir/${rndName()}`;
 
-    expect(getOpenedFilenames()).not.toContain(`${name}.md`);
+      expect(getOpenedFilenames()).not.toContain(`${name}.md`);
 
-    await openDocumentByReference({ reference: name });
+      await openDocumentByReference({ reference: name });
 
-    expect(getOpenedPaths()).toContain(`${path.join(getWorkspaceFolder()!, `${name}.md`)}`);
-  });
+      expect(getOpenedPaths()).toContain(`${path.join(getWorkspaceFolder()!, `${name}.md`)}`);
+    });
 
-  it('should create a note in a root dir when no matching rule found', async () => {
-    await updateMemoConfigProperty('links.rules', [
-      {
-        rule: '.*\\.txt$',
-        comment: 'all text',
-        folder: '/Text',
-      },
-    ]);
+    it('should create a note in a root dir when no matching rule found', async () => {
+      await updateMemoConfigProperty('links.rules', [
+        {
+          rule: '.*\\.txt$',
+          comment: 'all text',
+          folder: '/Text',
+        },
+      ]);
 
-    const name = rndName();
+      const name = rndName();
 
-    expect(getOpenedFilenames()).not.toContain(`${name}.md`);
+      expect(getOpenedFilenames()).not.toContain(`${name}.md`);
 
-    await openDocumentByReference({ reference: name });
+      await openDocumentByReference({ reference: name });
 
-    expect(getOpenedPaths()).toContain(`${path.join(getWorkspaceFolder()!, `${name}.md`)}`);
+      expect(getOpenedPaths()).toContain(`${path.join(getWorkspaceFolder()!, `${name}.md`)}`);
+    });
+
+    it('should handle regexp capture groups properly', async () => {
+      await updateMemoConfigProperty('links.rules', [
+        {
+          rule: '(\\d{4})-(\\d{2})-(\\d{2})\\.md$',
+          comment: 'Daily notes yyyy-mm-dd',
+          folder: '/Daily/$1-$2-$3',
+        },
+      ]);
+
+      const name = `${rndName()}-2000-10-10`;
+
+      expect(getOpenedFilenames()).not.toContain(`${name}.md`);
+
+      await openDocumentByReference({ reference: name });
+
+      expect(getOpenedPaths()).toContain(
+        `${path.join(getWorkspaceFolder()!, 'Daily/2000-10-10', `${name}.md`)}`,
+      );
+    });
+
+    it('should handle known variables properly', async () => {
+      await updateMemoConfigProperty('links.rules', [
+        {
+          rule: '.*\\.md$',
+          comment: 'all notes',
+          folder: '/Notes/$CURRENT_YEAR-$CURRENT_MONTH-$CURRENT_DATE',
+        },
+      ]);
+
+      const name = rndName();
+
+      expect(getOpenedFilenames()).not.toContain(`${name}.md`);
+
+      await openDocumentByReference({ reference: name });
+
+      const date = new Date();
+      const currentYear = String(date.getFullYear());
+      const currentMonth = String(date.getMonth().valueOf() + 1).padStart(2, '0');
+      const currentDate = String(date.getDate().valueOf()).padStart(2, '0');
+
+      expect(getOpenedPaths()).toContain(
+        `${path.join(
+          getWorkspaceFolder()!,
+          'Notes',
+          `${currentYear}-${currentMonth}-${currentDate}`,
+          `${name}.md`,
+        )}`,
+      );
+    });
   });
 });

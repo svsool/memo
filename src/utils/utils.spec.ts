@@ -52,6 +52,7 @@ import {
   trimLeadingSlash,
   trimSlashes,
   trimTrailingSlash,
+  getDirRelativeToWorkspace,
 } from './utils';
 
 describe('containsImageExt()', () => {
@@ -1747,5 +1748,17 @@ describe('findNonIgnoredFiles()', () => {
 
       await updateConfigProperty('search.exclude', prevConfig);
     });
+  });
+});
+
+describe.only('getDirRelativeToWorkspace()', () => {
+  it('should get directory relative to workspace', async () => {
+    const dir1 = rndName();
+    const dir2 = rndName();
+    const name1 = rndName();
+
+    const uri = await createFile(`/${dir1}/${dir2}/${name1}.md`);
+
+    expect(getDirRelativeToWorkspace(uri)).toBe(path.join('/', dir1, dir2));
   });
 });

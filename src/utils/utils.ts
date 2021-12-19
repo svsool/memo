@@ -556,4 +556,86 @@ export const findNonIgnoredFiles = async (
   return files;
 };
 
+export const getRefWithExt = (ref: string) => {
+  const paths = ref.split('/');
+  const refExt = path.parse(ref).ext;
+
+  return path.join(
+    ...paths.slice(0, -1),
+    `${paths.slice(-1)}${refExt !== '.md' && refExt !== '' ? '' : '.md'}`,
+  );
+};
+
+export const getDirRelativeToWorkspace = (uri: Uri | undefined) => {
+  const workspaceFolder = uri && workspace.getWorkspaceFolder(uri)?.uri.fsPath;
+
+  if (!workspaceFolder || !uri) {
+    return;
+  }
+
+  return path.dirname(uri.fsPath).replace(workspaceFolder, '');
+};
+
+export const resolveShortRefFolder = (ref: string): string | undefined => {
+  const linksFormat = getMemoConfigProperty('links.format', 'short');
+  const linksRules = getMemoConfigProperty('links.rules', []);
+  const refWithExt = getRefWithExt(ref);
+
+  if (linksFormat !== 'short' || isLongRef(ref) || !Array.isArray(linksRules)) {
+    return;
+  }
+
+  let linkRegExpMatchArr: RegExpMatchArray | null = null;
+  let linkRule: LinkRuleT | null = null;
+
+  for (const rule of linksRules) {
+    const matchRes = new RegExp(rule.rule).exec(refWithExt);
+
+    if (matchRes) {
+      linkRegExpMatchArr = matchRes;
+      linkRule = rule;
+
+      break;
+    }
+  }
+
+  if (!linkRule) {
+    return;
+  }
+
+  const date = new Date();
+
+  /* eslint-disable @typescript-eslint/naming-convention */
+  // https://github.com/microsoft/vscode/blob/main/src/vs/editor/contrib/snippet/snippetVariables.ts
+  const varsReplacementMap: { [varName: string]: string } = {
+    $CURRENT_FILE_DIRECTORY:
+      getDirRelativeToWorkspace(vscode.window.activeTextEditor?.document.uri) || '',
+    $CURRENT_YEAR: String(date.getFullYear()),
+    $CURRENT_YEAR_SHORT: String(date.getFullYear()).slice(-2),
+    $CURRENT_MONTH: String(date.getMonth().valueOf() + 1).padStart(2, '0'),
+    $CURRENT_DATE: String(date.getDate().valueOf()).padStart(2, '0'),
+    $CURRENT_HOUR: String(date.getHours().valueOf()).padStart(2, '0'),
+    $CURRENT_MINUTE: String(date.getMinutes().valueOf()).padStart(2, '0'),
+    $CURRENT_SECOND: String(date.getSeconds().valueOf()).padStart(2, '0'),
+    $CURRENT_SECONDS_UNIX: String(Math.floor(date.getTime() / 1000)),
+  };
+  /* eslint-enable @typescript-eslint/naming-convention */
+
+  if (linkRegExpMatchArr) {
+    linkRegExpMatchArr.forEach((match, index) => {
+      varsReplacementMap[`$${index}`] = match;
+    });
+  }
+
+  let folder = linkRule.folder;
+
+  for (const varName of Object.keys(varsReplacementMap)) {
+    const varVal = varsReplacementMap[varName];
+
+    folder = folder.replace(new RegExp(escapeForRegExp(varName), 'g'), varVal);
+  }
+
+  return folder;
+};
+
 export const isDefined = <T>(argument: T | undefined): argument is T => argument !== undefined;
