@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.16](https://github.com/svsool/vscode-memo/compare/v0.3.15...v0.3.16) (2021-12-19)
+
+
+### Features
+
+* Support vars and capturing group in link rules ([#469](https://github.com/svsool/vscode-memo/issues/469)) ([259ba76](https://github.com/svsool/vscode-memo/commit/259ba767bd74240501e448fb13f37c9318b949ee))
+
 ### [0.3.15](https://github.com/svsool/vscode-memo/compare/v0.3.14...v0.3.15) (2021-12-18)
 
 
