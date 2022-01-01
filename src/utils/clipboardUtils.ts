@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import { spawn } from 'child_process';
 import { inspect, getSystemErrorName } from 'util';
 import fs from 'fs-extra';
