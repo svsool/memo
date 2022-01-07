@@ -1696,7 +1696,6 @@ describe('findNonIgnoredFiles()', () => {
 
   it('should find non-ignored files', async () => {
     const prevConfig = getConfigProperty('search.exclude', {});
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     await updateConfigProperty('search.exclude', { '**/search-ignored': true });
 
     const allowedName = rndName();
@@ -1731,7 +1730,6 @@ describe('findNonIgnoredFiles()', () => {
   describe('when exclude param passed explicitly and search.exclude set', () => {
     it('should find non-ignored files', async () => {
       const prevConfig = getConfigProperty('search.exclude', {});
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       await updateConfigProperty('search.exclude', { '**/search-ignored': true });
 
       const allowedName = rndName();

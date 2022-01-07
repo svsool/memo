@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/naming-convention
 const VscodeEnvironment = require('jest-environment-vscode');
 
 class ExtendedVscodeEnvironment extends VscodeEnvironment {

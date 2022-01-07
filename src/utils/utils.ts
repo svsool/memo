@@ -605,7 +605,6 @@ export const resolveShortRefFolder = (ref: string): string | undefined => {
 
   const date = new Date();
 
-  /* eslint-disable @typescript-eslint/naming-convention */
   // https://github.com/microsoft/vscode/blob/main/src/vs/editor/contrib/snippet/snippetVariables.ts
   const varsReplacementMap: { [varName: string]: string } = {
     $CURRENT_FILE_DIRECTORY:
@@ -619,7 +618,6 @@ export const resolveShortRefFolder = (ref: string): string | undefined => {
     $CURRENT_SECOND: String(date.getSeconds().valueOf()).padStart(2, '0'),
     $CURRENT_SECONDS_UNIX: String(Math.floor(date.getTime() / 1000)),
   };
-  /* eslint-enable @typescript-eslint/naming-convention */
 
   if (linkRegExpMatchArr) {
     linkRegExpMatchArr.forEach((match, index) => {
