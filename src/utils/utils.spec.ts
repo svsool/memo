@@ -1749,7 +1749,7 @@ describe('findNonIgnoredFiles()', () => {
   });
 });
 
-describe.only('getDirRelativeToWorkspace()', () => {
+describe('getDirRelativeToWorkspace()', () => {
   it('should get directory relative to workspace', async () => {
     const dir1 = rndName();
     const dir2 = rndName();
