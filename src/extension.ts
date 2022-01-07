@@ -15,6 +15,7 @@ import {
   codeActionProvider,
 } from './features';
 import commands from './commands';
+import { logger } from './logger';
 import { cacheWorkspace, getMemoConfigProperty, MemoBoolConfigProp, isDefined } from './utils';
 
 const mdLangSelector = { language: 'markdown', scheme: '*' };
@@ -38,6 +39,8 @@ export const activate = async (
   referenceContextWatcher.activate(context);
 
   await cacheWorkspace();
+
+  context.subscriptions.push(logger);
 
   context.subscriptions.push(
     ...commands,
