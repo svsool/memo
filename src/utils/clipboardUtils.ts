@@ -1,5 +1,5 @@
 import { spawn } from 'child_process';
-import { inspect, getSystemErrorName } from 'util';
+import { inspect } from 'util';
 import fs from 'fs-extra';
 
 /* These utils borrowed from https://github.com/andrewdotn/2md */
