@@ -3,11 +3,21 @@ import util from 'util';
 
 export const logger = window.createOutputChannel('Memo');
 
-const info = (str: string) => logger.appendLine(`[INFO] ${str}`);
+const log =
+  (level: string) =>
+  (...params: (string | object | unknown)[]) =>
+    logger.appendLine(
+      `[${new Date().toISOString()}] [${level}] ${params
+        .map((param) => (typeof param === 'string' ? param : util.inspect(param)))
+        .join(' ')}`,
+    );
 
-const warn = (str: string) => logger.appendLine(`[WARN] ${str}`);
+const info = log('info');
 
-const error = (str: string | unknown) =>
-  logger.appendLine(`[ERROR] ${typeof str === 'string' ? str : util.inspect(str)}`);
+const debug = log('debug');
 
-export default { info, warn, error };
+const warn = log('warn');
+
+const error = log('error');
+
+export default { info, warn, debug, error, logger };

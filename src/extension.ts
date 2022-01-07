@@ -15,7 +15,7 @@ import {
   codeActionProvider,
 } from './features';
 import commands from './commands';
-import { logger } from './logger';
+import logger from './logger';
 import { cacheWorkspace, getMemoConfigProperty, MemoBoolConfigProp, isDefined } from './utils';
 
 const mdLangSelector = { language: 'markdown', scheme: '*' };
@@ -40,7 +40,7 @@ export const activate = async (
 
   await cacheWorkspace();
 
-  context.subscriptions.push(logger);
+  context.subscriptions.push(logger.logger);
 
   context.subscriptions.push(
     ...commands,
@@ -85,6 +85,8 @@ export const activate = async (
       }),
     );
   });
+
+  logger.info('Memo extension successfully initialized! 🎉');
 
   return when('markdownPreview.enabled', () => ({
     extendMarkdownIt,
