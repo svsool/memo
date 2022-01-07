@@ -17,6 +17,7 @@ import {
   removeCachedRefs,
   getMemoConfigProperty,
   isDefined,
+  search,
 } from '../utils';
 
 const getBasename = (pathParam: string) => path.basename(pathParam).toLowerCase();
@@ -161,7 +162,13 @@ export const activate = (
         return;
       }
 
-      for (const { fsPath } of newUris) {
+      const fsPaths = await search([`[[${oldShortRef}]]`, `[[${oldLongRef}]]`], workspaceFolder);
+
+      const searchUris = fsPaths.length
+        ? newUris.filter(({ fsPath }) => fsPaths.includes(fsPath))
+        : newUris;
+
+      for (const { fsPath } of searchUris) {
         if (!containsMarkdownExt(fsPath)) {
           continue;
         }
