@@ -27,7 +27,7 @@ export function run(): Promise<void> {
 
   return new Promise(async (resolve, reject) => {
     try {
-      const { results } = await (runCLI as any)(
+      const { results } = await runCLI(
         {
           rootDir,
           roots: ['<rootDir>/src'],
@@ -49,6 +49,9 @@ export function run(): Promise<void> {
           watch: process.env.JEST_WATCH === 'true',
           collectCoverage: process.env.JEST_COLLECT_COVERAGE === 'true',
           useStderr: true,
+          // Jest's runCLI requires special args to pass..
+          _: [],
+          $0: '',
         },
         [rootDir],
       );
