@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.17](https://github.com/svsool/vscode-memo/compare/v0.3.16...v0.3.17) (2022-01-08)
+
+
+### Features
+
+* Use rigrep to speed up refs rename ([#286](https://github.com/svsool/vscode-memo/issues/286)) ([284d06f](https://github.com/svsool/vscode-memo/commit/284d06f3f4eb673e47f767aa212c2e26b277e839))
+
 ### [0.3.16](https://github.com/svsool/vscode-memo/compare/v0.3.15...v0.3.16) (2021-12-19)
 
 
