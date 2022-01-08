@@ -90,10 +90,7 @@ export const provideCompletionItems = (document: TextDocument, position: Positio
 
     const linksFormat = getMemoConfigProperty('links.format', 'short');
 
-    item.insertText =
-      linksFormat === 'long' || linksFormat === 'absolute' || !isFirstUriInGroup
-        ? longRef
-        : shortRef;
+    item.insertText = linksFormat === 'long' || !isFirstUriInGroup ? longRef : shortRef;
 
     // prepend index with 0, so a lexicographic sort doesn't mess things up
     item.sortText = padWithZero(index);

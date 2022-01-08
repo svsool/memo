@@ -245,11 +245,10 @@ export type MemoBoolConfigProp =
   | 'backlinksPanel.enabled'
   | 'markdownPreview.enabled';
 
-// absolute is alias of long, check this comment https://github.com/svsool/vscode-memo/pull/131#issuecomment-720277164
 export function getMemoConfigProperty(
   property: 'links.format',
   fallback: 'short',
-): 'short' | 'long' | 'absolute';
+): 'short' | 'long';
 
 export function getMemoConfigProperty(
   property: 'backlinksPanel.collapseParentItems',

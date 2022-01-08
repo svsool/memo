@@ -1,4 +1,4 @@
-# Short and long (absolute) links support
+# Short and long (relative to workspace root) links support
 
 In case when you have a few notes with the same filename in different directories Memo supports short and long links.
 
@@ -16,6 +16,6 @@ If you want to link `DemoNote.md (#1)` Memo will use a short link like following
 
 ![[Short and long links support.png]]
 
-And if you want to link `DemoNote.md (#2)` Memo will use a long (absolute) link like following [[Examples/Demo (Non-Unique)/Notes/DemoNote]].
+And if you want to link `DemoNote.md (#2)` Memo will use a long link like following [[Examples/Demo (Non-Unique)/Notes/DemoNote]].
 
 This simple assumption helps to make links shorter in most cases.

@@ -176,7 +176,7 @@ export const activate = (
         const doc = await workspace.openTextDocument(Uri.file(fsPath));
         let refs: { old: string; new: string }[] = [];
 
-        if (linksFormat === 'long' || linksFormat === 'absolute') {
+        if (linksFormat === 'long') {
           refs = [
             // when links format = long re-sync short links with the long ones
             oldUriIsShortRef ? { old: oldShortRef, new: newLongRef } : undefined,
