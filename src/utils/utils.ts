@@ -3,7 +3,7 @@ import path from 'path';
 import { sort as sortPaths } from 'cross-path-sort';
 import fs from 'fs';
 
-import { WorkspaceCache, RefT, FoundRefT, LinkRuleT } from '../types';
+import { WorkspaceCache, RefT, FoundRefT, LinkRuleT, ExtractedRefT } from '../types';
 import { isInCodeSpan, isInFencedCodeBlock } from './externalUtils';
 import { default as createDailyQuickPick } from './createDailyQuickPick';
 import { readClipboard } from './clipboardUtils';
@@ -324,11 +324,54 @@ export const extractEmbedRefs = (content: string) => {
   });
 };
 
+const refsToRegExp = (refs: string | string[]) => {
+  const refsArr = typeof refs === 'string' ? [refs] : refs;
+
+  return new RegExp(
+    `\\[\\[((${refsArr.map((ref) => escapeForRegExp(ref)).join('|')})(\\|[^\\[\\]]+?)?)\\]\\]`,
+    'gi',
+  );
+};
+
+export const extractRefsFromText = (
+  refs: string | string[] | RegExp,
+  text: string,
+): ExtractedRefT[] => {
+  const refsRegexp = refs instanceof RegExp ? refs : refsToRegExp(refs);
+
+  const foundRefs: ExtractedRefT[] = [];
+
+  text.split(/\r?\n/g).forEach((lineText, lineNum) => {
+    for (const match of matchAll(refsRegexp, lineText)) {
+      const [, reference] = match;
+      const offset = (match.index || 0) + 2;
+
+      if (isInFencedCodeBlock(text, lineNum) || isInCodeSpan(text, lineNum, offset)) {
+        return;
+      }
+
+      foundRefs.push({
+        ref: {
+          position: {
+            start: new vscode.Position(lineNum, offset),
+            end: new vscode.Position(lineNum, offset + reference.length),
+          },
+          text: lineText.slice(Math.max(offset, 0), offset + reference.length),
+        },
+        line: {
+          trailingText: lineText.slice(Math.max(offset - 2, 0), lineText.length),
+        },
+      });
+    }
+  });
+
+  return foundRefs;
+};
+
 export const findReferences = async (
   refs: string | string[],
   excludePaths: string[] = [],
 ): Promise<FoundRefT[]> => {
-  const searchRefs = typeof refs === 'string' ? [refs] : refs;
   const foundRefs: FoundRefT[] = [];
 
   for (const { fsPath } of workspaceCache.markdownUris) {
@@ -336,40 +379,17 @@ export const findReferences = async (
       continue;
     }
 
-    const fileContent = fs.readFileSync(fsPath).toString();
-    const refRegexp = new RegExp(
-      `\\[\\[((${searchRefs.map((ref) => escapeForRegExp(ref)).join('|')})(\\|[^\\[\\]]+?)?)\\]\\]`,
-      'gi',
+    const extractedRefs = extractRefsFromText(refs, fs.readFileSync(fsPath).toString()).map(
+      ({ ref, line }) => ({
+        location: new vscode.Location(
+          vscode.Uri.file(fsPath),
+          new vscode.Range(ref.position.start, ref.position.end),
+        ),
+        matchText: line.trailingText,
+      }),
     );
 
-    const fileContentLines = fileContent.split(/\r?\n/g);
-
-    fileContentLines.forEach((lineText, lineNum) => {
-      for (const match of matchAll(refRegexp, lineText)) {
-        const [, reference] = match;
-        const offset = (match.index || 0) + 2;
-
-        if (
-          isInFencedCodeBlock(fileContent, lineNum) ||
-          isInCodeSpan(fileContent, lineNum, offset)
-        ) {
-          return;
-        }
-
-        const matchText = lineText.slice(Math.max(offset - 2, 0), lineText.length);
-
-        foundRefs.push({
-          location: new vscode.Location(
-            vscode.Uri.file(fsPath),
-            new vscode.Range(
-              new vscode.Position(lineNum, offset),
-              new vscode.Position(lineNum, offset + reference.length),
-            ),
-          ),
-          matchText: matchText,
-        });
-      }
-    });
+    foundRefs.push(...extractedRefs);
   }
 
   return foundRefs;

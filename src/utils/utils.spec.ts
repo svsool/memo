@@ -53,6 +53,7 @@ import {
   trimSlashes,
   trimTrailingSlash,
   getDirRelativeToWorkspace,
+  extractRefsFromText,
 } from './utils';
 
 describe('containsImageExt()', () => {
@@ -1758,5 +1759,179 @@ describe('getDirRelativeToWorkspace()', () => {
     const uri = await createFile(`/${dir1}/${dir2}/${name1}.md`);
 
     expect(getDirRelativeToWorkspace(uri)).toBe(path.join('/', dir1, dir2));
+  });
+});
+
+describe('extractRefsFromText()', () => {
+  const refRegExp = new RegExp('\\[\\[([^\\[\\]]+?)\\]\\]', 'g');
+
+  it('should extract ref from text', () => {
+    const text = `
+      [[hello-world]] [[adjacent-ref]]
+
+      [[any-ref]]
+    `;
+    expect(extractRefsFromText('hello-world', text)).toMatchInlineSnapshot(`
+      Array [
+        Object {
+          "line": Object {
+            "trailingText": "[[hello-world]] [[adjacent-ref]]",
+          },
+          "ref": Object {
+            "position": Object {
+              "end": Object {
+                "character": 19,
+                "line": 1,
+              },
+              "start": Object {
+                "character": 8,
+                "line": 1,
+              },
+            },
+            "text": "hello-world",
+          },
+        },
+      ]
+    `);
+  });
+
+  it('should extract refs from text', () => {
+    const text = `
+      [[hello-world]] [[adjacent-ref]] [[new-world]]
+
+      [[any-ref]]
+    `;
+
+    expect(extractRefsFromText(['hello-world', 'new-world'], text)).toMatchInlineSnapshot(`
+      Array [
+        Object {
+          "line": Object {
+            "trailingText": "[[hello-world]] [[adjacent-ref]] [[new-world]]",
+          },
+          "ref": Object {
+            "position": Object {
+              "end": Object {
+                "character": 19,
+                "line": 1,
+              },
+              "start": Object {
+                "character": 8,
+                "line": 1,
+              },
+            },
+            "text": "hello-world",
+          },
+        },
+        Object {
+          "line": Object {
+            "trailingText": "[[new-world]]",
+          },
+          "ref": Object {
+            "position": Object {
+              "end": Object {
+                "character": 50,
+                "line": 1,
+              },
+              "start": Object {
+                "character": 41,
+                "line": 1,
+              },
+            },
+            "text": "new-world",
+          },
+        },
+      ]
+    `);
+  });
+
+  it('should not extract empty refs', () => {
+    const text = 'leading text [[]] trailing text';
+
+    expect(extractRefsFromText(refRegExp, text)).toHaveLength(0);
+  });
+
+  it('should not extract refs within fenced block', () => {
+    const text = `
+      \`\`\`
+      Preceding text
+      [[some-ref]]
+      Following text
+      \`\`\`
+    `;
+
+    expect(extractRefsFromText(refRegExp, text)).toHaveLength(0);
+  });
+
+  it('should not extract refs within code span', () => {
+    expect(extractRefsFromText('test-ref', '`[[test-ref]]`')).toHaveLength(0);
+  });
+
+  it('should extract refs from text using RegExp', () => {
+    const text = `
+      [[hello-world]] [[test-ref]]
+
+      some text here...
+
+      [[any-ref]]
+    `;
+
+    expect(extractRefsFromText(refRegExp, text)).toMatchInlineSnapshot(`
+      Array [
+        Object {
+          "line": Object {
+            "trailingText": "[[hello-world]] [[test-ref]]",
+          },
+          "ref": Object {
+            "position": Object {
+              "end": Object {
+                "character": 19,
+                "line": 1,
+              },
+              "start": Object {
+                "character": 8,
+                "line": 1,
+              },
+            },
+            "text": "hello-world",
+          },
+        },
+        Object {
+          "line": Object {
+            "trailingText": "[[test-ref]]",
+          },
+          "ref": Object {
+            "position": Object {
+              "end": Object {
+                "character": 32,
+                "line": 1,
+              },
+              "start": Object {
+                "character": 24,
+                "line": 1,
+              },
+            },
+            "text": "test-ref",
+          },
+        },
+        Object {
+          "line": Object {
+            "trailingText": "[[any-ref]]",
+          },
+          "ref": Object {
+            "position": Object {
+              "end": Object {
+                "character": 15,
+                "line": 5,
+              },
+              "start": Object {
+                "character": 8,
+                "line": 5,
+              },
+            },
+            "text": "any-ref",
+          },
+        },
+      ]
+    `);
   });
 });

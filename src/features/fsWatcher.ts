@@ -184,14 +184,12 @@ export const activate = (
           ].filter(isDefined);
         } else if (!oldUriIsShortRef && !newUriIsShortRef) {
           // replace long ref with long ref
-          // TODO: Consider finding previous short ref and make it pointing to the long ref
           refs = [{ old: oldLongRef, new: newLongRef }];
         } else if (!oldUriIsShortRef && newUriIsShortRef) {
           // replace long ref with short ref
           refs = [{ old: oldLongRef, new: newShortRef }];
         } else if (oldUriIsShortRef && !newUriIsShortRef) {
           // replace short ref with long ref
-          // TODO: Consider finding new short ref and making long refs pointing to the new short ref
           refs = [{ old: oldShortRef, new: newLongRef }];
         } else {
           // replace short ref with the short ref

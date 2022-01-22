@@ -1,4 +1,4 @@
-import { Uri, Location } from 'vscode';
+import { Uri, Location, Position } from 'vscode';
 
 export type WorkspaceCache = {
   imageUris: Uri[];
@@ -17,6 +17,16 @@ export type RefT = {
 export type FoundRefT = {
   location: Location;
   matchText: string;
+};
+
+export type ExtractedRefT = {
+  ref: {
+    position: { start: Position; end: Position };
+    text: string;
+  };
+  line: {
+    trailingText: string;
+  };
 };
 
 export type LinkRuleT = {
