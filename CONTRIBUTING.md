@@ -27,6 +27,8 @@ Guidelines enforced via commit hooks, so commits MUST be prefixed with a type.
 4. Push to the branch: `git push origin my-new-feature`
 5. Submit a pull request
 
+For bigger features, please consider discussing your plans and ideas on GitHub first before implementing them.
+
 ## Development
 
 * `cd <project-root> && yarn && yarn watch`
@@ -60,6 +62,7 @@ yarn test:watch # runs only changed tests, consider also using JEST_TEST_REGEX e
 
 General:
 
+- Please prefer FP over OOP style where task permits to stay consistent with the existing codebase
 - Use random file names in tests to increase isolation
   - VSCode does not provide API to dispose text documents manually which can lead to flaky tests if random file names are not used
 - Use "_" prefix for internal command names
