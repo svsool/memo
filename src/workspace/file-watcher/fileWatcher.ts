@@ -2,7 +2,7 @@ import { workspace, ExtensionContext } from 'vscode';
 import debounce from 'lodash.debounce';
 
 import { handleFileCreate, handleFileDelete, handleDocChange, handleFilesRename } from './handlers';
-import { cacheUris } from '../../utils';
+import * as cache from '../cache';
 
 export const activate = (
   context: ExtensionContext,
@@ -10,7 +10,7 @@ export const activate = (
 ) => {
   const { uriCachingDelay = 1000, documentChangeDelay = 500 } = options;
 
-  const cacheUrisDebounced = debounce(cacheUris, uriCachingDelay);
+  const cacheUrisDebounced = debounce(cache.cacheUris, uriCachingDelay);
   const handleDocChangeDebounced = debounce(handleDocChange, documentChangeDelay);
 
   const fileWatcher = workspace.createFileSystemWatcher('**/*');

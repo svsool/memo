@@ -1,15 +1,15 @@
 import path from 'path';
 import { Uri, TextDocument } from 'vscode';
 import groupBy from 'lodash.groupby';
+import { sort as sortPaths } from 'cross-path-sort';
 
+import { cache } from '../workspace';
 import {
   fsPathToRef,
   getWorkspaceFolder,
   containsMarkdownExt,
   isDefined,
   getMemoConfigProperty,
-  sortPaths,
-  getWorkspaceCache,
   findAllUrisWithUnknownExts,
   escapeForRegExp,
 } from './utils';
@@ -46,7 +46,7 @@ export const resolveRefsReplaceMap = async (
   const oldUrisGroupedByBasename = groupBy(
     sortPaths(
       [
-        ...getWorkspaceCache().allUris.filter((uri) => !oldFsPaths.includes(uri.fsPath)),
+        ...cache.getWorkspaceCache().allUris.filter((uri) => !oldFsPaths.includes(uri.fsPath)),
         ...renamedFiles.map(({ oldUri }) => oldUri),
       ],
       {
@@ -60,7 +60,7 @@ export const resolveRefsReplaceMap = async (
   const newFsPaths = renamedFiles.map(({ newUri }) => newUri.fsPath);
 
   const allUris = [
-    ...getWorkspaceCache().allUris.filter((uri) => !newFsPaths.includes(uri.fsPath)),
+    ...cache.getWorkspaceCache().allUris.filter((uri) => !newFsPaths.includes(uri.fsPath)),
     ...renamedFiles.map(({ newUri }) => newUri),
   ];
 

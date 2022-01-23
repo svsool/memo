@@ -3,8 +3,8 @@ import markdownItRegex from 'markdown-it-regex';
 import path from 'path';
 import fs from 'fs';
 
+import { cache } from '../workspace';
 import {
-  getWorkspaceCache,
   getImgUrlForMarkdownPreview,
   getFileUrlForMarkdownPreview,
   containsImageExt,
@@ -37,7 +37,7 @@ const extendMarkdownIt = (md: MarkdownIt) => {
         const { ref, label } = parseRef(rawRef);
 
         if (containsImageExt(ref)) {
-          const imagePath = findUriByRef(getWorkspaceCache().imageUris, ref)?.fsPath;
+          const imagePath = findUriByRef(cache.getWorkspaceCache().imageUris, ref)?.fsPath;
 
           if (imagePath) {
             return `<div><img src="${getImgUrlForMarkdownPreview(
@@ -48,7 +48,7 @@ const extendMarkdownIt = (md: MarkdownIt) => {
           }
         }
 
-        const fsPath = findUriByRef(getWorkspaceCache().markdownUris, ref)?.fsPath;
+        const fsPath = findUriByRef(cache.getWorkspaceCache().markdownUris, ref)?.fsPath;
 
         if (!fsPath && containsUnknownExt(ref)) {
           return getUnknownExtRefAnchor(label || ref, ref);
@@ -100,7 +100,7 @@ const extendMarkdownIt = (md: MarkdownIt) => {
       replace: (rawRef: string) => {
         const { ref, label } = parseRef(rawRef);
 
-        const fsPath = findUriByRef(getWorkspaceCache().allUris, ref)?.fsPath;
+        const fsPath = findUriByRef(cache.getWorkspaceCache().allUris, ref)?.fsPath;
 
         if (!fsPath && containsUnknownExt(ref)) {
           return getUnknownExtRefAnchor(label || ref, ref);

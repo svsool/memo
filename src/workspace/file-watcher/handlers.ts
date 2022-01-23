@@ -1,40 +1,38 @@
 import fs from 'fs';
 import { FileRenameEvent, TextDocument, Uri, window, workspace } from 'vscode';
 
+import * as cache from '../cache';
 import {
-  addCachedRefs,
-  cacheUris,
   containsMarkdownExt,
   getMemoConfigProperty,
-  removeCachedRefs,
   replaceRefsInDoc,
   resolveRefsReplaceMap,
 } from '../../utils';
 
 export const handleFileCreate = async (
   newUri: Uri,
-  cacheUrisFn: () => Promise<void> = cacheUris,
+  cacheUrisFn: () => Promise<void> = cache.cacheUris,
 ) => {
   await cacheUrisFn();
-  await addCachedRefs([newUri]);
+  await cache.addCachedRefs([newUri]);
 };
 
 export const handleFileDelete = async (
   removedUri: Uri,
-  cacheUrisFn: () => Promise<void> = cacheUris,
+  cacheUrisFn: () => Promise<void> = cache.cacheUris,
 ) => {
   await cacheUrisFn();
-  await removeCachedRefs([removedUri]);
+  await cache.removeCachedRefs([removedUri]);
 };
 
 export const handleDocChange = async ({ uri }: TextDocument) => {
   if (containsMarkdownExt(uri.fsPath)) {
-    await addCachedRefs([uri]);
+    await cache.addCachedRefs([uri]);
   }
 };
 
 export const handleFilesRename = async ({ files }: FileRenameEvent) => {
-  await cacheUris();
+  await cache.cacheUris();
 
   if (!getMemoConfigProperty('links.sync.enabled', true)) {
     return;

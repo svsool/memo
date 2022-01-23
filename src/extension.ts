@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import { fileWatcher } from './workspace';
+import { fileWatcher, cache } from './workspace';
 import {
   syntaxDecorations,
   referenceContextWatcher,
@@ -16,7 +16,7 @@ import {
 } from './features';
 import commands from './commands';
 import logger from './logger';
-import { cacheWorkspace, getMemoConfigProperty, MemoBoolConfigProp, isDefined } from './utils';
+import { getMemoConfigProperty, MemoBoolConfigProp, isDefined } from './utils';
 
 const mdLangSelector = { language: 'markdown', scheme: '*' };
 
@@ -38,7 +38,7 @@ export const activate = async (
 
   referenceContextWatcher.activate(context);
 
-  await cacheWorkspace();
+  await cache.cacheWorkspace();
 
   context.subscriptions.push(logger.logger);
 
@@ -47,7 +47,7 @@ export const activate = async (
     vscode.languages.registerCodeActionsProvider(mdLangSelector, codeActionProvider),
     vscode.workspace.onDidChangeConfiguration(async (configChangeEvent) => {
       if (configChangeEvent.affectsConfiguration('search.exclude')) {
-        await cacheWorkspace();
+        await cache.cacheWorkspace();
       }
     }),
     ...[

@@ -7,13 +7,13 @@ import openReferenceBeside from './openReferenceBeside';
 import openDailyNote from './openDailyNote';
 import pasteHtmlAsMarkdown from './pasteHtmlAsMarkdown';
 import extractRangeToNewNote from './extractRangeToNewNote';
-import { cacheWorkspace, cleanWorkspaceCache, getWorkspaceCache } from '../utils';
+import { cache } from '../workspace';
 
 const commands = [
   vscode.commands.registerCommand('_memo.openDocumentByReference', openDocumentByReference),
-  vscode.commands.registerCommand('_memo.cacheWorkspace', cacheWorkspace),
-  vscode.commands.registerCommand('_memo.cleanWorkspaceCache', cleanWorkspaceCache),
-  vscode.commands.registerCommand('_memo.getWorkspaceCache', getWorkspaceCache),
+  vscode.commands.registerCommand('_memo.cacheWorkspace', cache.cacheWorkspace),
+  vscode.commands.registerCommand('_memo.cleanWorkspaceCache', cache.cleanWorkspaceCache),
+  vscode.commands.registerCommand('_memo.getWorkspaceCache', cache.getWorkspaceCache),
   vscode.commands.registerCommand('memo.openRandomNote', openRandomNote),
   vscode.commands.registerCommand('memo.openDailyNote', openDailyNote),
   vscode.commands.registerCommand('memo.openReferenceInDefaultApp', openReferenceInDefaultApp),

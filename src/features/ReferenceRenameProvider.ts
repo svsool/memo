@@ -1,10 +1,10 @@
 import { RenameProvider, TextDocument, Position, Range, WorkspaceEdit, Uri } from 'vscode';
 import path from 'path';
 
+import { cache } from '../workspace';
 import {
   getReferenceAtPosition,
   findUriByRef,
-  getWorkspaceCache,
   isLongRef,
   getWorkspaceFolder,
   containsMarkdownExt,
@@ -33,11 +33,11 @@ export default class ReferenceRenameProvider implements RenameProvider {
       const unknownUris = containsUnknownExt(ref) ? await findFilesByExts([extractExt(ref)]) : [];
 
       const augmentedUris = unknownUris.length
-        ? sortPaths([...getWorkspaceCache().allUris, ...unknownUris], {
+        ? sortPaths([...cache.getWorkspaceCache().allUris, ...unknownUris], {
             pathKey: 'path',
             shallowFirst: true,
           })
-        : getWorkspaceCache().allUris;
+        : cache.getWorkspaceCache().allUris;
 
       if (!findUriByRef(augmentedUris, ref)) {
         throw new Error(
@@ -69,11 +69,11 @@ export default class ReferenceRenameProvider implements RenameProvider {
       const unknownUris = containsUnknownExt(ref) ? await findFilesByExts([extractExt(ref)]) : [];
 
       const augmentedUris = unknownUris.length
-        ? sortPaths([...getWorkspaceCache().allUris, ...unknownUris], {
+        ? sortPaths([...cache.getWorkspaceCache().allUris, ...unknownUris], {
             pathKey: 'path',
             shallowFirst: true,
           })
-        : getWorkspaceCache().allUris;
+        : cache.getWorkspaceCache().allUris;
 
       const fsPath = findUriByRef(augmentedUris, ref)?.fsPath;
 

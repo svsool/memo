@@ -4,6 +4,7 @@ import path from 'path';
 import { workspace, Uri, commands, ConfigurationTarget } from 'vscode';
 export { default as waitForExpect } from 'wait-for-expect';
 
+import { cache } from '../workspace';
 import * as utils from '../utils';
 import { WorkspaceCache } from '../types';
 
@@ -35,12 +36,12 @@ export const cleanWorkspace = () => {
 };
 
 export const cacheWorkspace = async () => {
-  await utils.cacheWorkspace();
+  await cache.cacheWorkspace();
   await commands.executeCommand('_memo.cacheWorkspace');
 };
 
 export const cleanWorkspaceCache = async () => {
-  utils.cleanWorkspaceCache();
+  cache.cleanWorkspaceCache();
   await commands.executeCommand('_memo.cleanWorkspaceCache');
 };
 

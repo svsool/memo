@@ -14,8 +14,8 @@ import path from 'path';
 import groupBy from 'lodash.groupby';
 import fs from 'fs';
 
+import { cache } from '../workspace';
 import {
-  getWorkspaceCache,
   fsPathToRef,
   containsMarkdownExt,
   containsImageExt,
@@ -46,13 +46,13 @@ export const provideCompletionItems = (document: TextDocument, position: Positio
 
   const uris: Uri[] = [
     ...(isResourceAutocomplete
-      ? [...getWorkspaceCache().imageUris, ...getWorkspaceCache().markdownUris]
+      ? [...cache.getWorkspaceCache().imageUris, ...cache.getWorkspaceCache().markdownUris]
       : []),
     ...(!isResourceAutocomplete
       ? [
-          ...getWorkspaceCache().markdownUris,
-          ...getWorkspaceCache().imageUris,
-          ...getWorkspaceCache().otherUris,
+          ...cache.getWorkspaceCache().markdownUris,
+          ...cache.getWorkspaceCache().imageUris,
+          ...cache.getWorkspaceCache().otherUris,
         ]
       : []),
   ];
@@ -100,7 +100,7 @@ export const provideCompletionItems = (document: TextDocument, position: Positio
     completionItems.push(item);
   });
 
-  const danglingRefs = getWorkspaceCache().danglingRefs;
+  const danglingRefs = cache.getWorkspaceCache().danglingRefs;
 
   const completionItemsLength = completionItems.length;
 

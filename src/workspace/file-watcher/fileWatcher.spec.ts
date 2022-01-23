@@ -2,7 +2,7 @@ import { WorkspaceEdit, Uri, workspace, ExtensionContext, window, Range, Positio
 import path from 'path';
 
 import * as fileWatcher from './fileWatcher';
-import * as utils from '../../utils';
+import * as cache from '../cache';
 import {
   createFile,
   removeFile,
@@ -326,7 +326,7 @@ describe('fileWatcher', () => {
     await createFile(`${imageName}.md`, '', false);
 
     await waitForExpect(async () => {
-      const workspaceCache = await utils.getWorkspaceCache();
+      const workspaceCache = await cache.getWorkspaceCache();
 
       expect([...workspaceCache.markdownUris, ...workspaceCache.imageUris]).toHaveLength(2);
       expect(
@@ -340,14 +340,14 @@ describe('fileWatcher', () => {
   it('should add new dangling refs to cache on file create', async () => {
     const noteName = rndName();
 
-    expect(utils.getWorkspaceCache().danglingRefs).toEqual([]);
-    expect(utils.getWorkspaceCache().danglingRefsByFsPath).toEqual({});
+    expect(cache.getWorkspaceCache().danglingRefs).toEqual([]);
+    expect(cache.getWorkspaceCache().danglingRefsByFsPath).toEqual({});
 
     await createFile(`${noteName}.md`, '[[dangling-ref]] [[dangling-ref2]]', false);
 
     await waitForExpect(() => {
-      expect(utils.getWorkspaceCache().danglingRefs).toEqual(['dangling-ref', 'dangling-ref2']);
-      expect(Object.values(utils.getWorkspaceCache().danglingRefsByFsPath)).toEqual([
+      expect(cache.getWorkspaceCache().danglingRefs).toEqual(['dangling-ref', 'dangling-ref2']);
+      expect(Object.values(cache.getWorkspaceCache().danglingRefsByFsPath)).toEqual([
         ['dangling-ref', 'dangling-ref2'],
       ]);
     });
@@ -359,8 +359,8 @@ describe('fileWatcher', () => {
     await createFile(`${noteName}.md`, '[[dangling-ref]] [[dangling-ref2]]', false);
 
     await waitForExpect(() => {
-      expect(utils.getWorkspaceCache().danglingRefs).toEqual(['dangling-ref', 'dangling-ref2']);
-      expect(Object.values(utils.getWorkspaceCache().danglingRefsByFsPath)).toEqual([
+      expect(cache.getWorkspaceCache().danglingRefs).toEqual(['dangling-ref', 'dangling-ref2']);
+      expect(Object.values(cache.getWorkspaceCache().danglingRefsByFsPath)).toEqual([
         ['dangling-ref', 'dangling-ref2'],
       ]);
     });
@@ -368,8 +368,8 @@ describe('fileWatcher', () => {
     await removeFile(`${noteName}.md`);
 
     await waitForExpect(() => {
-      expect(utils.getWorkspaceCache().danglingRefs).toEqual([]);
-      expect(utils.getWorkspaceCache().danglingRefsByFsPath).toEqual({});
+      expect(cache.getWorkspaceCache().danglingRefs).toEqual([]);
+      expect(cache.getWorkspaceCache().danglingRefsByFsPath).toEqual({});
     });
   });
 
@@ -379,8 +379,8 @@ describe('fileWatcher', () => {
     await createFile(`${noteName}.md`, '[[dangling-ref]]', false);
 
     await waitForExpect(() => {
-      expect(utils.getWorkspaceCache().danglingRefs).toEqual(['dangling-ref']);
-      expect(Object.values(utils.getWorkspaceCache().danglingRefsByFsPath)).toEqual([
+      expect(cache.getWorkspaceCache().danglingRefs).toEqual(['dangling-ref']);
+      expect(Object.values(cache.getWorkspaceCache().danglingRefsByFsPath)).toEqual([
         ['dangling-ref'],
       ]);
     });
@@ -392,8 +392,8 @@ describe('fileWatcher', () => {
     await editor.edit((edit) => edit.insert(new Position(1, 0), '\n[[he]]'));
 
     await waitForExpect(() => {
-      expect(utils.getWorkspaceCache().danglingRefs).toEqual(['dangling-ref', 'he']);
-      expect(Object.values(utils.getWorkspaceCache().danglingRefsByFsPath)).toEqual([
+      expect(cache.getWorkspaceCache().danglingRefs).toEqual(['dangling-ref', 'he']);
+      expect(Object.values(cache.getWorkspaceCache().danglingRefsByFsPath)).toEqual([
         ['dangling-ref', 'he'],
       ]);
     });
@@ -404,8 +404,8 @@ describe('fileWatcher', () => {
     });
 
     await waitForExpect(() => {
-      expect(utils.getWorkspaceCache().danglingRefs).toEqual(['dangling-ref', 'hello']);
-      expect(Object.values(utils.getWorkspaceCache().danglingRefsByFsPath)).toEqual([
+      expect(cache.getWorkspaceCache().danglingRefs).toEqual(['dangling-ref', 'hello']);
+      expect(Object.values(cache.getWorkspaceCache().danglingRefsByFsPath)).toEqual([
         ['dangling-ref', 'hello'],
       ]);
     });
@@ -417,7 +417,7 @@ describe('fileWatcher', () => {
     await createFile(`${noteName}.md`, '', false);
 
     await waitForExpect(async () => {
-      const workspaceCache = await utils.getWorkspaceCache();
+      const workspaceCache = await cache.getWorkspaceCache();
 
       expect([...workspaceCache.markdownUris, ...workspaceCache.imageUris]).toHaveLength(1);
       expect(
@@ -430,7 +430,7 @@ describe('fileWatcher', () => {
     removeFile(`${noteName}.md`);
 
     await waitForExpect(async () => {
-      const workspaceCache = await utils.getWorkspaceCache();
+      const workspaceCache = await cache.getWorkspaceCache();
 
       expect([...workspaceCache.markdownUris, ...workspaceCache.imageUris]).toHaveLength(0);
       expect(

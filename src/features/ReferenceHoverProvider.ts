@@ -2,11 +2,11 @@ import vscode from 'vscode';
 import fs from 'fs';
 import path from 'path';
 
+import { cache } from '../workspace';
 import {
   containsImageExt,
   containsUnknownExt,
   containsOtherKnownExts,
-  getWorkspaceCache,
   getMemoConfigProperty,
   getReferenceAtPosition,
   isUncPath,
@@ -25,7 +25,7 @@ export default class ReferenceHoverProvider implements vscode.HoverProvider {
         new vscode.Position(range.end.line, range.end.character - 2),
       );
 
-      const uris = getWorkspaceCache().allUris;
+      const uris = cache.getWorkspaceCache().allUris;
       const foundUri = findUriByRef(uris, ref);
 
       if (!foundUri && containsUnknownExt(ref)) {

@@ -1,7 +1,8 @@
 import open from 'open';
 import * as vscode from 'vscode';
 
-import { getWorkspaceCache, getReferenceAtPosition, findUriByRef } from '../utils';
+import { cache } from '../workspace';
+import { getReferenceAtPosition, findUriByRef } from '../utils';
 
 const openReferenceInDefaultApp = async () => {
   const activeTextEditor = vscode.window.activeTextEditor;
@@ -13,7 +14,7 @@ const openReferenceInDefaultApp = async () => {
     );
 
     if (refAtPos) {
-      const uri = findUriByRef(getWorkspaceCache().allUris, refAtPos.ref);
+      const uri = findUriByRef(cache.getWorkspaceCache().allUris, refAtPos.ref);
 
       if (uri) {
         await open(uri.fsPath);

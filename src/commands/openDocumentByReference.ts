@@ -2,8 +2,8 @@ import vscode from 'vscode';
 import fs from 'fs';
 import path from 'path';
 
+import { cache } from '../workspace';
 import {
-  getWorkspaceCache,
   findUriByRef,
   ensureDirectoryExists,
   parseRef,
@@ -21,7 +21,7 @@ const openDocumentByReference = async ({
 }) => {
   const { ref } = parseRef(reference);
 
-  const uri = findUriByRef(getWorkspaceCache().allUris, ref);
+  const uri = findUriByRef(cache.getWorkspaceCache().allUris, ref);
 
   if (uri) {
     await vscode.commands.executeCommand('vscode.open', uri, showOption);

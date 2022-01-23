@@ -2,8 +2,8 @@ import vscode, { workspace } from 'vscode';
 import path from 'path';
 import groupBy from 'lodash.groupby';
 
+import { cache } from '../workspace';
 import {
-  getWorkspaceCache,
   containsMarkdownExt,
   findReferences,
   trimSlashes,
@@ -69,7 +69,7 @@ export default class BacklinksTreeDataProvider implements vscode.TreeDataProvide
         return [];
       }
 
-      const urisByPathBasename = groupBy(getWorkspaceCache().markdownUris, ({ fsPath }) =>
+      const urisByPathBasename = groupBy(cache.getWorkspaceCache().markdownUris, ({ fsPath }) =>
         path.basename(fsPath).toLowerCase(),
       );
 
