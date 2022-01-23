@@ -6,7 +6,7 @@ import {
   rndName,
   openTextDocument,
   closeEditorsAndCleanWorkspace,
-} from '../test/testUtils';
+} from '../test/utils';
 
 describe('getDecorations', () => {
   beforeEach(closeEditorsAndCleanWorkspace);

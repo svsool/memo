@@ -19,8 +19,29 @@
     "plugin:import/errors",
     "plugin:import/warnings"
   ],
-  "plugins": ["@typescript-eslint", "prettier"],
+  "plugins": ["@typescript-eslint", "prettier", "folders", "unicorn"],
   "rules": {
+    // kebab-case
+    "folders/match-regex": [2, "^[a-z-]+$", "/src/"],
+    "unicorn/filename-case": [
+      "error",
+      {
+        "cases": {
+          "camelCase": true,
+          "pascalCase": true
+        }
+      }
+    ],
+    "import/no-internal-modules": [
+      "error", {
+        "forbid": [
+          "commands/*",
+          "features/*",
+          "utils/*",
+          "test/utils/*"
+        ]
+      }
+    ],
     "eqeqeq": "warn",
     "no-throw-literal": "warn",
     "semi": "off",

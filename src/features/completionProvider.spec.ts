@@ -12,7 +12,7 @@ import {
   openTextDocument,
   closeEditorsAndCleanWorkspace,
   updateMemoConfigProperty,
-} from '../test/testUtils';
+} from '../test/utils';
 
 describe('provideCompletionItems()', () => {
   beforeEach(closeEditorsAndCleanWorkspace);

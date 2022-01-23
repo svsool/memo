@@ -1,8 +1,8 @@
 import fs from 'fs';
 
-import { createFile, rndName, cleanWorkspace, closeEditorsAndCleanWorkspace } from './testUtils';
+import { createFile, rndName, cleanWorkspace, closeEditorsAndCleanWorkspace } from './utils';
 
-describe('cleanWorkspace()', function () {
+describe('cleanWorkspace()', () => {
   beforeEach(closeEditorsAndCleanWorkspace);
 
   afterEach(closeEditorsAndCleanWorkspace);

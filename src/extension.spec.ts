@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import { closeEditorsAndCleanWorkspace } from './test/testUtils';
+import { closeEditorsAndCleanWorkspace } from './test/utils';
 
 const MEMO_EXTENSION_ID = 'svsool.markdown-memo';
 

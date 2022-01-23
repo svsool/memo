@@ -8,7 +8,7 @@ import {
   rndName,
   createFile,
   openTextDocument,
-} from '../test/testUtils';
+} from '../test/utils';
 
 describe('extractRangeToNewNote command', () => {
   beforeEach(closeEditorsAndCleanWorkspace);

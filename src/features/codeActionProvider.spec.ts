@@ -1,7 +1,7 @@
 import vscode from 'vscode';
 
 import codeActionProvider from './codeActionProvider';
-import { rndName, createFile, openTextDocument } from '../test/testUtils';
+import { rndName, createFile, openTextDocument } from '../test/utils';
 
 describe('codeActionProvider', () => {
   it('should provide code actions', async () => {

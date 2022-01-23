@@ -4,7 +4,7 @@ import {
   rndName,
   getOpenedFilenames,
   closeEditorsAndCleanWorkspace,
-} from '../test/testUtils';
+} from '../test/utils';
 
 describe('openRandomNote command', () => {
   beforeEach(closeEditorsAndCleanWorkspace);

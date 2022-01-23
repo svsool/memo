@@ -2,7 +2,7 @@ import { ExtensionContext } from 'vscode';
 import path from 'path';
 
 import * as newVersionNotifier from './newVersionNotifier';
-import { closeEditorsAndCleanWorkspace } from '../test/testUtils';
+import { closeEditorsAndCleanWorkspace } from '../test/utils';
 
 describe('newVersionNotifier feature', () => {
   beforeEach(closeEditorsAndCleanWorkspace);

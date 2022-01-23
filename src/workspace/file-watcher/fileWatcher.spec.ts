@@ -14,7 +14,7 @@ import {
   getWorkspaceCache,
   updateMemoConfigProperty,
   waitForExpect,
-} from '../../test/testUtils';
+} from '../../test/utils';
 
 describe('fileWatcher', () => {
   beforeEach(closeEditorsAndCleanWorkspace);

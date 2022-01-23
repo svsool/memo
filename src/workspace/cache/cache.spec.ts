@@ -16,7 +16,7 @@ import {
   closeEditorsAndCleanWorkspace,
   createFile,
   rndName,
-} from '../../test/testUtils';
+} from '../../test/utils';
 
 describe('cacheWorkspace()', () => {
   beforeEach(closeEditorsAndCleanWorkspace);

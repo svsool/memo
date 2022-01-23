@@ -46,7 +46,7 @@ import {
   rndName,
   toPlainObject,
   updateConfigProperty,
-} from '../test/testUtils';
+} from '../test/utils';
 
 describe('containsImageExt()', () => {
   test.each(['png', 'jpg', 'jpeg', 'gif'])(

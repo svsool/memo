@@ -11,7 +11,7 @@ import {
   closeEditorsAndCleanWorkspace,
   toPlainObject,
   updateMemoConfigProperty,
-} from '../test/testUtils';
+} from '../test/utils';
 
 describe('openDocumentByReference command', () => {
   beforeEach(closeEditorsAndCleanWorkspace);

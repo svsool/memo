@@ -1,7 +1,7 @@
 import moment from 'moment';
 
 import createDailyQuickPick from './createDailyQuickPick';
-import { closeEditorsAndCleanWorkspace, createFile } from '../test/testUtils';
+import { closeEditorsAndCleanWorkspace, createFile } from '../test/utils';
 
 describe('createDailyQuickPick()', () => {
   beforeEach(closeEditorsAndCleanWorkspace);

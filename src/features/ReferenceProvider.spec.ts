@@ -7,7 +7,7 @@ import {
   openTextDocument,
   closeEditorsAndCleanWorkspace,
   toPlainObject,
-} from '../test/testUtils';
+} from '../test/utils';
 
 describe('ReferenceProvider', () => {
   beforeEach(closeEditorsAndCleanWorkspace);

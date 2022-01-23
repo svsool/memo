@@ -11,7 +11,7 @@ import {
   toPlainObject,
   updateMemoConfigProperty,
   getMemoConfigProperty,
-} from '../test/testUtils';
+} from '../test/utils';
 
 const getChildren = async () => {
   const backlinksTreeDataProvider = new BacklinksTreeDataProvider();

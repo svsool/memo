@@ -8,7 +8,7 @@ import {
   rndName,
   toPlainObject,
   waitForExpect,
-} from '../test/testUtils';
+} from '../test/utils';
 
 describe('openReferenceBeside command', () => {
   beforeEach(closeEditorsAndCleanWorkspace);

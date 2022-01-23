@@ -4,9 +4,9 @@ import path from 'path';
 import { workspace, Uri, commands, ConfigurationTarget } from 'vscode';
 export { default as waitForExpect } from 'wait-for-expect';
 
-import { cache } from '../workspace';
-import * as utils from '../utils';
-import { WorkspaceCache } from '../types';
+import { cache } from '../../workspace';
+import * as utils from '../../utils';
+import { WorkspaceCache } from '../../types';
 
 const {
   getWorkspaceFolder,
@@ -126,7 +126,7 @@ const getDefaultConfigProperties = (): {
   description?: string;
   type?: string;
 }[] => {
-  return require('../../package.json').contributes.configuration.properties;
+  return require('../../../package.json').contributes.configuration.properties;
 };
 
 export const updateConfigProperty = async (

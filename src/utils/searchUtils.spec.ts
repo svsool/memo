@@ -4,7 +4,7 @@ import {
   createFile,
   getWorkspaceFolder,
   rndName,
-} from '../test/testUtils';
+} from '../test/utils';
 
 describe('search()', () => {
   beforeEach(closeEditorsAndCleanWorkspace);

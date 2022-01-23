@@ -10,7 +10,7 @@ import {
   getImgUrlForMarkdownPreview,
   getFileUrlForMarkdownPreview,
   escapeForRegExp,
-} from '../test/testUtils';
+} from '../test/utils';
 
 describe('extendMarkdownIt feature', () => {
   beforeEach(closeEditorsAndCleanWorkspace);

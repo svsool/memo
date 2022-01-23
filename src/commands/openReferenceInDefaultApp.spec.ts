@@ -9,7 +9,7 @@ import {
   closeEditorsAndCleanWorkspace,
   openTextDocument,
   getWorkspaceFolder,
-} from '../test/testUtils';
+} from '../test/utils';
 
 describe('openReferenceInDefaultApp command', () => {
   beforeEach(async () => {

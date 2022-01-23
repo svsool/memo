@@ -2,7 +2,7 @@ import { commands, workspace } from 'vscode';
 import moment from 'moment';
 
 import openDailyNote from './openDailyNote';
-import { closeEditorsAndCleanWorkspace } from '../test/testUtils';
+import { closeEditorsAndCleanWorkspace } from '../test/utils';
 
 describe('openDailyNote command', () => {
   beforeEach(closeEditorsAndCleanWorkspace);

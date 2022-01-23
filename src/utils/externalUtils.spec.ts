@@ -15,7 +15,7 @@ import {
   createFile,
   openTextDocument,
   rndName,
-} from '../test/testUtils';
+} from '../test/utils';
 
 describe('lineBreakOffsetsByLineIndex()', () => {
   it('should return offset for a single empty line', () => {
