@@ -1,8 +1,8 @@
 import { WorkspaceEdit, Uri, workspace, ExtensionContext, window, Range, Position } from 'vscode';
 import path from 'path';
 
-import * as fsWatcher from './fsWatcher';
-import * as utils from '../utils';
+import * as fileWatcher from './fileWatcher';
+import * as utils from '../../utils';
 import {
   createFile,
   removeFile,
@@ -14,30 +14,30 @@ import {
   getWorkspaceCache,
   updateMemoConfigProperty,
   waitForExpect,
-} from '../test/testUtils';
+} from '../../test/testUtils';
 
-describe('fsWatcher feature', () => {
+describe('fileWatcher', () => {
   beforeEach(closeEditorsAndCleanWorkspace);
 
   afterEach(closeEditorsAndCleanWorkspace);
 
   let mockContext: ExtensionContext;
 
-  let deactivateFsWatcher: Function;
+  let deactivateFileWatcher: Function;
 
   beforeEach(() => {
     mockContext = {
       subscriptions: [],
     } as unknown as ExtensionContext;
 
-    deactivateFsWatcher = fsWatcher.activate(mockContext, {
+    deactivateFileWatcher = fileWatcher.activate(mockContext, {
       uriCachingDelay: 50,
       documentChangeDelay: 50,
     });
   });
 
   afterEach(() => {
-    deactivateFsWatcher && deactivateFsWatcher();
+    deactivateFileWatcher && deactivateFileWatcher();
 
     mockContext.subscriptions.forEach((sub) => sub.dispose());
   });

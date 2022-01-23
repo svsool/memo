@@ -6,7 +6,6 @@ export { default as ReferenceRenameProvider } from './ReferenceRenameProvider';
 export { default as BacklinksTreeDataProvider } from './BacklinksTreeDataProvider';
 export { default as extendMarkdownIt } from './extendMarkdownIt';
 export { default as codeActionProvider } from './codeActionProvider';
-export * as fsWatcher from './fsWatcher';
 export * as referenceContextWatcher from './referenceContextWatcher';
 export * as syntaxDecorations from './syntaxDecorations';
 export * as newVersionNotifier from './newVersionNotifier';

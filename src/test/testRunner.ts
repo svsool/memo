@@ -23,7 +23,7 @@ export function run(): Promise<void> {
   };
 
   process.env.NODE_ENV = 'test';
-  process.env.DISABLE_FS_WATCHER = 'true';
+  process.env.DISABLE_FILE_WATCHER = 'true';
 
   return new Promise(async (resolve, reject) => {
     try {

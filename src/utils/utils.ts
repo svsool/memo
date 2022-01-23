@@ -208,6 +208,7 @@ export const removeCachedRefs = async (uris: vscode.Uri[]) => {
 
     return refsByFsPath;
   }, {});
+
   workspaceCache.danglingRefs = sortPaths(
     Array.from(new Set(Object.values(workspaceCache.danglingRefsByFsPath).flatMap((refs) => refs))),
     { shallowFirst: true },
@@ -498,64 +499,6 @@ export const parseRef = (rawRef: string): RefT => {
         ? rawRef.slice(dividerPosition + (escapedDividerPosition !== -1 ? 2 : 1), rawRef.length)
         : '',
   };
-};
-
-export const replaceRefs = ({
-  refs,
-  document,
-  onMatch,
-  onReplace,
-}: {
-  refs: { old: string; new: string }[];
-  document: vscode.TextDocument;
-  onMatch?: () => void;
-  onReplace?: () => void;
-}): string | null => {
-  const content = document.getText();
-
-  const { updatedOnce, nextContent } = refs.reduce(
-    ({ updatedOnce, nextContent }, ref) => {
-      const pattern = `\\[\\[${escapeForRegExp(ref.old)}(\\|.*)?\\]\\]`;
-
-      if (new RegExp(pattern, 'i').exec(content)) {
-        let replacedOnce = false;
-
-        const content = nextContent.replace(new RegExp(pattern, 'gi'), ($0, $1, offset) => {
-          const pos = document.positionAt(offset);
-
-          if (
-            isInFencedCodeBlock(document, pos.line) ||
-            isInCodeSpan(document, pos.line, pos.character)
-          ) {
-            return $0;
-          }
-
-          if (!replacedOnce) {
-            onMatch && onMatch();
-          }
-
-          onReplace && onReplace();
-
-          replacedOnce = true;
-
-          return `[[${ref.new}${$1 || ''}]]`;
-        });
-
-        return {
-          updatedOnce: true,
-          nextContent: content,
-        };
-      }
-
-      return {
-        updatedOnce: updatedOnce,
-        nextContent: nextContent,
-      };
-    },
-    { updatedOnce: false, nextContent: content },
-  );
-
-  return updatedOnce ? nextContent : null;
 };
 
 export const findNonIgnoredFiles = async (

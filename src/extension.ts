@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
 
+import { fileWatcher } from './workspace';
 import {
   syntaxDecorations,
-  fsWatcher,
   referenceContextWatcher,
   completionProvider,
   DocumentLinkProvider,
@@ -30,8 +30,8 @@ export const activate = async (
 
   when('decorations.enabled', () => syntaxDecorations.activate(context));
 
-  if (process.env.DISABLE_FS_WATCHER !== 'true') {
-    fsWatcher.activate(context);
+  if (process.env.DISABLE_FILE_WATCHER !== 'true') {
+    fileWatcher.activate(context);
   }
 
   when('links.completion.enabled', () => completionProvider.activate(context));
