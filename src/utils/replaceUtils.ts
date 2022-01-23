@@ -14,7 +14,7 @@ import {
   escapeForRegExp,
 } from './utils';
 import { isInCodeSpan, isInFencedCodeBlock } from './externalUtils';
-import { search } from './search';
+import { search } from './searchUtils';
 
 type RenamedFile = {
   readonly oldUri: Uri;

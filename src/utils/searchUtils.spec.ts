@@ -1,4 +1,4 @@
-import search from './search';
+import { search } from './searchUtils';
 import {
   closeEditorsAndCleanWorkspace,
   createFile,

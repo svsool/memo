@@ -80,5 +80,3 @@ export const search = async (refs: string[], dirPath: string = '.'): Promise<str
 
   return [];
 };
-
-export default search;
