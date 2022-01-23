@@ -45,10 +45,12 @@ const findRipgrepPath = async (): Promise<string | undefined> => {
   return;
 };
 
-export const search = async (refs: string[], dirPath: string = '.'): Promise<string[]> => {
+export const refsToSearchRegExpStr = (refs: string[]) => `(${refs.map(escapeForRegExp).join('|')})`;
+
+export const search = async (regExpStr: string, dirPath: string = '.'): Promise<string[]> => {
   const ripgrepPath = await findRipgrepPath();
 
-  if (!ripgrepPath || !refs.length) {
+  if (!ripgrepPath || !regExpStr) {
     return [];
   }
 
@@ -60,7 +62,7 @@ export const search = async (refs: string[], dirPath: string = '.'): Promise<str
       'never',
       '-g',
       `*.md`,
-      `(${refs.map(escapeForRegExp).join('|')})`,
+      regExpStr,
       dirPath,
     ]);
 

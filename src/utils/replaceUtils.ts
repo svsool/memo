@@ -14,7 +14,7 @@ import {
   escapeForRegExp,
 } from './utils';
 import { isInCodeSpan, isInFencedCodeBlock } from './externalUtils';
-import { search } from './searchUtils';
+import { search, refsToSearchRegExpStr } from './searchUtils';
 
 type RenamedFile = {
   readonly oldUri: Uri;
@@ -117,7 +117,10 @@ export const resolveRefsReplaceMap = async (
       return {};
     }
 
-    const fsPaths = await search([`[[${oldShortRef}]]`, `[[${oldLongRef}]]`], workspaceFolder);
+    const fsPaths = await search(
+      refsToSearchRegExpStr([`[[${oldShortRef}]]`, `[[${oldLongRef}]]`]),
+      workspaceFolder,
+    );
 
     const searchUris = fsPaths.length
       ? newUris.filter(({ fsPath }) => fsPaths.includes(fsPath))

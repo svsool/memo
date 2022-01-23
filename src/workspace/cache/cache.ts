@@ -18,9 +18,15 @@ const utils = () => require('../../utils');
 // private methods (not exported via workspace/index.ts and should not be used outside of workspace folder)
 
 export const cacheRefs = async () => {
-  workspaceCache.danglingRefsByFsPath = await utils().findDanglingRefsByFsPath(
-    workspaceCache.markdownUris,
-  );
+  const { search, getWorkspaceFolder } = utils();
+
+  const fsPaths = await search('\\[\\[([^\\[\\]]+?)\\]\\]', getWorkspaceFolder()!);
+
+  const searchUris = fsPaths.length
+    ? workspaceCache.markdownUris.filter(({ fsPath }) => fsPaths.includes(fsPath))
+    : workspaceCache.markdownUris;
+
+  workspaceCache.danglingRefsByFsPath = await utils().findDanglingRefsByFsPath(searchUris);
   workspaceCache.danglingRefs = sortPaths(
     Array.from(new Set(Object.values(workspaceCache.danglingRefsByFsPath).flatMap((refs) => refs))),
     { shallowFirst: true },

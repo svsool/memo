@@ -1,4 +1,4 @@
-import { search } from './searchUtils';
+import { search, refsToSearchRegExpStr } from './searchUtils';
 import {
   closeEditorsAndCleanWorkspace,
   createFile,
@@ -16,7 +16,7 @@ describe('search()', () => {
 
     const uri = await createFile(`${name}.md`, '[[ref]]');
 
-    const [path] = await search(['[[ref]]'], getWorkspaceFolder());
+    const [path] = await search(refsToSearchRegExpStr(['[[ref]]']), getWorkspaceFolder());
 
     expect(uri?.fsPath).toBe(path);
   });
@@ -26,7 +26,7 @@ describe('search()', () => {
 
     const uri = await createFile(`${name}.md`, '[[image.png]]');
 
-    const [path] = await search(['[[image.png]]'], getWorkspaceFolder());
+    const [path] = await search(refsToSearchRegExpStr(['[[image.png]]']), getWorkspaceFolder());
 
     expect(uri?.fsPath).toBe(path);
   });
@@ -36,7 +36,7 @@ describe('search()', () => {
 
     const uri = await createFile(`${name}.md`, '![[image.png]]');
 
-    const [path] = await search(['[[image.png]]'], getWorkspaceFolder());
+    const [path] = await search(refsToSearchRegExpStr(['[[image.png]]']), getWorkspaceFolder());
 
     expect(uri?.fsPath).toBe(path);
   });
@@ -56,7 +56,7 @@ describe('search()', () => {
 
     await createFile(`${name1}.md`);
 
-    const paths = await search(['[[ref]]'], getWorkspaceFolder());
+    const paths = await search(refsToSearchRegExpStr(['[[ref]]']), getWorkspaceFolder());
 
     expect(paths.length).toBe(1);
     expect(uri?.fsPath).toBe(paths[0]);
@@ -67,7 +67,7 @@ describe('search()', () => {
 
     await createFile(`${name}.txt`, '[[ref]]');
 
-    const paths = await search(['[[ref]]'], getWorkspaceFolder());
+    const paths = await search(refsToSearchRegExpStr(['[[ref]]']), getWorkspaceFolder());
 
     expect(paths.length).toBe(0);
   });
@@ -78,7 +78,10 @@ describe('search()', () => {
     await createFile(`${name}-1.md`, '[[ref0]]');
     await createFile(`${name}-2.md`, '[[ref1]]');
 
-    const paths = await search(['[[ref0]]', '[[ref1]]'], getWorkspaceFolder());
+    const paths = await search(
+      refsToSearchRegExpStr(['[[ref0]]', '[[ref1]]']),
+      getWorkspaceFolder(),
+    );
 
     expect(paths.length).toBe(2);
   });
