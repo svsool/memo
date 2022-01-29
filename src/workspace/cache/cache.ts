@@ -20,7 +20,9 @@ const utils = () => require('../../utils');
 export const cacheRefs = async () => {
   const { search, getWorkspaceFolder } = utils();
 
-  const fsPaths = await search('\\[\\[([^\\[\\]]+?)\\]\\]', getWorkspaceFolder()!);
+  const workspaceFolder = getWorkspaceFolder();
+
+  const fsPaths = workspaceFolder ? await search('\\[\\[([^\\[\\]]+?)\\]\\]', workspaceFolder) : [];
 
   const searchUris = fsPaths.length
     ? workspaceCache.markdownUris.filter(({ fsPath }) => fsPaths.includes(fsPath))
