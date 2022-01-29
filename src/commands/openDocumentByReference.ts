@@ -12,6 +12,8 @@ import {
   resolveShortRefFolder,
 } from '../utils';
 
+let workspaceErrorShown = false;
+
 const openDocumentByReference = async ({
   reference,
   showOption = vscode.ViewColumn.Active,
@@ -43,6 +45,17 @@ const openDocumentByReference = async ({
       }
 
       await vscode.commands.executeCommand('vscode.open', vscode.Uri.file(filePath), showOption);
+    } else if (!workspaceErrorShown) {
+      workspaceErrorShown = true;
+
+      vscode.window.showErrorMessage(
+        `It seems that you are trying to use Memo in single file mode.
+
+        Memo works best in folder/workspace mode.
+
+        The easiest way to start is to create a new folder and drag it onto the VSCode or use File > Open Folder... from the menu bar.
+        `,
+      );
     }
   }
 };
