@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.18](https://github.com/svsool/vscode-memo/compare/v0.3.17...v0.3.18) (2022-01-29)
+
+
+### Bug Fixes
+
+* Avoid searching if workspace folder not present ([4f39b0d](https://github.com/svsool/vscode-memo/commit/4f39b0d93b607795aa6c76f870db251c92c3c3ef))
+
 ### [0.3.17](https://github.com/svsool/vscode-memo/compare/v0.3.16...v0.3.17) (2022-01-08)
 
 
