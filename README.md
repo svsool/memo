@@ -18,9 +18,7 @@ Because your knowledge base deserves to be powered by open source. Read more [he
 
 ## Getting started
 
-If you want to try out Memo just install it via marketplace using [this link](https://marketplace.visualstudio.com/items?itemName=svsool.markdown-memo) and open the [help](https://github.com/svsool/vscode-memo/tree/master/help) folder in VSCode.
-
-**Important**: Memo only works in folder/workspace mode. The easiest way to start is to create a new folder and drag it onto the VSCode or use `File > Open Folder...` from the menu bar.
+If you want to try out Memo just install it via marketplace using [this link](https://marketplace.visualstudio.com/items?itemName=svsool.markdown-memo) and open the [help](https://github.com/svsool/vscode-memo/tree/master/help) folder via `File > Open Folder...` or by dragging it onto VSCode.
 
 ## Features
 
