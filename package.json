@@ -274,7 +274,7 @@
     "@types/turndown": "^5.0.1",
     "@types/vscode": "^1.63.1",
     "@typescript-eslint/eslint-plugin": "^5.10.0",
-    "@typescript-eslint/parser": "^5.10.0",
+    "@typescript-eslint/parser": "^5.10.2",
     "cross-env": "^7.0.3",
     "del": "^6.0.0",
     "del-cli": "^4.0.1",
