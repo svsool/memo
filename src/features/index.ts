@@ -7,5 +7,4 @@ export { default as BacklinksTreeDataProvider } from './BacklinksTreeDataProvide
 export { default as extendMarkdownIt } from './extendMarkdownIt';
 export { default as codeActionProvider } from './codeActionProvider';
 export * as referenceContextWatcher from './referenceContextWatcher';
-export * as syntaxDecorations from './syntaxDecorations';
 export * as newVersionNotifier from './newVersionNotifier';

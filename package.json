@@ -52,7 +52,14 @@
   "main": "./dist/extension",
   "contributes": {
     "markdown.markdownItPlugins": true,
-    "commands": [
+      "grammars": [
+        {
+          "path": "./syntaxes/injection.json",
+          "scopeName": "memo.wikilink.injection",
+          "injectTo": ["text.html.markdown"]
+        }
+      ],
+      "commands": [
       {
         "command": "memo.openDailyNote",
         "title": "Open daily note",
