@@ -9,10 +9,10 @@
   "icon": "media/memo.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/svsool/vscode-memo"
+    "url": "https://github.com/svsool/memo"
   },
   "bugs": {
-    "url": "https://github.com/svsool/vscode-memo/issues"
+    "url": "https://github.com/svsool/memo/issues"
   },
   "engines": {
     "vscode": "^1.63.1"
@@ -274,7 +274,7 @@
     "@types/turndown": "^5.0.1",
     "@types/vscode": "^1.63.1",
     "@typescript-eslint/eslint-plugin": "^5.10.0",
-    "@typescript-eslint/parser": "^5.10.0",
+    "@typescript-eslint/parser": "^5.22.0",
     "cross-env": "^7.0.3",
     "del": "^6.0.0",
     "del-cli": "^4.0.1",
