@@ -10,7 +10,7 @@ on:
 jobs:
   ci_jobs:
     name: CI Jobs
-    uses: svsool/vscode-memo/.github/workflows/ci_jobs.yml@75ea7d4b8a3f49d7cfc809ced788ad84636369d0
+    uses: svsool/memo/.github/workflows/ci_jobs.yml@master
     secrets:
       VSCE_PAT: ${{ secrets.VSCE_PAT }}
       OVSX_PAT: ${{ secrets.OVSX_PAT }}

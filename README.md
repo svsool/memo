@@ -8,17 +8,15 @@ Inspired by [Obsidian.md](https://obsidian.md/) and [RoamResearch](https://roamr
 [![Open VSX Version](https://img.shields.io/open-vsx/v/svsool/markdown-memo?color=salad&label=Open%20VSX)](https://open-vsx.org/extension/svsool/markdown-memo)
 [![](https://vsmarketplacebadge.apphb.com/installs/svsool.markdown-memo.svg)](https://marketplace.visualstudio.com/items?itemName=svsool.markdown-memo)
 [![](https://vsmarketplacebadge.apphb.com/rating-short/svsool.markdown-memo.svg)](https://marketplace.visualstudio.com/items?itemName=svsool.markdown-memo&ssr=false#review-details)
-[![](https://github.com/svsool/vscode-memo/workflows/CI/badge.svg?branch=master)](https://github.com/svsool/vscode-memo/actions?query=workflow%3ACI+branch%3Amaster)
-[![codecov](https://codecov.io/gh/svsool/vscode-memo/branch/master/graph/badge.svg)](https://codecov.io/gh/svsool/vscode-memo)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/svsool/vscode-memo/blob/master/CONTRIBUTING.md)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/svsool/memo/blob/master/CONTRIBUTING.md)
 
 ## Why?
 
-Because your knowledge base deserves to be powered by open source. Read more [here](https://github.com/svsool/vscode-memo/issues/9#issuecomment-658893538).
+Because your knowledge base deserves to be powered by open source. Read more [here](https://github.com/svsool/memo/issues/9#issuecomment-658893538).
 
 ## Getting started
 
-If you want to try out Memo just install it via marketplace using [this link](https://marketplace.visualstudio.com/items?itemName=svsool.markdown-memo) and open the [help](https://github.com/svsool/vscode-memo/tree/master/help) folder via `File > Open Folder...` or by dragging it onto VSCode.
+If you want to try out Memo just install it via marketplace using [this link](https://marketplace.visualstudio.com/items?itemName=svsool.markdown-memo) and open the [help](https://github.com/svsool/memo/tree/master/help) folder via `File > Open Folder...` or by dragging it onto VSCode.
 
 ## Features
 
@@ -98,16 +96,16 @@ If you want to try out Memo just install it via marketplace using [this link](ht
 
 ## FAQ
 
-- [Memo vs Foam](https://github.com/svsool/vscode-memo/issues/9#issuecomment-658346216)
-- [Memo vs Obsidian](https://github.com/svsool/vscode-memo/issues/1#issuecomment-655004112)
+- [Memo vs Foam](https://github.com/svsool/memo/issues/9#issuecomment-658346216)
+- [Memo vs Obsidian](https://github.com/svsool/memo/issues/1#issuecomment-655004112)
 - How to follow link on `cmd+enter` or `ctrl+enter` like in Obsidian?
-  - Bind built-in `editor.action.openLink` command to `cmd+enter` ([see example](https://github.com/svsool/vscode-memo/issues/2#issuecomment-654981827)) or use `cmd+click` on the link
+  - Bind built-in `editor.action.openLink` command to `cmd+enter` ([see example](https://github.com/svsool/memo/issues/2#issuecomment-654981827)) or use `cmd+click` on the link
 - [Pasting images from clipboard](./help/How%20to/Pasting%20images%20from%20clipboard.md)
 - Memo missing some feature? Please consider exploring other Markdown plugins from VS Marketplace first. There are [plenty of them](https://marketplace.visualstudio.com/search?term=markdown&target=VSCode&category=All%20categories&sortBy=Relevance).
 
 ## Contributing
 
-- File bugs, feature requests in [GitHub Issues](https://github.com/svsool/vscode-memo/issues).
+- File bugs, feature requests in [GitHub Issues](https://github.com/svsool/memo/issues).
 - Leave a review on [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=svsool.markdown-memo&ssr=false#review-details).
 - Read [CONTRIBUTING.md](CONTRIBUTING.md) for contributing to the code base.
 

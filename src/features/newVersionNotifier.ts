@@ -34,7 +34,7 @@ export const activate = (context: ExtensionContext) => {
       if (option === showChangelogAction) {
         commands.executeCommand(
           'vscode.open',
-          Uri.parse('https://github.com/svsool/vscode-memo/blob/master/CHANGELOG.md'),
+          Uri.parse('https://github.com/svsool/memo/blob/master/CHANGELOG.md'),
         );
       }
     });

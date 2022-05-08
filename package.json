@@ -9,10 +9,10 @@
   "icon": "media/memo.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/svsool/vscode-memo"
+    "url": "https://github.com/svsool/memo"
   },
   "bugs": {
-    "url": "https://github.com/svsool/vscode-memo/issues"
+    "url": "https://github.com/svsool/memo/issues"
   },
   "engines": {
     "vscode": "^1.63.1"
