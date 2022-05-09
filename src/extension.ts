@@ -2,7 +2,6 @@ import * as vscode from 'vscode';
 
 import { fileWatcher, cache } from './workspace';
 import {
-  syntaxDecorations,
   referenceContextWatcher,
   completionProvider,
   DocumentLinkProvider,
@@ -27,8 +26,6 @@ export const activate = async (
   context: vscode.ExtensionContext,
 ): Promise<void | { extendMarkdownIt: typeof extendMarkdownIt }> => {
   newVersionNotifier.activate(context);
-
-  when('decorations.enabled', () => syntaxDecorations.activate(context));
 
   if (process.env.DISABLE_FILE_WATCHER !== 'true') {
     fileWatcher.activate(context);

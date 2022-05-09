@@ -1,0 +1,17 @@
+{
+    "scopeName": "memo.wikilink.injection",
+    "injectionSelector": "L:meta.paragraph.markdown, L:markup.heading.markdown",
+    "patterns": [
+      {
+        "contentName": "string.other.link.title.markdown.memo",
+        "begin": "\\[\\[",
+        "beginCaptures": {
+          "0": { "name": "punctuation.definition.metadata.markdown.memo" }
+        },
+        "end": "\\]\\]",
+        "endCaptures": {
+          "0": { "name": "punctuation.definition.metadata.markdown.memo" }
+        }
+      }
+    ]
+  }

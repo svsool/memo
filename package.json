@@ -52,7 +52,14 @@
   "main": "./dist/extension",
   "contributes": {
     "markdown.markdownItPlugins": true,
-    "commands": [
+      "grammars": [
+        {
+          "path": "./syntaxes/injection.json",
+          "scopeName": "memo.wikilink.injection",
+          "injectTo": ["text.html.markdown"]
+        }
+      ],
+      "commands": [
       {
         "command": "memo.openDailyNote",
         "title": "Open daily note",
@@ -153,12 +160,6 @@
           "default": true,
           "scope": "resource",
           "description": "Whether to enable automatic links synchronization and rename action in the editor. Reload required!",
-          "type": "boolean"
-        },
-        "memo.decorations.enabled": {
-          "default": true,
-          "scope": "resource",
-          "description": "Whether to enable syntax decorations for links in the editor. Reload required!",
           "type": "boolean"
         },
         "memo.markdownPreview.enabled": {
