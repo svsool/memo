@@ -94,15 +94,6 @@ If you want to try out Memo just install it via marketplace using [this link](ht
 
   - "Extract range to a new note" command to ease notes refactoring
 
-## FAQ
-
-- [Memo vs Foam](https://github.com/svsool/memo/issues/9#issuecomment-658346216)
-- [Memo vs Obsidian](https://github.com/svsool/memo/issues/1#issuecomment-655004112)
-- How to follow link on `cmd+enter` or `ctrl+enter` like in Obsidian?
-  - Bind built-in `editor.action.openLink` command to `cmd+enter` ([see example](https://github.com/svsool/memo/issues/2#issuecomment-654981827)) or use `cmd+click` on the link
-- [Pasting images from clipboard](./help/How%20to/Pasting%20images%20from%20clipboard.md)
-- Memo missing some feature? Please consider exploring other Markdown plugins from VS Marketplace first. There are [plenty of them](https://marketplace.visualstudio.com/search?term=markdown&target=VSCode&category=All%20categories&sortBy=Relevance).
-
 ## Contributing
 
 - File bugs, feature requests in [GitHub Issues](https://github.com/svsool/memo/issues).
