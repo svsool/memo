@@ -314,7 +314,7 @@
     "lodash.range": "^3.2.0",
     "markdown-it": "^12.3.2",
     "markdown-it-regex": "^0.2.0",
-    "moment": "^2.29.1",
+    "moment": "^2.29.4",
     "open": "^8.4.0",
     "turndown": "^7.1.1"
   }
