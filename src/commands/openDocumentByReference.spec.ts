@@ -309,5 +309,23 @@ describe('openDocumentByReference command', () => {
         )}`,
       );
     });
+
+    it('should not add "X_UNIX" suffix when $CURRENT_SECONDS_UNIX variable is used (#570)', async () => {
+      await updateMemoConfigProperty('links.rules', [
+        {
+          rule: '.*\\.md$',
+          comment: 'all notes',
+          folder: '/Notes/ByUnixTime/$CURRENT_SECONDS_UNIX',
+        },
+      ]);
+
+      const name = rndName();
+
+      expect(getOpenedFilenames()).not.toContain(`${name}.md`);
+
+      await openDocumentByReference({ reference: name });
+
+      expect(getOpenedPaths()).not.toContain('X_UNIX');
+    });
   });
 });

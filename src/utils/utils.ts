@@ -481,31 +481,31 @@ export const resolveShortRefFolder = (ref: string): string | undefined => {
   const date = new Date();
 
   // https://github.com/microsoft/vscode/blob/main/src/vs/editor/contrib/snippet/snippetVariables.ts
-  const varsReplacementMap: { [varName: string]: string } = {
-    $CURRENT_FILE_DIRECTORY:
-      getDirRelativeToWorkspace(vscode.window.activeTextEditor?.document.uri) || '',
-    $CURRENT_YEAR: String(date.getFullYear()),
-    $CURRENT_YEAR_SHORT: String(date.getFullYear()).slice(-2),
-    $CURRENT_MONTH: String(date.getMonth().valueOf() + 1).padStart(2, '0'),
-    $CURRENT_DATE: String(date.getDate().valueOf()).padStart(2, '0'),
-    $CURRENT_HOUR: String(date.getHours().valueOf()).padStart(2, '0'),
-    $CURRENT_MINUTE: String(date.getMinutes().valueOf()).padStart(2, '0'),
-    $CURRENT_SECOND: String(date.getSeconds().valueOf()).padStart(2, '0'),
-    $CURRENT_SECONDS_UNIX: String(Math.floor(date.getTime() / 1000)),
-  };
+  const varsReplacementMap: { name: string; value: string }[] = [
+    {
+      name: '$CURRENT_FILE_DIRECTORY',
+      value: getDirRelativeToWorkspace(vscode.window.activeTextEditor?.document.uri) || '',
+    },
+    { name: '$CURRENT_YEAR_SHORT', value: String(date.getFullYear()).slice(-2) },
+    { name: '$CURRENT_YEAR', value: String(date.getFullYear()) },
+    { name: '$CURRENT_MONTH', value: String(date.getMonth().valueOf() + 1).padStart(2, '0') },
+    { name: '$CURRENT_DATE', value: String(date.getDate().valueOf()).padStart(2, '0') },
+    { name: '$CURRENT_HOUR', value: String(date.getHours().valueOf()).padStart(2, '0') },
+    { name: '$CURRENT_MINUTE', value: String(date.getMinutes().valueOf()).padStart(2, '0') },
+    { name: '$CURRENT_SECONDS_UNIX', value: String(Math.floor(date.getTime() / 1000)) },
+    { name: '$CURRENT_SECOND', value: String(date.getSeconds().valueOf()).padStart(2, '0') },
+  ];
 
   if (linkRegExpMatchArr) {
     linkRegExpMatchArr.forEach((match, index) => {
-      varsReplacementMap[`$${index}`] = match;
+      varsReplacementMap.push({ name: `$${index}`, value: match });
     });
   }
 
   let folder = linkRule.folder;
 
-  for (const varName of Object.keys(varsReplacementMap)) {
-    const varVal = varsReplacementMap[varName];
-
-    folder = folder.replace(new RegExp(escapeForRegExp(varName), 'g'), varVal);
+  for (const { name, value } of varsReplacementMap) {
+    folder = folder.replace(new RegExp(escapeForRegExp(name), 'g'), value);
   }
 
   return folder;
