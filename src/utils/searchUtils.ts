@@ -18,8 +18,8 @@ const findRipgrepPath = async (): Promise<string | undefined> => {
 
   const ripgrepPaths = [
     name,
-    path.join(vscodePath, `node_modules.asar.unpacked/vscode-ripgrep/bin/${name}`),
-    path.join(vscodePath, `node_modules/vscode-ripgrep/bin/${name}`),
+    path.join(vscodePath, `node_modules.asar.unpacked/@vscode/ripgrep/bin/${name}`),
+    path.join(vscodePath, `node_modules/@vscode/ripgrep/bin/${name}`),
   ];
 
   for (const ripgrepPath of ripgrepPaths) {
