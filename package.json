@@ -1,323 +1,329 @@
 {
-  "name": "markdown-memo",
-  "displayName": "Markdown Memo",
-  "description": "Markdown knowledge base with bidirectional [[link]]s built on top of VSCode",
-  "publisher": "svsool",
-  "version": "0.3.19",
-  "author": "Svyatoslav Sobol <svyat.nx@gmail.com>",
-  "license": "MIT",
-  "icon": "media/memo.png",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/svsool/memo"
-  },
-  "bugs": {
-    "url": "https://github.com/svsool/memo/issues"
-  },
-  "engines": {
-    "vscode": "^1.63.1"
-  },
-  "categories": [
-    "Other"
-  ],
-  "keywords": [
-    "memo",
-    "markdown",
-    "knowledge base",
-    "references",
-    "reference",
-    "links",
-    "link",
-    "wiki-links",
-    "wiki-link",
-    "zettelkasten",
-    "notes",
-    "note",
-    "note-taking"
-  ],
-  "activationEvents": [
-    "onLanguage:markdown",
-    "onCommand:memo.openRandomNote",
-    "onCommand:memo.openDailyNote",
-    "onCommand:memo.openReferenceInDefaultApp",
-    "onCommand:memo.openReferenceBeside",
-    "onCommand:memo.pasteHtmlAsMarkdown",
-    "onCommand:memo.extractRangeToNewNote",
-    "onCommand:_memo.openReference",
-    "onCommand:_memo.cacheWorkspace",
-    "onCommand:_memo.cleanWorkspaceCache",
-    "onCommand:_memo.getWorkspaceCache",
-    "onView:memo.backlinksPanel"
-  ],
-  "main": "./dist/extension",
-  "contributes": {
-    "markdown.markdownItPlugins": true,
-    "grammars": [
-      {
-        "path": "./syntaxes/injection.json",
-        "scopeName": "memo.wikilink.injection",
-        "injectTo": [
-          "text.html.markdown"
-        ]
-      }
-    ],
-    "commands": [
-      {
-        "command": "memo.openDailyNote",
-        "title": "Open daily note",
-        "category": "Memo"
-      },
-      {
-        "command": "memo.openRandomNote",
-        "title": "Open random note",
-        "category": "Memo"
-      },
-      {
-        "command": "memo.openReferenceInDefaultApp",
-        "title": "Open link in the default app",
-        "category": "Memo"
-      },
-      {
-        "command": "memo.openReferenceBeside",
-        "title": "Open link to the side",
-        "category": "Memo"
-      },
-      {
-        "command": "memo.pasteHtmlAsMarkdown",
-        "title": "Paste HTML as Markdown",
-        "category": "Memo"
-      },
-      {
-        "command": "memo.extractRangeToNewNote",
-        "title": "Extract range to a new note",
-        "category": "Memo"
-      }
-    ],
-    "configuration": {
-      "type": "object",
-      "title": "Memo",
-      "properties": {
-        "memo.backlinksPanel.collapseParentItems": {
-          "default": false,
-          "scope": "resource",
-          "description": "Collapse parent items by default.",
-          "type": "boolean"
-        },
-        "memo.backlinksPanel.enabled": {
-          "default": true,
-          "scope": "resource",
-          "description": "Whether to enable backlinks panel. Reload required!",
-          "type": "boolean"
-        },
-        "memo.links.completion.enabled": {
-          "default": true,
-          "scope": "resource",
-          "description": "Whether to enable links completion in the editor. Reload required!",
-          "type": "boolean"
-        },
-        "memo.links.following.enabled": {
-          "default": true,
-          "scope": "resource",
-          "description": "Whether to enable links following in the editor. Reload required!",
-          "type": "boolean"
-        },
-        "memo.links.format": {
-          "enum": [
-            "short",
-            "long"
-          ],
-          "enumDescriptions": [
-            "Short path when filename is unique across workspace and absolute path when not",
-            "Always absolute path in workspace"
-          ],
-          "default": "short",
-          "description": "Link format to insert on autocomplete and rename.",
-          "scope": "resource"
-        },
-        "memo.links.preview.enabled": {
-          "default": true,
-          "scope": "resource",
-          "description": "Whether to enable links preview on hover in the editor. Reload required!",
-          "type": "boolean"
-        },
-        "memo.links.preview.imageMaxHeight": {
-          "default": "200",
-          "scope": "resource",
-          "description": "The maximum height of the image.",
-          "type": "number"
-        },
-        "memo.links.references.enabled": {
-          "default": true,
-          "scope": "resource",
-          "description": "Whether to enable references search for links in the editor. Reload required!",
-          "type": "boolean"
-        },
-        "memo.links.rules": {
-          "default": [],
-          "scope": "resource",
-          "description": "Rules specifying the location where new files should be created for short links. Notice that applicable only if links format is set to short in the settings. In case if multiple rules matching the file path, the rule that comes first will be applied. Folder paths should always use forward slashes even on Windows.",
-          "type": "array"
-        },
-        "memo.links.sync.enabled": {
-          "default": true,
-          "scope": "resource",
-          "description": "Whether to enable automatic links synchronization and rename action in the editor. Reload required!",
-          "type": "boolean"
-        },
-        "memo.markdownPreview.enabled": {
-          "default": true,
-          "scope": "resource",
-          "description": "Whether to enhance built-in VSCode Markdown preview with links highlight, navigation and resource embedding. Reload required!",
-          "type": "boolean"
-        }
-      }
-    },
-    "keybindings": [
-      {
-        "command": "editor.action.openLink",
-        "key": "ctrl+enter",
-        "mac": "cmd+enter",
-        "when": "editorTextFocus && editorLangId == markdown"
-      },
-      {
-        "command": "memo.openReferenceBeside",
-        "key": "ctrl+shift+enter",
-        "mac": "cmd+shift+enter",
-        "when": "editorTextFocus && editorLangId == markdown && memo:refFocusedOrHovered"
-      }
-    ],
-    "menus": {
-      "editor/context": [
-        {
-          "when": "editorLangId == markdown && memo:refUnderCursorExists",
-          "group": "memo",
-          "command": "memo.openReferenceInDefaultApp"
-        },
-        {
-          "when": "editorLangId == markdown && memo:refFocusedOrHovered",
-          "group": "memo",
-          "command": "memo.openReferenceBeside"
-        }
-      ],
-      "commandPalette": [
-        {
-          "command": "memo.openReferenceInDefaultApp",
-          "when": "editorLangId == markdown && memo:refUnderCursorExists"
-        },
-        {
-          "command": "memo.openReferenceBeside",
-          "when": "editorLangId == markdown && memo:refFocusedOrHovered"
-        },
-        {
-          "command": "memo.extractRangeToNewNote",
-          "when": "editorHasSelection && editorLangId == markdown"
-        }
-      ]
-    },
-    "views": {
-      "explorer": [
-        {
-          "id": "memo.backlinksPanel",
-          "name": "Backlinks",
-          "when": "memo:backlinksPanel.enabled"
-        }
-      ]
-    },
-    "viewsWelcome": [
-      {
-        "view": "memo.backlinksPanel",
-        "contents": "No information to show"
-      }
-    ],
-    "markdown.previewStyles": [
-      "./media/fontello/css/fontello.css",
-      "./media/markdown.css"
-    ]
-  },
-  "lint-staged": {
-    "*.ts": [
-      "eslint --fix"
-    ]
-  },
-  "scripts": {
-    "vscode:prepublish": "webpack --mode production",
-    "deploy:vsce": "vsce publish --yarn",
-    "deploy:ovsx": "ovsx publish --yarn --packagePath ./",
-    "package": "vsce package --yarn",
-    "clean": "del dist out",
-    "lint": "eslint src --ext ts",
-    "compile": "webpack --mode development",
-    "compile:tests": "tsc -p ./ && yarn run webpack --mode development",
-    "watch": "webpack --mode development -w",
-    "pretest": "yarn compile:tests",
-    "pretest:ci": "yarn compile:tests",
-    "pretest:watch": "yarn compile:tests",
-    "precompile:tests": "del-cli ./tmp/test-workspace && mkdirp ./tmp/test-workspace",
-    "release": "standard-version",
-    "ts": "tsc --noEmit",
-    "test": "node ./out/test/runTest.js",
-    "test:ci": "cross-env JEST_CI=true JEST_COLLECT_COVERAGE=true node ./out/test/runTest.js",
-    "test:watch": "cross-env JEST_WATCH=true node ./out/test/runTest.js",
-    "prepare": "husky install"
-  },
-  "devDependencies": {
-    "@commitlint/cli": "^16.1.0",
-    "@commitlint/config-conventional": "^16.0.0",
-    "@types/del": "^4.0.0",
-    "@types/fs-extra": "^9.0.13",
-    "@types/glob": "^7.2.0",
-    "@types/jest": "^27.4.0",
-    "@types/lodash.debounce": "^4.0.6",
-    "@types/lodash.groupby": "^4.6.6",
-    "@types/lodash.range": "^3.2.6",
-    "@types/markdown-it": "^12.2.3",
-    "@types/moment": "^2.13.0",
-    "@types/node": "^17.0.10",
-    "@types/open": "^6.2.1",
-    "@types/turndown": "^5.0.1",
-    "@types/vscode": "^1.63.1",
-    "@typescript-eslint/eslint-plugin": "^5.10.0",
-    "@typescript-eslint/parser": "^5.10.0",
-    "cross-env": "^7.0.3",
-    "del": "^6.0.0",
-    "del-cli": "^4.0.1",
-    "eslint": "^8.7.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-folders": "^1.0.3",
-    "eslint-plugin-import": "^2.25.4",
-    "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-unicorn": "^40.1.0",
-    "glob": "^7.2.0",
-    "husky": "^7.0.4",
-    "jest": "^27.4.7",
-    "jest-environment-vscode": "^1.0.0",
-    "jest-extended": "^1.2.0",
-    "lint-staged": "^12.3.1",
-    "mkdirp": "^1.0.4",
-    "ovsx": "^0.3.0",
-    "prettier": "^2.5.1",
-    "standard-version": "^9.3.2",
-    "terser-webpack-plugin": "^5.3.0",
-    "ts-jest": "^27.1.3",
-    "ts-loader": "^9.2.6",
-    "typescript": "^4.5.5",
-    "vsce": "^2.6.3",
-    "vscode-test": "^1.6.1",
-    "wait-for-expect": "^3.0.2",
-    "webpack": "^5.67.0",
-    "webpack-cli": "^4.9.1"
-  },
-  "dependencies": {
-    "cross-path-sort": "^1.0.0",
-    "execa": "svsool/execa#v6.0.1",
-    "fs-extra": "^10.0.0",
-    "lodash.debounce": "^4.0.8",
-    "lodash.groupby": "^4.6.0",
-    "lodash.range": "^3.2.0",
-    "markdown-it": "^12.3.2",
-    "markdown-it-regex": "^0.2.0",
-    "moment": "^2.29.1",
-    "open": "^8.4.0",
-    "turndown": "^7.1.1"
-  }
+	"name": "markdown-memo",
+	"displayName": "Markdown Memo",
+	"description": "Markdown knowledge base with bidirectional [[link]]s built on top of VSCode",
+	"publisher": "svsool",
+	"version": "0.3.19",
+	"author": "Svyatoslav Sobol <svyat.nx@gmail.com>",
+	"license": "MIT",
+	"icon": "media/memo.png",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/svsool/memo"
+	},
+	"bugs": {
+		"url": "https://github.com/svsool/memo/issues"
+	},
+	"engines": {
+		"vscode": "^1.69.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"keywords": [
+		"memo",
+		"markdown",
+		"knowledge base",
+		"references",
+		"reference",
+		"links",
+		"link",
+		"wiki-links",
+		"wiki-link",
+		"zettelkasten",
+		"notes",
+		"note",
+		"note-taking"
+	],
+	"activationEvents": [
+		"onLanguage:markdown",
+		"onCommand:memo.openRandomNote",
+		"onCommand:memo.openDailyNote",
+		"onCommand:memo.openReferenceInDefaultApp",
+		"onCommand:memo.openReferenceBeside",
+		"onCommand:memo.pasteHtmlAsMarkdown",
+		"onCommand:memo.extractRangeToNewNote",
+		"onCommand:_memo.openReference",
+		"onCommand:_memo.cacheWorkspace",
+		"onCommand:_memo.cleanWorkspaceCache",
+		"onCommand:_memo.getWorkspaceCache",
+		"onView:memo.backlinksPanel"
+	],
+	"main": "./dist/extension",
+	"contributes": {
+		"markdown.markdownItPlugins": true,
+		"grammars": [
+			{
+				"path": "./syntaxes/injection.json",
+				"scopeName": "memo.wikilink.injection",
+				"injectTo": [
+					"text.html.markdown"
+				]
+			}
+		],
+		"commands": [
+			{
+				"command": "memo.openDailyNote",
+				"title": "Open daily note",
+				"category": "Memo"
+			},
+			{
+				"command": "memo.openRandomNote",
+				"title": "Open random note",
+				"category": "Memo"
+			},
+			{
+				"command": "memo.openReferenceInDefaultApp",
+				"title": "Open link in the default app",
+				"category": "Memo"
+			},
+			{
+				"command": "memo.openReferenceBeside",
+				"title": "Open link to the side",
+				"category": "Memo"
+			},
+			{
+				"command": "memo.pasteHtmlAsMarkdown",
+				"title": "Paste HTML as Markdown",
+				"category": "Memo"
+			},
+			{
+				"command": "memo.extractRangeToNewNote",
+				"title": "Extract range to a new note",
+				"category": "Memo"
+			}
+		],
+		"configuration": {
+			"type": "object",
+			"title": "Memo",
+			"properties": {
+				"memo.backlinksPanel.collapseParentItems": {
+					"default": false,
+					"scope": "resource",
+					"description": "Collapse parent items by default.",
+					"type": "boolean"
+				},
+				"memo.backlinksPanel.enabled": {
+					"default": true,
+					"scope": "resource",
+					"description": "Whether to enable backlinks panel. Reload required!",
+					"type": "boolean"
+				},
+				"memo.links.completion.enabled": {
+					"default": true,
+					"scope": "resource",
+					"description": "Whether to enable links completion in the editor. Reload required!",
+					"type": "boolean"
+				},
+				"memo.links.following.enabled": {
+					"default": true,
+					"scope": "resource",
+					"description": "Whether to enable links following in the editor. Reload required!",
+					"type": "boolean"
+				},
+				"memo.links.format": {
+					"enum": [
+						"short",
+						"long"
+					],
+					"enumDescriptions": [
+						"Short path when filename is unique across workspace and absolute path when not",
+						"Always absolute path in workspace"
+					],
+					"default": "short",
+					"description": "Link format to insert on autocomplete and rename.",
+					"scope": "resource"
+				},
+				"memo.links.preview.enabled": {
+					"default": true,
+					"scope": "resource",
+					"description": "Whether to enable links preview on hover in the editor. Reload required!",
+					"type": "boolean"
+				},
+				"memo.links.preview.imageMaxHeight": {
+					"default": "200",
+					"scope": "resource",
+					"description": "The maximum height of the image.",
+					"type": "number"
+				},
+				"memo.links.references.enabled": {
+					"default": true,
+					"scope": "resource",
+					"description": "Whether to enable references search for links in the editor. Reload required!",
+					"type": "boolean"
+				},
+				"memo.links.rules": {
+					"default": [],
+					"scope": "resource",
+					"description": "Rules specifying the location where new files should be created for short links. Notice that applicable only if links format is set to short in the settings. In case if multiple rules matching the file path, the rule that comes first will be applied. Folder paths should always use forward slashes even on Windows.",
+					"type": "array"
+				},
+				"memo.links.sync.enabled": {
+					"default": true,
+					"scope": "resource",
+					"description": "Whether to enable automatic links synchronization and rename action in the editor. Reload required!",
+					"type": "boolean"
+				},
+				"memo.markdownPreview.enabled": {
+					"default": true,
+					"scope": "resource",
+					"description": "Whether to enhance built-in VSCode Markdown preview with links highlight, navigation and resource embedding. Reload required!",
+					"type": "boolean"
+				}
+			}
+		},
+		"keybindings": [
+			{
+				"command": "editor.action.openLink",
+				"key": "ctrl+enter",
+				"mac": "cmd+enter",
+				"when": "editorTextFocus && editorLangId == markdown"
+			},
+			{
+				"command": "memo.openReferenceBeside",
+				"key": "ctrl+shift+enter",
+				"mac": "cmd+shift+enter",
+				"when": "editorTextFocus && editorLangId == markdown && memo:refFocusedOrHovered"
+			}
+		],
+		"menus": {
+			"editor/context": [
+				{
+					"when": "editorLangId == markdown && memo:refUnderCursorExists",
+					"group": "memo",
+					"command": "memo.openReferenceInDefaultApp"
+				},
+				{
+					"when": "editorLangId == markdown && memo:refFocusedOrHovered",
+					"group": "memo",
+					"command": "memo.openReferenceBeside"
+				}
+			],
+			"commandPalette": [
+				{
+					"command": "memo.openReferenceInDefaultApp",
+					"when": "editorLangId == markdown && memo:refUnderCursorExists"
+				},
+				{
+					"command": "memo.openReferenceBeside",
+					"when": "editorLangId == markdown && memo:refFocusedOrHovered"
+				},
+				{
+					"command": "memo.extractRangeToNewNote",
+					"when": "editorHasSelection && editorLangId == markdown"
+				}
+			]
+		},
+		"views": {
+			"explorer": [
+				{
+					"id": "memo.backlinksPanel",
+					"name": "Backlinks",
+					"when": "memo:backlinksPanel.enabled"
+				}
+			]
+		},
+		"viewsWelcome": [
+			{
+				"view": "memo.backlinksPanel",
+				"contents": "No information to show"
+			}
+		],
+		"markdown.previewStyles": [
+			"./media/fontello/css/fontello.css",
+			"./media/markdown.css"
+		]
+	},
+	"lint-staged": {
+		"*.ts": [
+			"eslint --fix"
+		]
+	},
+	"scripts": {
+		"vscode:prepublish": "webpack --mode production",
+		"deploy:vsce": "vsce publish --yarn",
+		"deploy:ovsx": "ovsx publish --yarn --packagePath ./",
+		"package": "vsce package --yarn",
+		"clean": "del dist out",
+		"lint": "eslint src --ext ts",
+		"compile": "webpack --mode development",
+		"compile:tests": "tsc -p ./ && yarn run webpack --mode development",
+		"watch": "webpack --mode development -w",
+		"pretest": "yarn compile:tests",
+		"pretest:ci": "yarn compile:tests",
+		"pretest:watch": "yarn compile:tests",
+		"precompile:tests": "del-cli ./tmp/test-workspace && mkdirp ./tmp/test-workspace",
+		"release": "standard-version",
+		"ts": "tsc --noEmit",
+		"test": "node ./out/test/runTest.js",
+		"test:ci": "cross-env JEST_CI=true JEST_COLLECT_COVERAGE=true node ./out/test/runTest.js",
+		"test:watch": "cross-env JEST_WATCH=true node ./out/test/runTest.js",
+		"prepare": "husky install"
+	},
+	"devDependencies": {
+		"@commitlint/cli": "^17.0.3",
+		"@commitlint/config-conventional": "^17.0.3",
+		"@types/del": "^4.0.0",
+		"@types/fs-extra": "^9.0.13",
+		"@types/glob": "^7.2.0",
+		"@types/jest": "^28.1.6",
+		"@types/lodash.debounce": "^4.0.7",
+		"@types/lodash.groupby": "^4.6.7",
+		"@types/lodash.range": "^3.2.7",
+		"@types/markdown-it": "^12.2.3",
+		"@types/moment": "^2.13.0",
+		"@types/node": "^18.6.3",
+		"@types/open": "^6.2.1",
+		"@types/turndown": "^5.0.1",
+		"@types/vscode": "^1.69.0",
+		"@typescript-eslint/eslint-plugin": "^5.31.0",
+		"@typescript-eslint/parser": "^5.31.0",
+		"cross-env": "^7.0.3",
+		"del": "^6.0.0",
+		"del-cli": "^5.0.0",
+		"eslint": "^8.20.0",
+		"eslint-config-prettier": "^8.5.0",
+		"eslint-plugin-folders": "^1.0.3",
+		"eslint-plugin-import": "^2.26.0",
+		"eslint-plugin-prettier": "^4.2.1",
+		"eslint-plugin-unicorn": "^40.1.0",
+		"glob": "^8.0.3",
+		"husky": "^8.0.1",
+		"jest": "^27.5.1",
+		"jest-environment-vscode": "^1.0.0",
+		"jest-extended": "^3.0.1",
+		"lint-staged": "^13.0.3",
+		"mkdirp": "^1.0.4",
+		"ovsx": "^0.5.1",
+		"prettier": "^2.7.1",
+		"standard-version": "^9.5.0",
+		"terser-webpack-plugin": "^5.3.3",
+		"ts-jest": "^28.0.7",
+		"ts-loader": "^9.3.1",
+		"typescript": "^4.7.4",
+		"vsce": "^2.10.0",
+		"vscode-test": "^1.6.1",
+		"wait-for-expect": "^3.0.2",
+		"webpack": "^5.74.0",
+		"webpack-cli": "^4.10.0"
+	},
+	"dependencies": {
+		"cross-path-sort": "^1.0.0",
+		"execa": "svsool/execa#v6.0.1",
+		"fs-extra": "^10.1.0",
+		"lodash.debounce": "^4.0.8",
+		"lodash.groupby": "^4.6.0",
+		"lodash.range": "^3.2.0",
+		"markdown-it": "^13.0.1",
+		"markdown-it-regex": "^0.2.0",
+		"moment": "^2.29.4",
+		"open": "^8.4.0",
+		"turndown": "^7.1.1"
+	},
+	"__metadata": {
+		"id": "a654a671-80d2-4f77-9c27-7f83f02cf376",
+		"publisherDisplayName": "Svyat Sobol",
+		"publisherId": "8a7ce00c-ba74-4209-ab2a-0389b8ad36f1",
+		"isPreReleaseVersion": false
+	}
 }
