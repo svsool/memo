@@ -3,7 +3,7 @@ import util from 'util';
 
 export const logger = window.createOutputChannel('Memo');
 
-const log =
+const createLogFn =
   (level: string) =>
   (...params: (string | object | unknown)[]) =>
     logger.appendLine(
@@ -12,12 +12,12 @@ const log =
         .join(' ')}`,
     );
 
-const info = log('info');
+const info = createLogFn('info');
 
-const debug = log('debug');
+const debug = createLogFn('debug');
 
-const warn = log('warn');
+const warn = createLogFn('warn');
 
-const error = log('error');
+const error = createLogFn('error');
 
 export default { info, warn, debug, error, logger };
