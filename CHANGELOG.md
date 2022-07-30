@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.19](https://github.com/svsool/memo/compare/v0.3.18...v0.3.19) (2022-07-30)
+
+
+### Features
+
+* allow customization of delimiters ([b567cc4](https://github.com/svsool/memo/commit/b567cc485e861c9f55f4ab8d57b862130ee450d0))
+* support wikilink syntax in headers ([21d2560](https://github.com/svsool/memo/commit/21d25609ec0b51706061891e42c0b2c89daaac5d))
+* use syntax injection for wikilinks ([f53e768](https://github.com/svsool/memo/commit/f53e768e792a20ac9a71ba9a91a7ea5a2506e54e))
+
+
+### Bug Fixes
+
+* Fix $CURRENT_SECONDS_UNIX handling when resolving short ref folder ([#570](https://github.com/svsool/memo/issues/570)) ([bbf955e](https://github.com/svsool/memo/commit/bbf955e144d2d0b35a3e7380e943f5691a0f3ea7))
+* Fix ripgrep path and tests ([#510](https://github.com/svsool/memo/issues/510)) ([420b7f7](https://github.com/svsool/memo/commit/420b7f7a6358a3a5e979d5c9f2c0d18e6f72ead0))
+* remove decorations configuration ([456119e](https://github.com/svsool/memo/commit/456119e5ed26af58992ab155b46a3784196035de))
+
 ### [0.3.18](https://github.com/svsool/memo/compare/v0.3.17...v0.3.18) (2022-01-29)
 
 
