@@ -13,7 +13,7 @@ Inspired by [Obsidian.md](https://obsidian.md/) and [RoamResearch](https://roamr
 
 ## Why?
 
-Because your knowledge base deserves to be powered by open source. Read more [here](https://github.com/svsool/memo/issues/9#issuecomment-658893538).
+Because your knowledge base deserves to be powered by open source.
 
 ## Getting started
 
