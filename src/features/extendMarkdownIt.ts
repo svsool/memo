@@ -58,6 +58,8 @@ const extendMarkdownIt = (md: MarkdownIt) => {
           return getInvalidRefAnchor(label || ref);
         }
 
+        const previewFileUrl = getFileUrlForMarkdownPreview(fsPath);
+
         const name = path.parse(fsPath).name;
 
         const content = fs.readFileSync(fsPath).toString();
@@ -74,7 +76,7 @@ const extendMarkdownIt = (md: MarkdownIt) => {
         const html = `<div class="memo-markdown-embed">
           <div class="memo-markdown-embed-title">${name}</div>
           <div class="memo-markdown-embed-link">
-            <a title="${fsPath}" href="${fsPath}">
+            <a title="${previewFileUrl}" href="${previewFileUrl}" data-href="${previewFileUrl}">
               <i class="icon-link"></i>
             </a>
           </div>

@@ -267,7 +267,7 @@ describe('extendMarkdownIt feature', () => {
       "<p><div class=\\"memo-markdown-embed\\">
                 <div class=\\"memo-markdown-embed-title\\">note</div>
                 <div class=\\"memo-markdown-embed-link\\">
-                  <a title=\\"/note.md\\" href=\\"/note.md\\">
+                  <a title=\\"/${name}.md\\" href=\\"/${name}.md\\" data-href=\\"/${name}.md\\">
                     <i class=\\"icon-link\\"></i>
                   </a>
                 </div>
@@ -304,7 +304,7 @@ describe('extendMarkdownIt feature', () => {
       "<p><div class=\\"memo-markdown-embed\\">
                 <div class=\\"memo-markdown-embed-title\\">note1</div>
                 <div class=\\"memo-markdown-embed-link\\">
-                  <a title=\\"/note1.md\\" href=\\"/note1.md\\">
+                  <a title=\\"/${name1}.md\\" href=\\"/${name1}.md\\" data-href=\\"/${name1}.md\\">
                     <i class=\\"icon-link\\"></i>
                   </a>
                 </div>
@@ -312,7 +312,7 @@ describe('extendMarkdownIt feature', () => {
                   <p><div class=\\"memo-markdown-embed\\">
                 <div class=\\"memo-markdown-embed-title\\">note</div>
                 <div class=\\"memo-markdown-embed-link\\">
-                  <a title=\\"/note.md\\" href=\\"/note.md\\">
+                  <a title=\\"/${name}.md\\" href=\\"/${name}.md\\" data-href=\\"/${name}.md\\">
                     <i class=\\"icon-link\\"></i>
                   </a>
                 </div>
@@ -345,7 +345,7 @@ describe('extendMarkdownIt feature', () => {
       "<p><div class=\\"memo-markdown-embed\\">
                 <div class=\\"memo-markdown-embed-title\\">note</div>
                 <div class=\\"memo-markdown-embed-link\\">
-                  <a title=\\"/note.md\\" href=\\"/note.md\\">
+                  <a title=\\"/${name}.md\\" href=\\"/${name}.md\\" data-href=\\"/${name}.md\\">
                     <i class=\\"icon-link\\"></i>
                   </a>
                 </div>
@@ -381,7 +381,7 @@ describe('extendMarkdownIt feature', () => {
       "<p><div class=\\"memo-markdown-embed\\">
                 <div class=\\"memo-markdown-embed-title\\">note</div>
                 <div class=\\"memo-markdown-embed-link\\">
-                  <a title=\\"/note.md\\" href=\\"/note.md\\">
+                  <a title=\\"/${name}.md\\" href=\\"/${name}.md\\" data-href=\\"/${name}.md\\">
                     <i class=\\"icon-link\\"></i>
                   </a>
                 </div>
@@ -389,7 +389,7 @@ describe('extendMarkdownIt feature', () => {
                   <p><div class=\\"memo-markdown-embed\\">
                 <div class=\\"memo-markdown-embed-title\\">note1</div>
                 <div class=\\"memo-markdown-embed-link\\">
-                  <a title=\\"/note1.md\\" href=\\"/note1.md\\">
+                  <a title=\\"/${name1}.md\\" href=\\"/${name1}.md\\" data-href=\\"/${name1}.md\\">
                     <i class=\\"icon-link\\"></i>
                   </a>
                 </div>
