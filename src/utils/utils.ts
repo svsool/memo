@@ -38,6 +38,7 @@ export const otherExts = [
   'ogg',
   '3gp',
   'flac',
+  'msg',
 ];
 
 const otherExtsRegex = new RegExp(`.(${otherExts.join('|')})$`, 'i');
