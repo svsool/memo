@@ -48,13 +48,7 @@ export const provideCompletionItems = (document: TextDocument, position: Positio
     ...(isResourceAutocomplete
       ? [...cache.getWorkspaceCache().imageUris, ...cache.getWorkspaceCache().markdownUris]
       : []),
-    ...(!isResourceAutocomplete
-      ? [
-          ...cache.getWorkspaceCache().markdownUris,
-          ...cache.getWorkspaceCache().imageUris,
-          ...cache.getWorkspaceCache().otherUris,
-        ]
-      : []),
+    ...(!isResourceAutocomplete ? [...cache.getWorkspaceCache().allUris] : []),
   ];
 
   const urisByPathBasename = groupBy(uris, ({ fsPath }) => path.basename(fsPath).toLowerCase());
@@ -69,12 +63,12 @@ export const provideCompletionItems = (document: TextDocument, position: Positio
     const longRef = fsPathToRef({
       path: uri.fsPath,
       basePath: workspaceFolder.uri.fsPath,
-      keepExt: containsImageExt(uri.fsPath) || containsOtherKnownExts(uri.fsPath),
+      keepExt: !containsMarkdownExt(uri.fsPath),
     });
 
     const shortRef = fsPathToRef({
       path: uri.fsPath,
-      keepExt: containsImageExt(uri.fsPath) || containsOtherKnownExts(uri.fsPath),
+      keepExt: !containsMarkdownExt(uri.fsPath),
     });
 
     const urisGroup = urisByPathBasename[path.basename(uri.fsPath).toLowerCase()] || [];
