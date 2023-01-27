@@ -115,6 +115,39 @@
 					"description": "Whether to enable links completion in the editor. Reload required!",
 					"type": "boolean"
 				},
+				"memo.links.extensions.other": {
+					"scope": "resource",
+					"description": "Other file extensions supported by links. Use a single entry of '*' to include all extensions.",
+                    "default": [
+						"doc",
+						"docx",
+						"rtf",
+						"txt",
+						"odt",
+						"xls",
+						"xlsx",
+						"ppt",
+						"pptm",
+						"pptx",
+						"pdf",
+						"pages",
+						"mp4",
+						"mov",
+						"wmv",
+						"flv",
+						"avi",
+						"mkv",
+						"mp3",
+						"webm",
+						"wav",
+						"m4a",
+						"ogg",
+						"3gp",
+						"flac",
+						"msg"
+                    ],
+					"type": "array"
+				},
 				"memo.links.following.enabled": {
 					"default": true,
 					"scope": "resource",
@@ -169,8 +202,7 @@
 					"scope": "resource",
 					"description": "Whether to enhance built-in VSCode Markdown preview with links highlight, navigation and resource embedding. Reload required!",
 					"type": "boolean"
-				}
-			}
+				}			}
 		},
 		"keybindings": [
 			{
