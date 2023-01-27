@@ -92,7 +92,10 @@ export const cacheUris = async () => {
   const { findNonIgnoredFiles, imageExts, otherExts } = utils();
   const markdownUris = await findNonIgnoredFiles('**/*.md');
   const imageUris = await findNonIgnoredFiles(`**/*.{${imageExts.join(',')}}`);
-  const otherUris = await findNonIgnoredFiles(`**/*.{${otherExts.join(',')}}`);
+  const otherUris =
+    otherExts.length == 1 && otherExts[0] == '*'
+      ? await findNonIgnoredFiles('**/*')
+      : await findNonIgnoredFiles(`**/*.{${otherExts.join(',')}}`);
 
   workspaceCache.markdownUris = sortPaths(markdownUris, { pathKey: 'path', shallowFirst: true });
   workspaceCache.imageUris = sortPaths(imageUris, { pathKey: 'path', shallowFirst: true });
