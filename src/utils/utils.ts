@@ -35,7 +35,7 @@ export function getMemoConfigProperty(
 export function getMemoConfigProperty(property: MemoBoolConfigProp, fallback: boolean): boolean;
 
 export function getMemoConfigProperty(
-  property: 'links.extensions.other',
+  property: 'links.customExtensions',
   fallback: null | Array<String>,
 ): String[];
 
@@ -43,7 +43,7 @@ export function getMemoConfigProperty<T>(property: string, fallback: T): T {
   return getConfigProperty(`memo.${property}`, fallback);
 }
 
-export const otherExts = getMemoConfigProperty('links.extensions.other', [
+export const otherExts = getMemoConfigProperty('links.customExtensions', [
   'doc',
   'docx',
   'rtf',

@@ -115,7 +115,7 @@
 					"description": "Whether to enable links completion in the editor. Reload required!",
 					"type": "boolean"
 				},
-				"memo.links.extensions.other": {
+				"memo.links.customExtensions": {
 					"scope": "resource",
 					"description": "Other file extensions supported by links. Use a single entry of '*' to include all extensions.",
                     "default": [

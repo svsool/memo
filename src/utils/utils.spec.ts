@@ -1183,8 +1183,8 @@ describe('findNonIgnoredFiles()', () => {
 
   describe('when config includes py files', () => {
     it('should find non-ignored files', async () => {
-      const prevConfig = getConfigProperty('memo.links.extensions.other', []);
-      await updateConfigProperty('memo.links.extensions.other', ['py']);
+      const prevConfig = getConfigProperty('memo.links.customExtensions', []);
+      await updateConfigProperty('memo.links.customExtensions', ['py']);
       const allowedName = rndName();
 
       await createFile(`${allowedName}.py`);
@@ -1194,7 +1194,7 @@ describe('findNonIgnoredFiles()', () => {
       expect(files).toHaveLength(1);
       expect(path.basename(files[0].fsPath)).toBe(`${allowedName}.py`);
 
-      await updateConfigProperty('memo.links.extensions.other', prevConfig);
+      await updateConfigProperty('memo.links.customExtensions', prevConfig);
     });
   });
 
