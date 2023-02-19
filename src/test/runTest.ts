@@ -1,5 +1,5 @@
 import * as path from 'path';
-import { runTests } from 'vscode-test';
+import { runTests } from '@vscode/test-electron';
 
 process.env.FORCE_COLOR = '1';
 

@@ -1,5 +1,6 @@
 import { runCLI } from '@jest/core';
 import { AggregatedResult } from '@jest/test-result';
+import util from 'util';
 import path from 'path';
 
 const getFailureMessages = (results: AggregatedResult): string[] | undefined => {
@@ -13,7 +14,27 @@ const getFailureMessages = (results: AggregatedResult): string[] | undefined => 
 
 const rootDir = path.resolve(__dirname, '../..');
 
+// vscode uses special mechanism to require node modules which interferes with jest-runtime and mocks functionality
+// see https://bitly.com/ and https://bit.ly/3EmrV7c
+const fixVscodeRuntime = () => {
+  const globalTyped = global as unknown as { _VSCODE_NODE_MODULES: typeof Proxy };
+
+  if (globalTyped._VSCODE_NODE_MODULES && util.types.isProxy(globalTyped._VSCODE_NODE_MODULES)) {
+    globalTyped._VSCODE_NODE_MODULES = new Proxy(globalTyped._VSCODE_NODE_MODULES, {
+      get(target, prop, receiver) {
+        if (prop === '_isMockFunction') {
+          return false;
+        }
+
+        return Reflect.get(target, prop, receiver);
+      },
+    });
+  }
+};
+
 export function run(): Promise<void> {
+  fixVscodeRuntime();
+
   process.stderr.write = (buffer: string) => {
     // ideally console.error should be used, but not possible due to stack overflow and how console methods are patched in vscode, see http://bit.ly/3vilufz
     // using original stdout/stderr not possible either, see this issue https://github.com/microsoft/vscode/issues/74173
@@ -33,17 +54,14 @@ export function run(): Promise<void> {
           roots: ['<rootDir>/src'],
           verbose: true,
           colors: true,
-          transform: JSON.stringify({ '^.+\\.ts$': 'ts-jest' }),
+          transform: JSON.stringify({
+            '\\.ts$': ['@swc/jest'],
+          }),
           runInBand: true,
           testRegex: process.env.JEST_TEST_REGEX || '\\.(test|spec)\\.ts$',
           testEnvironment: '<rootDir>/src/test/env/VsCodeEnvironment.js',
           setupFiles: ['<rootDir>/src/test/config/jestSetup.ts'],
           setupFilesAfterEnv: ['jest-extended/all'],
-          globals: JSON.stringify({
-            'ts-jest': {
-              tsconfig: path.resolve(rootDir, './tsconfig.json'),
-            },
-          }),
           ci: process.env.JEST_CI === 'true',
           testTimeout: 30000,
           watch: process.env.JEST_WATCH === 'true',

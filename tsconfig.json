@@ -7,7 +7,7 @@
     "sourceMap": true,
     "rootDir": "src",
     "lib": ["es2019"],
-    "types": ["jest-extended"],
+    "types": ["jest-extended", "jest"],
     "skipLibCheck": true,
     "strict": true,
     "noImplicitReturns": true,
