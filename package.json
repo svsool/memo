@@ -278,7 +278,7 @@
 		"@types/open": "^6.2.1",
 		"@types/turndown": "^5.0.1",
 		"@types/vscode": "^1.69.0",
-		"@typescript-eslint/eslint-plugin": "^5.31.0",
+		"@typescript-eslint/eslint-plugin": "^5.54.0",
 		"@typescript-eslint/parser": "^5.31.0",
 		"@vscode/test-electron": "^2.2.3",
 		"cross-env": "^7.0.3",
