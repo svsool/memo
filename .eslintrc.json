@@ -19,7 +19,7 @@
     "plugin:import/errors",
     "plugin:import/warnings"
   ],
-  "plugins": ["@typescript-eslint", "prettier", "folders", "unicorn"],
+  "plugins": ["@typescript-eslint", "prettier", "folders", "unicorn", "no-only-tests"],
   "rules": {
     // kebab-case
     "folders/match-regex": [2, "^[a-z-]+$", "/src/"],
@@ -71,6 +71,7 @@
     "new-cap": ["error", { "capIsNew": false }],
     "no-restricted-globals": 0,
     "no-var-requires": 0,
+    "no-only-tests/no-only-tests": "error",
     "prefer-object-spread": "error",
     "prefer-destructuring": 0,
     "strict": 0,
