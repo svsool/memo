@@ -27,7 +27,7 @@ describe('extendMarkdownIt feature', () => {
     const md = extendMarkdownIt(MarkdownIt());
 
     expect(md.render('[[invalid-link]]')).toMatchInlineSnapshot(`
-      "<p><a class=\\"memo-invalid-link\\" title=\\"Link does not exist yet. Please use cmd / ctrl + click in text editor to create a new one.\\" href=\\"javascript:void(0)\\">invalid-link</a></p>
+      "<p><a class="memo-invalid-link" title="Link does not exist yet. Please use cmd / ctrl + click in text editor to create a new one." href="javascript:void(0)">invalid-link</a></p>
       "
     `);
   });
@@ -104,7 +104,7 @@ describe('extendMarkdownIt feature', () => {
     const md = extendMarkdownIt(MarkdownIt());
 
     expect(md.render(`[[.${name}|Test Label]]`)).toMatchInlineSnapshot(`
-      "<p><a class=\\"memo-invalid-link\\" title=\\"Link does not exist yet. Please use cmd / ctrl + click in text editor to create a new one.\\" href=\\"javascript:void(0)\\">Test Label</a></p>
+      "<p><a class="memo-invalid-link" title="Link does not exist yet. Please use cmd / ctrl + click in text editor to create a new one." href="javascript:void(0)">Test Label</a></p>
       "
     `);
   });
@@ -161,7 +161,7 @@ describe('extendMarkdownIt feature', () => {
     const md = extendMarkdownIt(MarkdownIt());
 
     expect(md.render('[[invalid-link.png]]')).toMatchInlineSnapshot(`
-      "<p><a class=\\"memo-invalid-link\\" title=\\"Link does not exist yet. Please use cmd / ctrl + click in text editor to create a new one.\\" href=\\"javascript:void(0)\\">invalid-link.png</a></p>
+      "<p><a class="memo-invalid-link" title="Link does not exist yet. Please use cmd / ctrl + click in text editor to create a new one." href="javascript:void(0)">invalid-link.png</a></p>
       "
     `);
   });
@@ -264,14 +264,14 @@ describe('extendMarkdownIt feature', () => {
     expect(
       html.replace(new RegExp(escapeForRegExp(notePath), 'g'), `/note.md`).replace(name, 'note'),
     ).toMatchInlineSnapshot(`
-      "<p><div class=\\"memo-markdown-embed\\">
-                <div class=\\"memo-markdown-embed-title\\">note</div>
-                <div class=\\"memo-markdown-embed-link\\">
-                  <a title=\\"/${name}.md\\" href=\\"/${name}.md\\" data-href=\\"/${name}.md\\">
-                    <i class=\\"icon-link\\"></i>
+      "<p><div class="memo-markdown-embed">
+                <div class="memo-markdown-embed-title">note</div>
+                <div class="memo-markdown-embed-link">
+                  <a title="/${name}.md" href="/${name}.md" data-href="/${name}.md">
+                    <i class="icon-link"></i>
                   </a>
                 </div>
-                <div class=\\"memo-markdown-embed-content\\">
+                <div class="memo-markdown-embed-content">
                   <h1>Hello world</h1>
 
                 </div>
@@ -301,22 +301,22 @@ describe('extendMarkdownIt feature', () => {
         .replace(new RegExp(escapeForRegExp(notePath1), 'g'), `/note1.md`)
         .replace(name1, 'note1'),
     ).toMatchInlineSnapshot(`
-      "<p><div class=\\"memo-markdown-embed\\">
-                <div class=\\"memo-markdown-embed-title\\">note1</div>
-                <div class=\\"memo-markdown-embed-link\\">
-                  <a title=\\"/${name1}.md\\" href=\\"/${name1}.md\\" data-href=\\"/${name1}.md\\">
-                    <i class=\\"icon-link\\"></i>
+      "<p><div class="memo-markdown-embed">
+                <div class="memo-markdown-embed-title">note1</div>
+                <div class="memo-markdown-embed-link">
+                  <a title="/${name1}.md" href="/${name1}.md" data-href="/${name1}.md">
+                    <i class="icon-link"></i>
                   </a>
                 </div>
-                <div class=\\"memo-markdown-embed-content\\">
-                  <p><div class=\\"memo-markdown-embed\\">
-                <div class=\\"memo-markdown-embed-title\\">note</div>
-                <div class=\\"memo-markdown-embed-link\\">
-                  <a title=\\"/${name}.md\\" href=\\"/${name}.md\\" data-href=\\"/${name}.md\\">
-                    <i class=\\"icon-link\\"></i>
+                <div class="memo-markdown-embed-content">
+                  <p><div class="memo-markdown-embed">
+                <div class="memo-markdown-embed-title">note</div>
+                <div class="memo-markdown-embed-link">
+                  <a title="/${name}.md" href="/${name}.md" data-href="/${name}.md">
+                    <i class="icon-link"></i>
                   </a>
                 </div>
-                <div class=\\"memo-markdown-embed-content\\">
+                <div class="memo-markdown-embed-content">
                   <h1>Hello world</h1>
 
                 </div>
@@ -342,15 +342,15 @@ describe('extendMarkdownIt feature', () => {
     expect(
       html.replace(new RegExp(escapeForRegExp(notePath), 'g'), `/note.md`).replace(name, 'note'),
     ).toMatchInlineSnapshot(`
-      "<p><div class=\\"memo-markdown-embed\\">
-                <div class=\\"memo-markdown-embed-title\\">note</div>
-                <div class=\\"memo-markdown-embed-link\\">
-                  <a title=\\"/${name}.md\\" href=\\"/${name}.md\\" data-href=\\"/${name}.md\\">
-                    <i class=\\"icon-link\\"></i>
+      "<p><div class="memo-markdown-embed">
+                <div class="memo-markdown-embed-title">note</div>
+                <div class="memo-markdown-embed-link">
+                  <a title="/${name}.md" href="/${name}.md" data-href="/${name}.md">
+                    <i class="icon-link"></i>
                   </a>
                 </div>
-                <div class=\\"memo-markdown-embed-content\\">
-                  <div class=\\"memo-cyclic-link-warning\\">Cyclic linking detected 💥.</div>
+                <div class="memo-markdown-embed-content">
+                  <div class="memo-cyclic-link-warning">Cyclic linking detected 💥.</div>
                 </div>
               </div></p>
       "
@@ -378,23 +378,23 @@ describe('extendMarkdownIt feature', () => {
         .replace(new RegExp(escapeForRegExp(notePath1), 'g'), `/note1.md`)
         .replace(name1, 'note1'),
     ).toMatchInlineSnapshot(`
-      "<p><div class=\\"memo-markdown-embed\\">
-                <div class=\\"memo-markdown-embed-title\\">note</div>
-                <div class=\\"memo-markdown-embed-link\\">
-                  <a title=\\"/${name}.md\\" href=\\"/${name}.md\\" data-href=\\"/${name}.md\\">
-                    <i class=\\"icon-link\\"></i>
+      "<p><div class="memo-markdown-embed">
+                <div class="memo-markdown-embed-title">note</div>
+                <div class="memo-markdown-embed-link">
+                  <a title="/${name}.md" href="/${name}.md" data-href="/${name}.md">
+                    <i class="icon-link"></i>
                   </a>
                 </div>
-                <div class=\\"memo-markdown-embed-content\\">
-                  <p><div class=\\"memo-markdown-embed\\">
-                <div class=\\"memo-markdown-embed-title\\">note1</div>
-                <div class=\\"memo-markdown-embed-link\\">
-                  <a title=\\"/${name1}.md\\" href=\\"/${name1}.md\\" data-href=\\"/${name1}.md\\">
-                    <i class=\\"icon-link\\"></i>
+                <div class="memo-markdown-embed-content">
+                  <p><div class="memo-markdown-embed">
+                <div class="memo-markdown-embed-title">note1</div>
+                <div class="memo-markdown-embed-link">
+                  <a title="/${name1}.md" href="/${name1}.md" data-href="/${name1}.md">
+                    <i class="icon-link"></i>
                   </a>
                 </div>
-                <div class=\\"memo-markdown-embed-content\\">
-                  <div class=\\"memo-cyclic-link-warning\\">Cyclic linking detected 💥.</div>
+                <div class="memo-markdown-embed-content">
+                  <div class="memo-cyclic-link-warning">Cyclic linking detected 💥.</div>
                 </div>
               </div></p>
 
@@ -408,7 +408,7 @@ describe('extendMarkdownIt feature', () => {
     const md = extendMarkdownIt(MarkdownIt());
 
     expect(md.render('[[link.unknown]]')).toMatchInlineSnapshot(`
-      "<p><a class=\\"memo-invalid-link\\" title=\\"Link contains unknown extension: .unknown. Please use common file extensions .md,.png,.jpg,.jpeg,.svg,.gif,.doc,.docx,.rtf,.txt,.odt,.xls,.xlsx,.ppt,.pptm,.pptx,.pdf to enable full support.\\" href=\\"javascript:void(0)\\">link.unknown</a></p>
+      "<p><a class="memo-invalid-link" title="Link contains unknown extension: .unknown. Please use common file extensions .md,.png,.jpg,.jpeg,.svg,.gif,.doc,.docx,.rtf,.txt,.odt,.xls,.xlsx,.ppt,.pptm,.pptx,.pdf to enable full support." href="javascript:void(0)">link.unknown</a></p>
       "
     `);
   });

@@ -207,22 +207,22 @@ describe('DocumentLinkProvider', () => {
     const links = linkProvider.provideDocumentLinks(doc);
 
     expect(toPlainObject(links)).toMatchInlineSnapshot(`
-      Array [
-        Object {
-          "range": Array [
-            Object {
+      [
+        {
+          "range": [
+            {
               "character": 6,
               "line": 9,
             },
-            Object {
+            {
               "character": 14,
               "line": 9,
             },
           ],
-          "target": Object {
+          "target": {
             "$mid": 1,
             "path": "_memo.openDocumentByReference",
-            "query": "{\\"reference\\":\\"DemoNote\\"}",
+            "query": "{"reference":"DemoNote"}",
             "scheme": "command",
           },
           "tooltip": "Follow link",

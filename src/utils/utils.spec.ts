@@ -2,7 +2,6 @@ import { Position, Range, Selection, Uri, window, workspace } from 'vscode';
 import fs from 'fs';
 import path from 'path';
 
-import * as utils from './utils';
 import {
   containsImageExt,
   containsMarkdownExt,
@@ -317,14 +316,14 @@ describe('matchAll()', () => {
     `,
       ),
     ).toMatchInlineSnapshot(`
-      Array [
-        Array [
+      [
+        [
           "[[ref|Test Label]]",
           "ref|Test Label",
           "ref",
           "|Test Label",
         ],
-        Array [
+        [
           "[[ref 2|Test Label 2]]",
           "ref 2|Test Label 2",
           "ref 2",
@@ -343,14 +342,14 @@ describe('getReferenceAtPosition()', () => {
         new Position(0, 4),
       ),
     ).toMatchInlineSnapshot(`
-      Object {
+      {
         "label": "",
-        "range": Array [
-          Object {
+        "range": [
+          {
             "character": 0,
             "line": 0,
           },
-          Object {
+          {
             "character": 8,
             "line": 0,
           },
@@ -367,14 +366,14 @@ describe('getReferenceAtPosition()', () => {
         new Position(0, 4),
       ),
     ).toMatchInlineSnapshot(`
-      Object {
+      {
         "label": "",
-        "range": Array [
-          Object {
+        "range": [
+          {
             "character": 0,
             "line": 0,
           },
-          Object {
+          {
             "character": 15,
             "line": 0,
           },
@@ -391,14 +390,14 @@ describe('getReferenceAtPosition()', () => {
         new Position(0, 4),
       ),
     ).toMatchInlineSnapshot(`
-      Object {
+      {
         "label": "",
-        "range": Array [
-          Object {
+        "range": [
+          {
             "character": 1,
             "line": 0,
           },
-          Object {
+          {
             "character": 9,
             "line": 0,
           },
@@ -415,14 +414,14 @@ describe('getReferenceAtPosition()', () => {
         new Position(0, 4),
       ),
     ).toMatchInlineSnapshot(`
-      Object {
+      {
         "label": "",
-        "range": Array [
-          Object {
+        "range": [
+          {
             "character": 1,
             "line": 0,
           },
-          Object {
+          {
             "character": 16,
             "line": 0,
           },
@@ -439,17 +438,18 @@ describe('getReferenceAtPosition()', () => {
           language: 'markdown',
           content: '![[test-v1.1.0]]',
         }),
+
         new Position(0, 4),
       ),
     ).toMatchInlineSnapshot(`
-      Object {
+      {
         "label": "",
-        "range": Array [
-          Object {
+        "range": [
+          {
             "character": 1,
             "line": 0,
           },
-          Object {
+          {
             "character": 16,
             "line": 0,
           },
@@ -466,17 +466,18 @@ describe('getReferenceAtPosition()', () => {
           language: 'markdown',
           content: '![[test/test-v1.1.0]]',
         }),
+
         new Position(0, 4),
       ),
     ).toMatchInlineSnapshot(`
-      Object {
+      {
         "label": "",
-        "range": Array [
-          Object {
+        "range": [
+          {
             "character": 1,
             "line": 0,
           },
-          Object {
+          {
             "character": 21,
             "line": 0,
           },
@@ -527,7 +528,7 @@ describe('extractEmbedRefs()', () => {
     ![[note]]
     `),
     ).toMatchInlineSnapshot(`
-      Array [
+      [
         "image.png",
         "note",
       ]
@@ -959,15 +960,12 @@ describe('findUriByRef()', () => {
     );
   });
 
-  it('should match long refs against workspace root', async () => {
-    const getWorkspaceFolderMock = jest.spyOn(utils, 'getWorkspaceFolder');
-    getWorkspaceFolderMock.mockReturnValue('/Users/Memo/Test');
-
+  it('should not find uri by long ref if it contains part of workspace', async () => {
     expect(
-      await findUriByRef([Uri.file('/Users/Memo/Test/hello.md')], 'Test/hello'),
+      await findUriByRef([Uri.file('/Users/Memo/Test/hello.md')], 'Test/hello', {
+        workspaceFolder: '/Users/Memo/Test',
+      }),
     ).toBeUndefined();
-
-    getWorkspaceFolderMock.mockRestore();
   });
 
   it('should find uri by ref with explicit markdown extension in ref', async () => {
@@ -1225,18 +1223,18 @@ describe('extractRefsFromText()', () => {
       [[any-ref]]
     `;
     expect(extractRefsFromText('hello-world', text)).toMatchInlineSnapshot(`
-      Array [
-        Object {
-          "line": Object {
+      [
+        {
+          "line": {
             "trailingText": "[[hello-world]] [[adjacent-ref]]",
           },
-          "ref": Object {
-            "position": Object {
-              "end": Object {
+          "ref": {
+            "position": {
+              "end": {
                 "character": 19,
                 "line": 1,
               },
-              "start": Object {
+              "start": {
                 "character": 8,
                 "line": 1,
               },
@@ -1256,18 +1254,18 @@ describe('extractRefsFromText()', () => {
     `;
 
     expect(extractRefsFromText(['hello-world', 'new-world'], text)).toMatchInlineSnapshot(`
-      Array [
-        Object {
-          "line": Object {
+      [
+        {
+          "line": {
             "trailingText": "[[hello-world]] [[adjacent-ref]] [[new-world]]",
           },
-          "ref": Object {
-            "position": Object {
-              "end": Object {
+          "ref": {
+            "position": {
+              "end": {
                 "character": 19,
                 "line": 1,
               },
-              "start": Object {
+              "start": {
                 "character": 8,
                 "line": 1,
               },
@@ -1275,17 +1273,17 @@ describe('extractRefsFromText()', () => {
             "text": "hello-world",
           },
         },
-        Object {
-          "line": Object {
+        {
+          "line": {
             "trailingText": "[[new-world]]",
           },
-          "ref": Object {
-            "position": Object {
-              "end": Object {
+          "ref": {
+            "position": {
+              "end": {
                 "character": 50,
                 "line": 1,
               },
-              "start": Object {
+              "start": {
                 "character": 41,
                 "line": 1,
               },
@@ -1329,18 +1327,18 @@ describe('extractRefsFromText()', () => {
     `;
 
     expect(extractRefsFromText(refRegExp, text)).toMatchInlineSnapshot(`
-      Array [
-        Object {
-          "line": Object {
+      [
+        {
+          "line": {
             "trailingText": "[[hello-world]] [[test-ref]]",
           },
-          "ref": Object {
-            "position": Object {
-              "end": Object {
+          "ref": {
+            "position": {
+              "end": {
                 "character": 19,
                 "line": 1,
               },
-              "start": Object {
+              "start": {
                 "character": 8,
                 "line": 1,
               },
@@ -1348,17 +1346,17 @@ describe('extractRefsFromText()', () => {
             "text": "hello-world",
           },
         },
-        Object {
-          "line": Object {
+        {
+          "line": {
             "trailingText": "[[test-ref]]",
           },
-          "ref": Object {
-            "position": Object {
-              "end": Object {
+          "ref": {
+            "position": {
+              "end": {
                 "character": 32,
                 "line": 1,
               },
-              "start": Object {
+              "start": {
                 "character": 24,
                 "line": 1,
               },
@@ -1366,17 +1364,17 @@ describe('extractRefsFromText()', () => {
             "text": "test-ref",
           },
         },
-        Object {
-          "line": Object {
+        {
+          "line": {
             "trailingText": "[[any-ref]]",
           },
-          "ref": Object {
-            "position": Object {
-              "end": Object {
+          "ref": {
+            "position": {
+              "end": {
                 "character": 15,
                 "line": 5,
               },
-              "start": Object {
+              "start": {
                 "character": 8,
                 "line": 5,
               },

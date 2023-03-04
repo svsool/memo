@@ -110,16 +110,16 @@ describe('ReferenceHoverProvider', () => {
 
     expect(toPlainObject(referenceHoverProvider.provideHover(doc, new vscode.Position(0, 4))))
       .toMatchInlineSnapshot(`
-      Object {
-        "contents": Array [
+      {
+        "contents": [
           "Link contains unknown extension: .unknown. Please use common file extensions .md,.png,.jpg,.jpeg,.svg,.gif,.doc,.docx,.rtf,.txt,.odt,.xls,.xlsx,.ppt,.pptm,.pptx,.pdf to enable full support.",
         ],
-        "range": Array [
-          Object {
+        "range": [
+          {
             "character": 2,
             "line": 0,
           },
-          Object {
+          {
             "character": 15,
             "line": 0,
           },
@@ -139,16 +139,16 @@ describe('ReferenceHoverProvider', () => {
 
     expect(toPlainObject(referenceHoverProvider.provideHover(doc, new vscode.Position(0, 4))))
       .toMatchInlineSnapshot(`
-      Object {
-        "contents": Array [
-          "\\"any-link\\" is not created yet. Click to create.",
+      {
+        "contents": [
+          ""any-link" is not created yet. Click to create.",
         ],
-        "range": Array [
-          Object {
+        "range": [
+          {
             "character": 2,
             "line": 0,
           },
-          Object {
+          {
             "character": 10,
             "line": 0,
           },

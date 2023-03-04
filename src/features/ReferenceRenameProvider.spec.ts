@@ -73,12 +73,12 @@ describe('ReferenceRenameProvider', () => {
 
     expect(await referenceRenameProvider.prepareRename(doc, new vscode.Position(0, 2)))
       .toMatchInlineSnapshot(`
-      Array [
-        Object {
+      [
+        {
           "character": 2,
           "line": 0,
         },
-        Object {
+        {
           "character": 7,
           "line": 0,
         },
@@ -99,12 +99,12 @@ describe('ReferenceRenameProvider', () => {
 
     expect(await referenceRenameProvider.prepareRename(doc, new vscode.Position(0, 2)))
       .toMatchInlineSnapshot(`
-      Array [
-        Object {
+      [
+        {
           "character": 2,
           "line": 0,
         },
-        Object {
+        {
           "character": 15,
           "line": 0,
         },

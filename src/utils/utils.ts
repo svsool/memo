@@ -341,10 +341,18 @@ export const findAllUrisWithUnknownExts = async (uris: vscode.Uri[]) => {
 
 export const extractExt = (value: string) => path.parse(value).ext.replace(/^\./, '');
 
-export const findUriByRef = (uris: vscode.Uri[], ref: string): vscode.Uri | undefined => {
+export const findUriByRef = (
+  uris: vscode.Uri[],
+  ref: string,
+  options: { workspaceFolder?: string } = {},
+): vscode.Uri | undefined => {
   return uris.find((uri) => {
     const relativeFsPath =
-      path.sep + path.relative(getWorkspaceFolder()!.toLowerCase(), uri.fsPath.toLowerCase());
+      path.sep +
+      path.relative(
+        (options.workspaceFolder || getWorkspaceFolder()!).toLowerCase(),
+        uri.fsPath.toLowerCase(),
+      );
 
     if (containsImageExt(ref) || containsOtherKnownExts(ref) || containsUnknownExt(ref)) {
       if (isLongRef(ref)) {
