@@ -9,7 +9,7 @@ on:
         required: true
 
 env:
-  NODE_VERSION: 14.17.0
+  NODE_VERSION: 16.14.2
 
 jobs:
   check-types:
