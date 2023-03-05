@@ -14,3 +14,4 @@ jobs:
     secrets:
       VSCE_PAT: ${{ secrets.VSCE_PAT }}
       OVSX_PAT: ${{ secrets.OVSX_PAT }}
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

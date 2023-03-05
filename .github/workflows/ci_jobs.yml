@@ -7,6 +7,8 @@ on:
         required: true
       OVSX_PAT:
         required: true
+      CODECOV_TOKEN:
+        required: true
 
 env:
   NODE_VERSION: 16.14.2

@@ -10,3 +10,7 @@ jobs:
     name: CI Jobs
     if: ${{ github.actor == 'dependabot[bot]' }}
     uses: svsool/vscode-memo/.github/workflows/ci_jobs.yml@master
+    secrets:
+      VSCE_PAT: ${{ secrets.VSCE_PAT }}
+      OVSX_PAT: ${{ secrets.OVSX_PAT }}
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
