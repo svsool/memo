@@ -4,10 +4,10 @@ Markdown knowledge base with bidirectional [[link]]s built on top of [VSCode](ht
 
 Inspired by [Obsidian.md](https://obsidian.md/) and [RoamResearch](https://roamresearch.com/).
 
-[![](https://vsmarketplacebadge.apphb.com/version-short/svsool.markdown-memo.svg)](https://marketplace.visualstudio.com/items?itemName=svsool.markdown-memo)
+[![Visual Studio Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/svsool.markdown-memo?color=light-green&label=VS%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=svsool.markdown-memo)
 [![Open VSX Version](https://img.shields.io/open-vsx/v/svsool/markdown-memo?color=salad&label=Open%20VSX)](https://open-vsx.org/extension/svsool/markdown-memo)
 [![](https://vsmarketplacebadge.apphb.com/installs/svsool.markdown-memo.svg)](https://marketplace.visualstudio.com/items?itemName=svsool.markdown-memo)
-[![](https://vsmarketplacebadge.apphb.com/rating-short/svsool.markdown-memo.svg)](https://marketplace.visualstudio.com/items?itemName=svsool.markdown-memo&ssr=false#review-details)
+[![Visual Studio Marketplace Rating](https://img.shields.io/visual-studio-marketplace/r/svsool.markdown-memo)](https://marketplace.visualstudio.com/items?itemName=svsool.markdown-memo&ssr=false#review-details)
 [![codecov](https://codecov.io/gh/svsool/memo/branch/master/graph/badge.svg)](https://codecov.io/gh/svsool/memo)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/svsool/memo/blob/master/CONTRIBUTING.md)
 
