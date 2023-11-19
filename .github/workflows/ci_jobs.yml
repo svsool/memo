@@ -16,7 +16,7 @@ env:
 jobs:
   check-types:
     name: Check Types
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v1
       - name: Setup Node
@@ -29,7 +29,7 @@ jobs:
         run: npm run ts
   lint:
     name: Run Linter
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v1
       - name: Setup Node
@@ -44,7 +44,7 @@ jobs:
     name: Run Tests
     strategy:
       matrix:
-        os: [macos-10.15, ubuntu-18.04, windows-2019]
+        os: [macos-12, ubuntu-22.04, windows-2019]
     runs-on: ${{ matrix.os }}
     env:
       OS: ${{ matrix.os }}
@@ -70,7 +70,7 @@ jobs:
   create_release:
     name: Create Release
     if: success() && startsWith(github.ref, 'refs/tags/v')
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     needs: [check-types, lint, tests]
     steps:
       - uses: actions/checkout@v1
@@ -90,7 +90,7 @@ jobs:
             markdown-memo-*.vsix
   publish:
     name: Publish Release
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     needs: [create_release]
     steps:
       - uses: actions/checkout@v1
