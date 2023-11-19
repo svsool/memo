@@ -88,6 +88,7 @@ describe('openReferenceBeside command', () => {
     await openReferenceBeside();
 
     await waitForExpect(() => expect(window.visibleTextEditors.length === 2).toBeTrue());
-    expect(window.activeTextEditor!.viewColumn === ViewColumn.Two).toBeTrue();
+    // expect(window.activeTextEditor!.viewColumn === ViewColumn.Two).toBeTrue();
+    expect(window.activeTextEditor!.viewColumn).toBe(ViewColumn.Two);
   });
 });
