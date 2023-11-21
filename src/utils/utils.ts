@@ -12,7 +12,38 @@ export const imageExts = ['png', 'jpg', 'jpeg', 'svg', 'gif', 'webp'];
 
 const imageExtsRegex = new RegExp(`.(${imageExts.join('|')})$`, 'i');
 
-export const otherExts = [
+export function getMemoConfigProperty(
+  property: 'links.format',
+  fallback: 'short',
+): 'short' | 'long';
+
+export function getMemoConfigProperty(
+  property: 'backlinksPanel.collapseParentItems',
+  fallback: null | boolean,
+): boolean;
+
+export function getMemoConfigProperty(
+  property: 'links.preview.imageMaxHeight',
+  fallback: null | number,
+): number;
+
+export function getMemoConfigProperty(
+  property: 'links.rules',
+  fallback: null | Array<LinkRuleT>,
+): LinkRuleT[];
+
+export function getMemoConfigProperty(property: MemoBoolConfigProp, fallback: boolean): boolean;
+
+export function getMemoConfigProperty(
+  property: 'links.customExtensions',
+  fallback: null | Array<String>,
+): String[];
+
+export function getMemoConfigProperty<T>(property: string, fallback: T): T {
+  return getConfigProperty(`memo.${property}`, fallback);
+}
+
+export const otherExts = getMemoConfigProperty('links.customExtensions', [
   'doc',
   'docx',
   'rtf',
@@ -39,9 +70,12 @@ export const otherExts = [
   '3gp',
   'flac',
   'msg',
-];
+]);
 
-const otherExtsRegex = new RegExp(`.(${otherExts.join('|')})$`, 'i');
+export const otherExtsRegex =
+  otherExts.length == 1 && otherExts[0] == '*'
+    ? new RegExp(`.*`, 'i')
+    : new RegExp(`.(${otherExts.join('|')})$`, 'i');
 
 // Remember to edit accordingly when extensions above edited
 export const commonExtsHint =
@@ -159,32 +193,6 @@ export type MemoBoolConfigProp =
   | 'links.sync.enabled'
   | 'backlinksPanel.enabled'
   | 'markdownPreview.enabled';
-
-export function getMemoConfigProperty(
-  property: 'links.format',
-  fallback: 'short',
-): 'short' | 'long';
-
-export function getMemoConfigProperty(
-  property: 'backlinksPanel.collapseParentItems',
-  fallback: null | boolean,
-): boolean;
-
-export function getMemoConfigProperty(
-  property: 'links.preview.imageMaxHeight',
-  fallback: null | number,
-): number;
-
-export function getMemoConfigProperty(
-  property: 'links.rules',
-  fallback: null | Array<LinkRuleT>,
-): LinkRuleT[];
-
-export function getMemoConfigProperty(property: MemoBoolConfigProp, fallback: boolean): boolean;
-
-export function getMemoConfigProperty<T>(property: string, fallback: T): T {
-  return getConfigProperty(`memo.${property}`, fallback);
-}
 
 export const matchAll = (pattern: RegExp, text: string): Array<RegExpMatchArray> => {
   let match: RegExpMatchArray | null;

@@ -1179,6 +1179,23 @@ describe('findNonIgnoredFiles()', () => {
     });
   });
 
+  describe('when config includes py files', () => {
+    it('should find non-ignored files', async () => {
+      const prevConfig = getConfigProperty('memo.links.customExtensions', []);
+      await updateConfigProperty('memo.links.customExtensions', ['py']);
+      const allowedName = rndName();
+
+      await createFile(`${allowedName}.py`);
+
+      const files = await findNonIgnoredFiles('**/*.py');
+
+      expect(files).toHaveLength(1);
+      expect(path.basename(files[0].fsPath)).toBe(`${allowedName}.py`);
+
+      await updateConfigProperty('memo.links.customExtensions', prevConfig);
+    });
+  });
+
   describe('when exclude param passed explicitly and search.exclude set', () => {
     it('should find non-ignored files', async () => {
       const prevConfig = getConfigProperty('search.exclude', {});
