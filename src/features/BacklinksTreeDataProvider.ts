@@ -87,7 +87,8 @@ export default class BacklinksTreeDataProvider implements vscode.TreeDataProvide
         ({ location }) => location.uri.fsPath,
       );
 
-      const pathsSorted = sortPaths(Object.keys(referencesByPath), { shallowFirst: true });
+      const sortOrder = getMemoConfigProperty('backlinksPanel.sortOrder', 'path');
+      const pathsSorted = await sortPaths(sortOrder)(referencesByPath);
 
       if (!pathsSorted.length) {
         return [];

@@ -11,7 +11,7 @@ import {
   containsUnknownExt,
   findFilesByExts,
   extractExt,
-  sortPaths,
+  crossPathSort,
 } from '../utils';
 
 const openingBracketsLength = 2;
@@ -33,7 +33,7 @@ export default class ReferenceRenameProvider implements RenameProvider {
       const unknownUris = containsUnknownExt(ref) ? await findFilesByExts([extractExt(ref)]) : [];
 
       const augmentedUris = unknownUris.length
-        ? sortPaths([...cache.getWorkspaceCache().allUris, ...unknownUris], {
+        ? crossPathSort([...cache.getWorkspaceCache().allUris, ...unknownUris], {
             pathKey: 'path',
             shallowFirst: true,
           })
@@ -69,7 +69,7 @@ export default class ReferenceRenameProvider implements RenameProvider {
       const unknownUris = containsUnknownExt(ref) ? await findFilesByExts([extractExt(ref)]) : [];
 
       const augmentedUris = unknownUris.length
-        ? sortPaths([...cache.getWorkspaceCache().allUris, ...unknownUris], {
+        ? crossPathSort([...cache.getWorkspaceCache().allUris, ...unknownUris], {
             pathKey: 'path',
             shallowFirst: true,
           })

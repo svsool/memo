@@ -97,6 +97,23 @@
 			"type": "object",
 			"title": "Memo",
 			"properties": {
+				"memo.backlinksPanel.sortOrder": {
+					"enum": [
+						"path",
+						"alphabet",
+						"last-modified",
+						"last-modified-refs"
+					],
+					"enumDescriptions": [
+						"Backlinks are sorted by their paths.",
+						"Backlinks are sorted by their directionary order.",
+						"Backlinks are sorted by their last modified time.",
+						"Backlinks are sorted by their last modified reference's time."
+					],
+					"default": "path",
+					"scope": "resource",
+					"description": "Controls the sorting order of backlinks."
+				},
 				"memo.backlinksPanel.collapseParentItems": {
 					"default": false,
 					"scope": "resource",
@@ -305,6 +322,7 @@
 		"ts-loader": "^9.4.2",
 		"typescript": "^4.9.5",
 		"vsce": "^2.15.0",
+		"vscode-uri": "^3.0.8",
 		"wait-for-expect": "^3.0.2",
 		"webpack": "^5.75.0",
 		"webpack-cli": "^5.0.1"

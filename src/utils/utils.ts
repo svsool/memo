@@ -5,6 +5,7 @@ import fs from 'fs';
 import { RefT, FoundRefT, LinkRuleT, ExtractedRefT } from '../types';
 import { cache } from '../workspace';
 import { isInCodeSpan, isInFencedCodeBlock } from './externalUtils';
+import { SortPathsDefaultType, SortPathsType } from './sortUtils.pure';
 
 const markdownExtRegex = /\.md$/i;
 
@@ -164,6 +165,11 @@ export function getMemoConfigProperty(
   property: 'links.format',
   fallback: 'short',
 ): 'short' | 'long';
+
+export function getMemoConfigProperty(
+  property: 'backlinksPanel.sortOrder',
+  fallback: SortPathsDefaultType,
+): SortPathsType;
 
 export function getMemoConfigProperty(
   property: 'backlinksPanel.collapseParentItems',
